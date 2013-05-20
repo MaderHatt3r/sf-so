@@ -23,7 +23,7 @@ namespace SFSO.Data
         public const string CLIENT_ID = "641263753705.apps.googleusercontent.com";
         public const string CLIENT_SECRET = "RHWZG1O8TtwJF0p0jl8WebYY";
         public const string MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        public const string SERVICE_PATH = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SFSO\\Services\\";
+        public static string SERVICE_PATH = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SFSO\\Services\\";
         public const string SERVICE_FILE_NAME = "service";
         public const string GOOGLE_FILE_ID_PROPERTY_NAME = "GoogleFileID";
 
