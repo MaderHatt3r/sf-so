@@ -1,0 +1,8 @@
+syntax: glob
+*.suo
+*.user
+*.ncb
+SFSO/bin/*
+SFSO/obj/*
+*.sdf
+*.opensdf
