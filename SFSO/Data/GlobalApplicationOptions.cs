@@ -20,11 +20,12 @@ namespace SFSO.Data
 {
     public class GlobalApplicationOptions
     {
-        public static string CLIENT_ID = "641263753705.apps.googleusercontent.com";
-        public static string CLIENT_SECRET = "RHWZG1O8TtwJF0p0jl8WebYY";
-        public static string MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        public static string SERVICE_PATH = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SFSO\\Services\\";
-        public static string SERVICE_FILE_NAME = "service";
+        public const string CLIENT_ID = "641263753705.apps.googleusercontent.com";
+        public const string CLIENT_SECRET = "RHWZG1O8TtwJF0p0jl8WebYY";
+        public const string MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        public const string SERVICE_PATH = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SFSO\\Services\\";
+        public const string SERVICE_FILE_NAME = "service";
+        public const string GOOGLE_FILE_ID_PROPERTY_NAME = "GoogleFileID";
 
         // You should use a more secure way of storing the key here as
         // .NET applications can be disassembled using a reflection tool.
