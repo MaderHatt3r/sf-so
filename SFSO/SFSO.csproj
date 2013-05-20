@@ -166,6 +166,7 @@
   <ItemGroup>
     <Compile Include="Controller\RequestController.cs" />
     <Compile Include="Data\GlobalApplicationOptions.cs" />
+    <Compile Include="IO\FileIO.cs" />
     <Compile Include="Model\RequestBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

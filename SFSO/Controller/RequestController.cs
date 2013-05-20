@@ -7,6 +7,7 @@ namespace SFSO.Controller
 {
     class RequestController
     {
+        //Create request dependent objects
         //Build the request
         //Initiate the request
         //Return results
