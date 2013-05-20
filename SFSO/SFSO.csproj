@@ -106,6 +106,18 @@
   -->
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="DotNetOpenAuth">
+      <HintPath>..\..\..\drive\Lib\DotNetOpenAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis">
+      <HintPath>..\..\..\drive\Lib\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Authentication.OAuth2">
+      <HintPath>..\..\..\drive\Lib\Google.Apis.Authentication.OAuth2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Drive.v2">
+      <HintPath>..\..\..\drive\Service\Google.Apis.Drive.v2.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -152,6 +164,9 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Controller\RequestController.cs" />
+    <Compile Include="Data\GlobalApplicationOptions.cs" />
+    <Compile Include="Model\RequestBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
