@@ -121,6 +121,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -166,8 +167,10 @@
   <ItemGroup>
     <Compile Include="Controller\RequestController.cs" />
     <Compile Include="Data\GlobalApplicationOptions.cs" />
+    <Compile Include="Forms\AuthenticationForm.cs" />
     <Compile Include="IO\FileIO.cs" />
-    <Compile Include="Model\RequestBuilder.cs" />
+    <Compile Include="Model\AuthenticationManager.cs" />
+    <Compile Include="Model\UploadBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

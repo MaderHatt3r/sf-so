@@ -7,8 +7,8 @@ using Word = Microsoft.Office.Interop.Word;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Word;
 
-using Google.Apis.Drive.v2;
 using SFSO.Data;
+using SFSO.Controller;
 
 
 namespace SFSO
@@ -17,11 +17,12 @@ namespace SFSO
     {
         bool allowSave = false;
         GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
+        RequestController requestController;
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
-            
+            requestController = new RequestController(userOptions);
         }
 
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
@@ -45,13 +46,11 @@ namespace SFSO
                 }
 
                 //After file is saved
-                this.uploadToGoogleDrive(Doc);
+                this.requestController.uploadToGoogleDrive(Doc);
                 this.allowSave = false;
                 Cancel = true;
             }
         }
-
-
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
