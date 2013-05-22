@@ -51,11 +51,11 @@ namespace SFSO.IO
             //TODO: Extract this duplicate code
             if (fileIDProperty == null)
             {
-                propertyValue = getMetadataProperty(customProperties, propertyName).Value; ;
+                propertyValue = null;
             }
             else
             {
-                propertyValue = null;
+                propertyValue = getMetadataProperty(customProperties, propertyName).Value;
             }
             
 
@@ -82,6 +82,10 @@ namespace SFSO.IO
                 }
             }
             return null;
+        }
+
+        public static void TearDown(){
+            Directory.Delete(GlobalApplicationOptions.TMP_PATH, true);
         }
 
     }

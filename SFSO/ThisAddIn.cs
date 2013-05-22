@@ -9,6 +9,7 @@ using Microsoft.Office.Tools.Word;
 
 using SFSO.Data;
 using SFSO.Controller;
+using SFSO.IO;
 
 
 namespace SFSO
@@ -54,6 +55,7 @@ namespace SFSO
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
+            FileIO.TearDown();
         }
 
         #region VSTO generated code
