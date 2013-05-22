@@ -12,48 +12,52 @@ using SFSO.Data;
 
 namespace SFSO.IO
 {
-    class FileIO
+    public class FileIO
     {
         //Copy Word doc to tmp file for upload
-        private string createTmpFile(string fileName, string fullFileLocation)
+        private static string createTmpFile(string fileName, string fullFileLocation)
         {
-            String fileCopy = Environment.GetEnvironmentVariable("TMP") + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.');
+            string tmpPath = GlobalApplicationOptions.TMP_PATH;
+            string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.');
+            Directory.CreateDirectory(tmpPath);
             System.IO.File.Copy(fullFileLocation, fileCopy);
 
             return fileCopy;
         }
 
         //Create MemoryStream for file upload
-        public MemoryStream createMemoryStream(string fileName, string fullFileLocation)
+        public static MemoryStream createMemoryStream(string fileName, string fullFileLocation)
         {
-            string fileCopy = this.createTmpFile(fileName, fullFileLocation);
-            try
-            {
-                byte[] byteArray = System.IO.File.ReadAllBytes(fileCopy);
-                System.IO.MemoryStream stream = new System.IO.MemoryStream(byteArray);
-                System.IO.File.Delete(fullFileLocation);
+            string fileCopy = createTmpFile(fileName, fullFileLocation);
 
-                return stream;
-            }
-            catch
-            {
-                System.IO.File.Delete(fullFileLocation);
-            }
+            byte[] byteArray = System.IO.File.ReadAllBytes(fileCopy);
+            System.IO.MemoryStream stream = new System.IO.MemoryStream(byteArray);
 
-            return null;
+            return stream;
         }
 
         //Delete the temp word file
-        private void deleteTmpFile(string file)
+        private static void deleteTmpFile(string file)
         {
             System.IO.File.Delete(file);
         }
 
         //Append metadata to word document
-        public void setMetadataProperty(Word.Document doc, string propertyName, string value)
+        public static void setMetadataProperty(Word.Document doc, string propertyName, string value)
         {
             Microsoft.Office.Core.DocumentProperties customProperties = doc.CustomDocumentProperties;
-            string propertyValue = getMetadataProperty(customProperties, propertyName).Value;
+            Office.DocumentProperty fileIDProperty = FileIO.getMetadataProperty(customProperties, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
+            string propertyValue;
+            //TODO: Extract this duplicate code
+            if (fileIDProperty == null)
+            {
+                propertyValue = getMetadataProperty(customProperties, propertyName).Value; ;
+            }
+            else
+            {
+                propertyValue = null;
+            }
+            
 
             if (propertyValue.IsNullOrEmpty())
             {
@@ -61,20 +65,14 @@ namespace SFSO.IO
             }
             else
             {
-                this.getMetadataProperty(customProperties, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME).Value = value;
+                getMetadataProperty(customProperties, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME).Value = value;
             }
             doc.Saved = false;
             doc.Save();
         }
 
-        //Move this to a Model class
-        public void setGoogleFileID(Word.Document doc, string newID)
-        {
-            setMetadataProperty(doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, newID);
-        }
-
         //Read metadata property from Word File
-        private Office.DocumentProperty getMetadataProperty(Office.DocumentProperties customProperties, string propertyName)
+        public static Office.DocumentProperty getMetadataProperty(Office.DocumentProperties customProperties, string propertyName)
         {
             foreach (Office.DocumentProperty property in customProperties)
             {
@@ -86,10 +84,5 @@ namespace SFSO.IO
             return null;
         }
 
-        //Move this to a Model Class
-        private string getGoogleFileID(Office.DocumentProperties customProperties)
-        {
-            return getMetadataProperty(customProperties, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME).Value;
-        }
     }
 }

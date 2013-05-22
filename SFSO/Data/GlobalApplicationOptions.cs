@@ -26,6 +26,7 @@ namespace SFSO.Data
         public static string SERVICE_PATH = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SFSO\\Services\\";
         public const string SERVICE_FILE_NAME = "service";
         public const string GOOGLE_FILE_ID_PROPERTY_NAME = "GoogleFileID";
+        public static string TMP_PATH = Environment.GetEnvironmentVariable("TMP") + "\\SFSO\\";
 
         // You should use a more secure way of storing the key here as
         // .NET applications can be disassembled using a reflection tool.
