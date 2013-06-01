@@ -85,7 +85,10 @@ namespace SFSO.IO
         }
 
         public static void TearDown(){
-            Directory.Delete(GlobalApplicationOptions.TMP_PATH, true);
+            if (Directory.Exists(GlobalApplicationOptions.TMP_PATH))
+            {
+                Directory.Delete(GlobalApplicationOptions.TMP_PATH, true);
+            }
         }
 
     }
