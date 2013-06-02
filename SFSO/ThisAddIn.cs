@@ -49,6 +49,7 @@ namespace SFSO
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
         private void Application_DocumentBeforeSave(Word.Document Doc, ref bool SaveAsUI, ref bool Cancel)
         {
+            
             //Override Word's save functionality by writing own and sending cancel
             if (!this.allowSave)
             {

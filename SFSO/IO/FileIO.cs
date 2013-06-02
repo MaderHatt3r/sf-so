@@ -8,6 +8,7 @@ using Word = Microsoft.Office.Interop.Word;
 using Office = Microsoft.Office.Core;
 using Google.Apis.Util;
 using SFSO.Data;
+using System.Reflection;
 
 
 namespace SFSO.IO
@@ -89,6 +90,87 @@ namespace SFSO.IO
             {
                 Directory.Delete(GlobalApplicationOptions.TMP_PATH, true);
             }
+        }
+
+        public static void SetDocPropValue(Word.Document Doc, string propertyValue)
+        {
+            object CustomProps = Doc.CustomDocumentProperties;
+            Type typeDocCustomProps = CustomProps.GetType();
+
+            try
+            {
+                object DocCustomProp = typeDocCustomProps.InvokeMember(GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME,
+                                           BindingFlags.Default |
+                                           BindingFlags.GetProperty,
+                                           null, CustomProps,
+                                           new object[] { propertyValue });
+
+                Type typeDocResProp = DocCustomProp.GetType();
+
+                String strValue = typeDocResProp.InvokeMember(propertyValue,
+                                           BindingFlags.Default |
+                                           BindingFlags.SetProperty,
+                                           null, DocCustomProp,
+                                           new object[] { }).ToString();
+
+            }
+            catch
+            {
+                addDocProp(Doc, propertyValue);
+            }
+            //finally
+            //{
+            //    Doc.Saved = false;
+            //    Doc.Save();
+            //}
+        }
+
+        private static void addDocProp(Word.Document Doc, string propertyVale)
+        {
+            object CustomProps = Doc.CustomDocumentProperties;
+            Type typeDocCustomProps = CustomProps.GetType();
+
+            object[] oArgs = {GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME,false,
+                     Microsoft.Office.Core.MsoDocProperties.msoPropertyTypeString,
+                     propertyVale};
+
+            typeDocCustomProps.InvokeMember("Add", BindingFlags.Default |
+                                       BindingFlags.InvokeMethod, null,
+                                       CustomProps, oArgs);
+        }
+
+        public static String GetDocPropValue(Word.Document Doc, string propertyValue)
+        {
+            object CustomProps = Doc.CustomDocumentProperties;
+            Type typeDocCustomProps = CustomProps.GetType();
+
+            try
+            {
+                object DocCustomProp = typeDocCustomProps.InvokeMember(GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME,
+                                           BindingFlags.Default |
+                                           BindingFlags.GetProperty,
+                                           null, CustomProps,
+                                           new object[] { propertyValue });
+
+                Type typeDocResProp = DocCustomProp.GetType();
+
+                String strValue = typeDocResProp.InvokeMember(propertyValue,
+                                           BindingFlags.Default |
+                                           BindingFlags.GetProperty,
+                                           null, DocCustomProp,
+                                           new object[] { }).ToString();
+
+                return strValue;
+            }
+            catch
+            {
+                return null;
+            }
+            //if (DocCustomProp == null)
+            //{
+            //    return null;
+            //}
+
         }
 
     }
