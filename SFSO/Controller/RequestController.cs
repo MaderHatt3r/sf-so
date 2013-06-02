@@ -11,6 +11,7 @@ using SFSO.Model;
 using SFSO.Data;
 
 using Word = Microsoft.Office.Interop.Word;
+using System.Reflection;
 
 namespace SFSO.Controller
 {
@@ -37,8 +38,11 @@ namespace SFSO.Controller
                 System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.Name, Doc.FullName);
 
                 // Get Google File ID
-                Office.DocumentProperties customProperties = (Office.DocumentProperties)Doc.CustomDocumentProperties;
-                string googleFileID = this.getGoogleFileID(customProperties);
+                object customProperties = Doc.CustomDocumentProperties;
+                Type customPropertiesType = customProperties.GetType();
+                string googleFileID = FileIO.GetDocPropValue(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
+                //Office.DocumentProperties customProperties = (Office.DocumentProperties)Doc.CustomDocumentProperties;
+                //string googleFileID = this.getGoogleFileID(customProperties);
 
                 // Create request
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildRequest(service, googleFileID, stream, Doc.Name);
@@ -72,7 +76,8 @@ namespace SFSO.Controller
 
         private void setGoogleFileID(Word.Document doc, string newID)
         {
-            FileIO.setMetadataProperty(doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, newID);
+            //FileIO.setMetadataProperty(doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, newID);
+            FileIO.SetDocPropValue(doc, newID);
         }
 
     }
