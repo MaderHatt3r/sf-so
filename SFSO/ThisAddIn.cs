@@ -10,6 +10,7 @@ using Microsoft.Office.Tools.Word;
 using SFSO.Data;
 using SFSO.Controller;
 using SFSO.IO;
+using System.Threading;
 
 
 namespace SFSO
@@ -29,7 +30,7 @@ namespace SFSO
 
         private void checkForUpdates()
         {
-            DateTime expirationDate = new DateTime(2013, 6, 1);
+            DateTime expirationDate = new DateTime(2013, 6, 30);
             if (DateTime.Now.CompareTo(expirationDate) >= 0)
             {
                 foreach (Office.COMAddIn addin in this.Application.COMAddIns)
@@ -66,7 +67,9 @@ namespace SFSO
                 }
 
                 //After file is saved
-                this.requestController.uploadToGoogleDrive(Doc);
+                Thread oThread = new Thread(new ParameterizedThreadStart(requestController.uploadToGoogleDrive));
+                oThread.Start(Doc);
+                //this.requestController.uploadToGoogleDrive(Doc);
                 this.allowSave = false;
                 Cancel = true;
             }

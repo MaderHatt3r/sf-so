@@ -28,8 +28,9 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        public void uploadToGoogleDrive(Microsoft.Office.Interop.Word.Document Doc)
+        public void uploadToGoogleDrive(object Document)
         {
+            Microsoft.Office.Interop.Word.Document Doc = (Microsoft.Office.Interop.Word.Document)Document;
             try
             {
                 // Prepare document for upload
@@ -51,11 +52,11 @@ namespace SFSO.Controller
             {
                 //MessageBox.Show("Sync to Google Drive canceled by user");
             }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
-                    e.GetType().ToString() + Environment.NewLine + e.Message);
-            }
+            //catch (Exception e)
+            //{
+            //    System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
+            //        e.GetType().ToString() + Environment.NewLine + e.Message);
+            //}
         }
 
         private String getGoogleFileID(Office.DocumentProperties customProperties)
