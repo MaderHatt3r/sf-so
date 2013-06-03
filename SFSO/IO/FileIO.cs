@@ -43,48 +43,6 @@ namespace SFSO.IO
             System.IO.File.Delete(file);
         }
 
-        //Append metadata to word document
-        public static void setMetadataProperty(Word.Document doc, string propertyName, string value)
-        {
-            Microsoft.Office.Core.DocumentProperties customProperties = doc.CustomDocumentProperties;
-            Office.DocumentProperty fileIDProperty = FileIO.getMetadataProperty(customProperties, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
-            string propertyValue;
-            //TODO: Extract this duplicate code
-            if (fileIDProperty == null)
-            {
-                propertyValue = null;
-            }
-            else
-            {
-                propertyValue = getMetadataProperty(customProperties, propertyName).Value;
-            }
-            
-
-            if (propertyValue.IsNullOrEmpty())
-            {
-                customProperties.Add(propertyName, false, Office.MsoDocProperties.msoPropertyTypeString, value);
-            }
-            else
-            {
-                getMetadataProperty(customProperties, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME).Value = value;
-            }
-            doc.Saved = false;
-            doc.Save();
-        }
-
-        //Read metadata property from Word File
-        public static Office.DocumentProperty getMetadataProperty(Office.DocumentProperties customProperties, string propertyName)
-        {
-            foreach (Office.DocumentProperty property in customProperties)
-            {
-                if (property.Name.Equals(propertyName))
-                {
-                    return property;
-                }
-            }
-            return null;
-        }
-
         public static void TearDown(){
             if (Directory.Exists(GlobalApplicationOptions.TMP_PATH))
             {
@@ -109,10 +67,6 @@ namespace SFSO.IO
             catch
             {
                 addDocProp(Doc, propertyValue);
-            }
-            finally
-            {
-                Doc.Saved = false;
             }
         }
 
@@ -155,10 +109,6 @@ namespace SFSO.IO
             {
                 return null;
             }
-            //if (DocCustomProp == null)
-            //{
-            //    return null;
-            //}
 
         }
 

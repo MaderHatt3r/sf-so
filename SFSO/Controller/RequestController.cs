@@ -41,8 +41,6 @@ namespace SFSO.Controller
                 object customProperties = Doc.CustomDocumentProperties;
                 Type customPropertiesType = customProperties.GetType();
                 string googleFileID = FileIO.GetDocPropValue(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
-                //Office.DocumentProperties customProperties = (Office.DocumentProperties)Doc.CustomDocumentProperties;
-                //string googleFileID = this.getGoogleFileID(customProperties);
 
                 // Create request
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildRequest(service, googleFileID, stream, Doc.Name);
@@ -50,34 +48,17 @@ namespace SFSO.Controller
                 // Initiate request and handle response from the server
                 request.Upload();
                 File googleFile = request.ResponseBody;
-                this.setGoogleFileID(Doc, googleFile.Id);
+                FileIO.SetDocPropValue(Doc, googleFile.Id);
             }
             catch (OperationCanceledException oce)
             {
                 //MessageBox.Show("Sync to Google Drive canceled by user");
             }
-            //catch (Exception e)
-            //{
-            //    System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
-            //        e.GetType().ToString() + Environment.NewLine + e.Message);
-            //}
-        }
-
-        private String getGoogleFileID(Office.DocumentProperties customProperties)
-        {
-            Office.DocumentProperty fileIDProperty = FileIO.getMetadataProperty(customProperties, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
-            //TODO: Extract this duplicate code
-            if (fileIDProperty == null)
+            catch (Exception e)
             {
-                return null;
+                System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
+                    e.GetType().ToString() + Environment.NewLine + e.Message);
             }
-            return fileIDProperty.Value;
-        }
-
-        private void setGoogleFileID(Word.Document doc, string newID)
-        {
-            //FileIO.setMetadataProperty(doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, newID);
-            FileIO.SetDocPropValue(doc, newID);
         }
 
     }
