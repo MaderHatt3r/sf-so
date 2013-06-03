@@ -23,3 +23,9 @@ of the cloud.
 
 		--Use Google Drive's sharing options to collaborate on
 		documents without having to maintain multiple copies.
+
+Other possible features:
+
+	-Detect name changes and ask the user if the Google file name should be changed,
+	if a new copy should be made with the new name, or to save changes to the current
+	Google Drive filename.
