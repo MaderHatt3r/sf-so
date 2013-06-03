@@ -26,6 +26,9 @@ namespace SFSO
             this.checkForUpdates();
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
             requestController = new RequestController(userOptions);
+
+            requestController.uploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument);
+            System.Windows.Forms.MessageBox.Show("FullName: " + Globals.ThisAddIn.Application.ActiveDocument.FullName);
         }
 
         private void checkForUpdates()

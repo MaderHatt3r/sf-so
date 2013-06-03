@@ -29,3 +29,8 @@ Other possible features:
 	-Detect name changes and ask the user if the Google file name should be changed,
 	if a new copy should be made with the new name, or to save changes to the current
 	Google Drive filename.
+
+	-Always have a backup of your document, even if you haven't saved yet.
+		--Have the option to automatically delete the document from Google Drive
+		if the document was never saved before exiting (not recommended) but
+		available.
