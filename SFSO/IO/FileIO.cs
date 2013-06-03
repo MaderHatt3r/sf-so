@@ -99,40 +99,31 @@ namespace SFSO.IO
 
             try
             {
-                object DocCustomProp = typeDocCustomProps.InvokeMember(GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME,
-                                           BindingFlags.Default |
-                                           BindingFlags.GetProperty,
-                                           null, CustomProps,
-                                           new object[] { propertyValue });
-
-                Type typeDocResProp = DocCustomProp.GetType();
-
-                String strValue = typeDocResProp.InvokeMember(propertyValue,
-                                           BindingFlags.Default |
-                                           BindingFlags.SetProperty,
-                                           null, DocCustomProp,
-                                           new object[] { }).ToString();
+                typeDocCustomProps.InvokeMember("Item",
+                              BindingFlags.Default |
+                              BindingFlags.SetProperty,
+                              null, CustomProps,
+                              new object[] { GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, propertyValue });
 
             }
             catch
             {
                 addDocProp(Doc, propertyValue);
             }
-            //finally
-            //{
-            //    Doc.Saved = false;
-            //    Doc.Save();
-            //}
+            finally
+            {
+                Doc.Saved = false;
+            }
         }
 
-        private static void addDocProp(Word.Document Doc, string propertyVale)
+        private static void addDocProp(Word.Document Doc, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
 
             object[] oArgs = {GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME,false,
                      Microsoft.Office.Core.MsoDocProperties.msoPropertyTypeString,
-                     propertyVale};
+                     propertyValue};
 
             typeDocCustomProps.InvokeMember("Add", BindingFlags.Default |
                                        BindingFlags.InvokeMethod, null,
@@ -146,18 +137,16 @@ namespace SFSO.IO
 
             try
             {
-                object DocCustomProp = typeDocCustomProps.InvokeMember(GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME,
+                object property = typeDocCustomProps.InvokeMember("Item",
                                            BindingFlags.Default |
                                            BindingFlags.GetProperty,
                                            null, CustomProps,
-                                           new object[] { propertyValue });
-
-                Type typeDocResProp = DocCustomProp.GetType();
-
-                String strValue = typeDocResProp.InvokeMember(propertyValue,
+                                           new object[] { GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME });
+                Type typeDocAuthorProp = property.GetType();
+                String strValue = typeDocAuthorProp.InvokeMember("Value",
                                            BindingFlags.Default |
                                            BindingFlags.GetProperty,
-                                           null, DocCustomProp,
+                                           null, property,
                                            new object[] { }).ToString();
 
                 return strValue;
