@@ -17,7 +17,7 @@ namespace SFSO
 {
     public partial class ThisAddIn
     {
-        bool allowSave = false;
+        bool allowSave = true;
         GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
         RequestController requestController;
 
@@ -27,8 +27,11 @@ namespace SFSO
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
             requestController = new RequestController(userOptions);
 
+            System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
+            object fileName = "DriveProtectedDocument.docx";
+            object addToRecentFiles = false;
+            Globals.ThisAddIn.Application.ActiveDocument.SaveAs2(ref fileName, ref missing, ref missing, ref missing, ref addToRecentFiles, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
             requestController.uploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument);
-            System.Windows.Forms.MessageBox.Show("FullName: " + Globals.ThisAddIn.Application.ActiveDocument.FullName);
         }
 
         private void checkForUpdates()
