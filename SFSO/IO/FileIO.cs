@@ -18,12 +18,25 @@ namespace SFSO.IO
         //Copy Word doc to tmp file for upload
         private static string createTmpFile(string fileName, string fullFileLocation)
         {
-            string tmpPath = GlobalApplicationOptions.TMP_PATH;
-            string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.');
-            Directory.CreateDirectory(tmpPath);
-            System.IO.File.Copy(fullFileLocation, fileCopy);
+            try
+            {
+                string tmpPath = GlobalApplicationOptions.TMP_PATH;
+                string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.');
+                Directory.CreateDirectory(tmpPath);
+                System.IO.File.Copy(fullFileLocation, fileCopy);
 
-            return fileCopy;
+                return fileCopy;
+            }
+            catch (FileNotFoundException fnfe)
+            {
+                //return "";
+                return createEmptyTmpFile(fileName);
+            }
+        }
+
+        private static string createEmptyTmpFile(string fileName)
+        {
+            return "";
         }
 
         //Create MemoryStream for file upload
