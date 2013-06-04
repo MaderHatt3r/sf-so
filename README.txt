@@ -30,7 +30,5 @@ Other possible features:
 	if a new copy should be made with the new name, or to save changes to the current
 	Google Drive filename.
 
-	-Always have a backup of your document, even if you haven't saved yet.
-		--Have the option to automatically delete the document from Google Drive
-		if the document was never saved before exiting (not recommended) but
-		available.
+	-Save Google Name as Author
+		--Option to use alternative name or Google username
