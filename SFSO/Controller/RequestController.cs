@@ -38,8 +38,6 @@ namespace SFSO.Controller
                 System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.Name, Doc.FullName);
 
                 // Get Google File ID
-                object customProperties = Doc.CustomDocumentProperties;
-                Type customPropertiesType = customProperties.GetType();
                 string googleFileID = FileIO.GetDocPropValue(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
 
                 // Create request
@@ -74,8 +72,6 @@ namespace SFSO.Controller
                 System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.Name, Doc.FullName);
 
                 // Get Google File ID
-                object customProperties = Doc.CustomDocumentProperties;
-                Type customPropertiesType = customProperties.GetType();
                 string googleFileID = FileIO.GetDocPropValue(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
 
                 // Create request

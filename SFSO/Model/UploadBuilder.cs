@@ -37,14 +37,14 @@ namespace SFSO.Model
             Google.Apis.Upload.ResumableUpload<File, File> request;
             if (googleFileID.IsNotNullOrEmpty())
             {
-                //Create an upload request and initiate it
+                //Create an upload request
                 request = service.Files.Update(body, googleFileID, stream, GlobalApplicationOptions.MIME_TYPE);
                 ((FilesResource.UpdateMediaUpload)request).NewRevision = this.userOptions.newRevision;
                 return request;
             }
             else
             {
-                //Create an upload request and initiate it
+                //Create an upload request
                 request = service.Files.Insert(body, stream, GlobalApplicationOptions.MIME_TYPE);
                 return request;
             }
