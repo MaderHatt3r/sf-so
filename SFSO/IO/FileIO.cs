@@ -15,15 +15,31 @@ namespace SFSO.IO
 {
     public class FileIO
     {
+        public static bool TmpUploadExists { get; set; }
+
         //Copy Word doc to tmp file for upload
-        public static string createTmpFile(string fileName, string fullFileLocation)
+        private static string createTmpCopy(string fileName, string fullFileLocation)
         {
             string tmpPath = GlobalApplicationOptions.TMP_PATH;
             string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.');
             Directory.CreateDirectory(tmpPath);
             System.IO.File.Copy(fullFileLocation, fileCopy);
 
+            TmpUploadExists = false;
+
             return fileCopy;
+        }
+
+        private static string createTmpFile()
+        {
+            string fullName = GlobalApplicationOptions.TMP_PATH + Globals.ThisAddIn.Application.ActiveDocument.Name + ".docx";
+            System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
+            System.IO.FileStream fileStream = System.IO.File.Create(fullName);
+            fileStream.Close();
+
+            TmpUploadExists = true;
+
+            return fullName;
         }
 
         private static string createEmptyTmpFile(string fileName)
@@ -42,15 +58,28 @@ namespace SFSO.IO
         //Create MemoryStream for file upload
         public static MemoryStream createMemoryStream(string fileName, string fullFileLocation)
         {
-            string fileCopy = createTmpFile(fileName, fullFileLocation);
+            string file = "";
+            if (uploadIDExists())
+            {
+                file = createTmpCopy(fileName, fullFileLocation);
+            }
+            else
+            {
+                file = createTmpFile();
+            }
 
-            byte[] byteArray = System.IO.File.ReadAllBytes(fileCopy);
+            byte[] byteArray = System.IO.File.ReadAllBytes(file);
             System.IO.MemoryStream stream = new System.IO.MemoryStream(byteArray);
 
             return stream;
         }
 
         public static void TearDown(){
+            removeLocalTmpFolder();
+        }
+
+        private static void removeLocalTmpFolder()
+        {
             if (Directory.Exists(GlobalApplicationOptions.TMP_PATH))
             {
                 Directory.Delete(GlobalApplicationOptions.TMP_PATH, true);
@@ -91,9 +120,9 @@ namespace SFSO.IO
                                        CustomProps, oArgs);
         }
 
-        public static String GetDocPropValue(Word.Document Doc, string propertyValue)
+        public static String GetDocPropValue()
         {
-            object CustomProps = Doc.CustomDocumentProperties;
+            object CustomProps = Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
 
             try
@@ -117,6 +146,16 @@ namespace SFSO.IO
                 return null;
             }
 
+        }
+
+        public static bool uploadIDExists()
+        {
+            if (GetDocPropValue() == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
     }

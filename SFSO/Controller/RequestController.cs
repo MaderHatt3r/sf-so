@@ -15,12 +15,12 @@ using System.Reflection;
 
 namespace SFSO.Controller
 {
-    public class RequestController
+    internal class RequestController
     {
         DriveService service = null;
         UploadBuilder uploadBuilder;
 
-        public RequestController(GlobalApplicationOptions userOptions)
+        internal RequestController(GlobalApplicationOptions userOptions)
         {
             uploadBuilder = new UploadBuilder(userOptions);
             this.service = uploadBuilder.buildService();
@@ -29,19 +29,19 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        public void uploadToGoogleDrive(object Document)
+        internal void uploadToGoogleDrive(object Document)
         {
             Microsoft.Office.Interop.Word.Document Doc = (Microsoft.Office.Interop.Word.Document)Document;
             try
             {
+                // Get Google File ID
+                string googleFileID = FileIO.GetDocPropValue();
+
                 // Prepare document for upload
                 System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.Name, Doc.FullName);
 
-                // Get Google File ID
-                string googleFileID = FileIO.GetDocPropValue(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
-
                 // Create request
-                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildRequest(service, googleFileID, stream, Doc.Name);
+                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
 
                 // Initiate request and handle response from the server
                 request.Upload();
@@ -63,7 +63,7 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        public void uploadToGoogleDrive()
+        internal void uploadToGoogleDrive()
         {
             Microsoft.Office.Interop.Word.Document Doc = Globals.ThisAddIn.Application.ActiveDocument;
             try
@@ -72,10 +72,10 @@ namespace SFSO.Controller
                 System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.Name, Doc.FullName);
 
                 // Get Google File ID
-                string googleFileID = FileIO.GetDocPropValue(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
+                string googleFileID = FileIO.GetDocPropValue();
 
                 // Create request
-                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildRequest(service, googleFileID, stream, Doc.Name);
+                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
 
                 // Initiate request and handle response from the server
                 request.Upload();
@@ -97,22 +97,19 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        public void initializeUploadToGoogleDrive()
+        internal void initializeUploadToGoogleDrive()
         {
             try
             {
                 // Create file
-                System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
                 string fileName = Globals.ThisAddIn.Application.ActiveDocument.Name;
-                string fullName = GlobalApplicationOptions.TMP_PATH + Globals.ThisAddIn.Application.ActiveDocument.Name + ".docx";
-                System.IO.FileStream fileStream = System.IO.File.Create(fullName);
-                fileStream.Close();
+                string fullName = null;
 
                 // Prepare document for upload
                 System.IO.MemoryStream stream = FileIO.createMemoryStream(fileName, fullName);
 
                 // Create request
-                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildRequest(service, null, stream, fileName);
+                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, null, stream, fileName);
 
                 // Initiate request and handle response from the server
                 request.Upload();
@@ -130,5 +127,31 @@ namespace SFSO.Controller
             }
         }
 
+        internal void removeTmpUpload()
+        {
+            
+            string googleFileID = FileIO.GetDocPropValue();
+
+            // Remove labels to prevent dangling pointers
+            ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);
+            ParentList labels = listRequest.Fetch();
+            foreach (ParentReference label in labels.Items)
+            {
+                this.service.Children.Delete(label.Id, googleFileID);
+            }
+
+            System.Threading.Thread.Sleep(2000);
+
+            // Trash file
+            this.service.Files.Trash(googleFileID).Fetch();
+
+            System.Threading.Thread.Sleep(2000);
+
+            // Delete the trashed file
+            this.service.Files.Delete(FileIO.GetDocPropValue()).Fetch();
+
+            //FilesResource.DeleteRequest request = this.service.Files.Delete(googleFileID);
+            //request.Fetch();
+        }
     }
 }

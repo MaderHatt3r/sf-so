@@ -31,7 +31,7 @@ namespace SFSO.Model
         }
 
         //Check if there is a googleFileID and create update or upload request respectively
-        public Google.Apis.Upload.ResumableUpload<File, File> buildRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName)
+        public Google.Apis.Upload.ResumableUpload<File, File> buildUploadRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName)
         {
             File body = this.buildFileBody(service, googleFileID, fileName);
             Google.Apis.Upload.ResumableUpload<File, File> request;

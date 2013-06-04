@@ -17,34 +17,19 @@ namespace SFSO
 {
     public partial class ThisAddIn
     {
-        bool allowSave = false;
-        GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
-        RequestController requestController;
-        List<Thread> threads = new List<Thread>();
+        private bool allowSave = false;
+        private GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
+        private RequestController requestController;
+        private List<Thread> threads = new List<Thread>();
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             this.checkForUpdates();
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
             requestController = new RequestController(userOptions);
-
+            this.Application.DocumentBeforeClose += Application_DocumentBeforeClose;
             threads.Add(new Thread(new ThreadStart(requestController.initializeUploadToGoogleDrive)));
             threads[threads.Count - 1].Start();
-
-            //requestController.uploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument);
-
-            //Thread oThread = new Thread(new ParameterizedThreadStart(requestController.uploadToGoogleDrive));
-            //oThread.Start(Globals.ThisAddIn.Application.ActiveDocument);
-
-            //string tmpFile = FileIO.createTmpFile(Globals.ThisAddIn.Application.ActiveDocument.Name, Globals.ThisAddIn.Application.ActiveDocument.FullName);
-            
-            //System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
-            //object fileName = "DriveProtectedDocument.docx";
-            //Word._Document emptyDocument = Globals.ThisAddIn.Application.Documents.Add();
-            //requestController.uploadToGoogleDrive(emptyDocument);
-            //object addToRecentFiles = false;
-            //Globals.ThisAddIn.Application.ActiveDocument.SaveAs2(ref fileName, ref missing, ref missing, ref missing, ref addToRecentFiles, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
-            //requestController.uploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument);
         }
 
         private void checkForUpdates()
@@ -89,7 +74,7 @@ namespace SFSO
                 //After file is saved
                 threads.Add(new Thread(new ParameterizedThreadStart(requestController.uploadToGoogleDrive)));
                 threads[threads.Count-1].Start(Doc);
-                //this.requestController.uploadToGoogleDrive(Doc);
+
                 this.allowSave = false;
                 Cancel = true;
             }
@@ -103,9 +88,23 @@ namespace SFSO
             }
         }
 
+        private void removeTmpUpload()
+        {
+            if (FileIO.TmpUploadExists)
+            {
+                requestController.removeTmpUpload();
+            }
+        }
+
+        private void Application_DocumentBeforeClose(Word.Document Doc, ref bool Cancel)
+        {
+            this.waitForRunningThreads();
+
+            removeTmpUpload();
+        }
+
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
-            
             FileIO.TearDown();
         }
 
