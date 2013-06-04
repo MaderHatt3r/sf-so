@@ -27,7 +27,7 @@ namespace SFSO
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
             requestController = new RequestController(userOptions);
 
-            requestController.initializeUploadToGoogleDrive();
+            Thread worker1 = new Thread(new ThreadStart(requestController.initializeUploadToGoogleDrive));
 
             //requestController.uploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument);
 
