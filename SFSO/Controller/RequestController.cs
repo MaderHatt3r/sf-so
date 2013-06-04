@@ -111,6 +111,7 @@ namespace SFSO.Controller
                 string fullName = GlobalApplicationOptions.TMP_PATH + Globals.ThisAddIn.Application.ActiveDocument.Name + ".docx";
                 System.IO.FileStream fileStream = System.IO.File.Create(fullName);
                 fileStream.Close();
+
                 // Prepare document for upload
                 System.IO.MemoryStream stream = FileIO.createMemoryStream(fileName, fullName);
 
