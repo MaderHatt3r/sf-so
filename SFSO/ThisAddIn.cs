@@ -17,7 +17,7 @@ namespace SFSO
 {
     public partial class ThisAddIn
     {
-        bool allowSave = true;
+        bool allowSave = false;
         GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
         RequestController requestController;
 
@@ -27,11 +27,22 @@ namespace SFSO
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
             requestController = new RequestController(userOptions);
 
-            System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
-            object fileName = "DriveProtectedDocument.docx";
-            object addToRecentFiles = false;
-            Globals.ThisAddIn.Application.ActiveDocument.SaveAs2(ref fileName, ref missing, ref missing, ref missing, ref addToRecentFiles, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
-            requestController.uploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument);
+            requestController.initializeUploadToGoogleDrive();
+
+            //requestController.uploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument);
+
+            //Thread oThread = new Thread(new ParameterizedThreadStart(requestController.uploadToGoogleDrive));
+            //oThread.Start(Globals.ThisAddIn.Application.ActiveDocument);
+
+            //string tmpFile = FileIO.createTmpFile(Globals.ThisAddIn.Application.ActiveDocument.Name, Globals.ThisAddIn.Application.ActiveDocument.FullName);
+            
+            //System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
+            //object fileName = "DriveProtectedDocument.docx";
+            //Word._Document emptyDocument = Globals.ThisAddIn.Application.Documents.Add();
+            //requestController.uploadToGoogleDrive(emptyDocument);
+            //object addToRecentFiles = false;
+            //Globals.ThisAddIn.Application.ActiveDocument.SaveAs2(ref fileName, ref missing, ref missing, ref missing, ref addToRecentFiles, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
+            //requestController.uploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument);
         }
 
         private void checkForUpdates()

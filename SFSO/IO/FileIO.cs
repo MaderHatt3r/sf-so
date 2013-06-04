@@ -16,27 +16,34 @@ namespace SFSO.IO
     public class FileIO
     {
         //Copy Word doc to tmp file for upload
-        private static string createTmpFile(string fileName, string fullFileLocation)
+        public static string createTmpFile(string fileName, string fullFileLocation)
         {
-            try
-            {
+            //try
+            //{
                 string tmpPath = GlobalApplicationOptions.TMP_PATH;
                 string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.');
                 Directory.CreateDirectory(tmpPath);
                 System.IO.File.Copy(fullFileLocation, fileCopy);
 
                 return fileCopy;
-            }
-            catch (FileNotFoundException fnfe)
-            {
-                //return "";
-                return createEmptyTmpFile(fileName);
-            }
+            //}
+            //catch (FileNotFoundException fnfe)
+            //{
+            //    return createEmptyTmpFile(fileName);
+            //}
         }
 
         private static string createEmptyTmpFile(string fileName)
         {
-            return "";
+            System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
+            object oFileName = GlobalApplicationOptions.TMP_PATH + fileName + ".docx";
+            object addToRecentFiles = false;
+            object isVisible = false;
+            object missing = Missing.Value;
+            Word._Document emptyDocument = Globals.ThisAddIn.Application.Documents.Add(ref missing, ref missing, ref missing, ref isVisible);
+            emptyDocument.SaveAs2(ref oFileName, ref missing, ref missing, ref missing, ref addToRecentFiles, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
+            emptyDocument.Close();
+            return oFileName + "";
         }
 
         //Create MemoryStream for file upload
@@ -48,12 +55,6 @@ namespace SFSO.IO
             System.IO.MemoryStream stream = new System.IO.MemoryStream(byteArray);
 
             return stream;
-        }
-
-        //Delete the temp word file
-        private static void deleteTmpFile(string file)
-        {
-            System.IO.File.Delete(file);
         }
 
         public static void TearDown(){
