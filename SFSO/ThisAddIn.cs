@@ -26,15 +26,54 @@ namespace SFSO
         {
             this.checkForUpdates();
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
-            requestController = new RequestController(userOptions);
             this.Application.DocumentBeforeClose += Application_DocumentBeforeClose;
+            this.Application.DocumentOpen += Application_DocumentOpen;
+            requestController = new RequestController(userOptions);
+            
             threads.Add(new Thread(new ThreadStart(requestController.initializeUploadToGoogleDrive)));
             threads[threads.Count - 1].Start();
         }
 
+        private void Application_DocumentOpen(Word.Document Doc)
+        {
+            FileIO.TmpUploadExists = false;
+            this.waitForRunningThreads();
+            this.abortSuspendedThreads();
+            this.checkForUpdates();
+        }
+
+        private void abortSuspendedThreads()
+        {
+            foreach (Thread thread in this.threads)
+            {
+                if (thread.ThreadState.Equals(System.Threading.ThreadState.Suspended))
+                {
+                    try
+                    {
+                        thread.Abort();
+                    }
+                    catch (ThreadStateException tse)
+                    {
+                        thread.Resume();
+                    }
+                }
+            }
+        }
+
+        private void resumeSuspendedThreads()
+        {
+            foreach (Thread thread in this.threads)
+            {
+                if (thread.ThreadState.Equals(System.Threading.ThreadState.Suspended))
+                {
+                    thread.Resume();
+                }
+            }
+        }
+
         private void checkForUpdates()
         {
-            DateTime expirationDate = new DateTime(2013, 6, 30);
+            DateTime expirationDate = new DateTime(2013, 7, 31);
             if (DateTime.Now.CompareTo(expirationDate) >= 0)
             {
                 foreach (Office.COMAddIn addin in this.Application.COMAddIns)
@@ -43,8 +82,6 @@ namespace SFSO
                     {
                         System.Windows.Forms.MessageBox.Show("This beta version of SFSO has expired. Please upgrade to the newest release by visiting http://ctdragon.com. This add-in will now uninstall itself.");
                         addin.Connect = false;
-                        //addin.Installed = false;
-                        //addin.Delete();
                     }
                 }
             }
@@ -53,6 +90,7 @@ namespace SFSO
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
         private void Application_DocumentBeforeSave(Word.Document Doc, ref bool SaveAsUI, ref bool Cancel)
         {
+            this.resumeSuspendedThreads();
             this.waitForRunningThreads();
             //Override Word's save functionality by writing own and sending cancel
             if (!this.allowSave)
@@ -84,7 +122,10 @@ namespace SFSO
         {
             foreach (Thread thread in threads)
             {
-                thread.Join(10000);
+                if (!thread.ThreadState.Equals(System.Threading.ThreadState.Suspended))
+                {
+                    thread.Join(10000);
+                }
             }
         }
 
@@ -98,9 +139,20 @@ namespace SFSO
 
         private void Application_DocumentBeforeClose(Word.Document Doc, ref bool Cancel)
         {
+            this.Application.Visible = false;
+
             this.waitForRunningThreads();
 
-            removeTmpUpload();
+            this.abortSuspendedThreads();
+
+            try
+            {
+                removeTmpUpload();
+            }
+            catch
+            {
+
+            }
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)

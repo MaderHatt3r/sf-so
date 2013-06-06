@@ -112,6 +112,8 @@ namespace SFSO.Controller
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, null, stream, fileName);
 
                 // Initiate request and handle response from the server
+                System.Threading.Thread.CurrentThread.Suspend();
+
                 request.Upload();
                 File googleFile = request.ResponseBody;
                 FileIO.SetDocPropValue(Globals.ThisAddIn.Application.ActiveDocument, googleFile.Id);
@@ -120,11 +122,11 @@ namespace SFSO.Controller
             {
                 //MessageBox.Show("Sync to Google Drive canceled by user");
             }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
-                    e.GetType().ToString() + Environment.NewLine + e.Message);
-            }
+            //catch (Exception e)
+            //{
+            //    System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
+            //        e.GetType().ToString() + Environment.NewLine + e.Message);
+            //}
         }
 
         internal void removeTmpUpload()
@@ -133,25 +135,43 @@ namespace SFSO.Controller
             string googleFileID = FileIO.GetDocPropValue();
 
             // Remove labels to prevent dangling pointers
+            //ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);
+            //ParentList labels = listRequest.Fetch();
+            //foreach (ParentReference label in labels.Items)
+            //{
+            //    this.service.Children.Delete(label.Id, googleFileID);
+            //}
+
+            //System.Threading.Thread.Sleep(2000);
+
+            // Trash file
+            FilesResource.TrashRequest trashRequest = this.service.Files.Trash(googleFileID);
+            File trashResponse = this.service.Files.Trash(googleFileID).Fetch();
+
+            while (trashResponse == null)
+            {
+                continue;
+            }
+            
+            //System.Threading.Thread.Sleep(2000);
+
+
+            // Remove labels to prevent dangling pointers
             ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);
             ParentList labels = listRequest.Fetch();
+
+            // Delete the trashed file
+            //this.service.Files.Delete(FileIO.GetDocPropValue()).Fetch();
+
+            // Delete the trashed file
+            //FilesResource.DeleteRequest deleteRequest = this.service.Files.Delete(googleFileID);
+            //deleteRequest.Fetch();
+            
+
             foreach (ParentReference label in labels.Items)
             {
                 this.service.Children.Delete(label.Id, googleFileID);
             }
-
-            System.Threading.Thread.Sleep(2000);
-
-            // Trash file
-            this.service.Files.Trash(googleFileID).Fetch();
-
-            System.Threading.Thread.Sleep(2000);
-
-            // Delete the trashed file
-            this.service.Files.Delete(FileIO.GetDocPropValue()).Fetch();
-
-            //FilesResource.DeleteRequest request = this.service.Files.Delete(googleFileID);
-            //request.Fetch();
         }
     }
 }
