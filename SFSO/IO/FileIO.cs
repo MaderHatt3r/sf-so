@@ -25,8 +25,6 @@ namespace SFSO.IO
             Directory.CreateDirectory(tmpPath);
             System.IO.File.Copy(fullFileLocation, fileCopy);
 
-            TmpUploadExists = false;
-
             return fileCopy;
         }
 
@@ -36,8 +34,6 @@ namespace SFSO.IO
             System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
             System.IO.FileStream fileStream = System.IO.File.Create(fullName);
             fileStream.Close();
-
-            TmpUploadExists = true;
 
             return fullName;
         }
