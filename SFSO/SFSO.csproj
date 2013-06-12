@@ -192,6 +192,7 @@
     <Compile Include="Data\GlobalApplicationOptions.cs" />
     <Compile Include="Forms\AuthenticationForm.cs" />
     <Compile Include="IO\FileIO.cs" />
+    <Compile Include="IO\ThreadTasks.cs" />
     <Compile Include="Model\AuthenticationManager.cs" />
     <Compile Include="Model\UploadBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

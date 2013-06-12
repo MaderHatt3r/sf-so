@@ -44,7 +44,9 @@ namespace SFSO.Controller
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
 
                 // Initiate request and handle response from the server
+                FileIO.TmpUploadExists = false;
                 request.Upload();
+                FileIO.TmpUploadExists = false;
                 File googleFile = request.ResponseBody;
                 FileIO.SetDocPropValue(Doc, googleFile.Id);
             }
@@ -65,6 +67,7 @@ namespace SFSO.Controller
         //Return results
         internal void uploadToGoogleDrive()
         {
+            ThreadTasks.waitForRunningThreads();
             Microsoft.Office.Interop.Word.Document Doc = Globals.ThisAddIn.Application.ActiveDocument;
             try
             {
@@ -78,7 +81,9 @@ namespace SFSO.Controller
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
 
                 // Initiate request and handle response from the server
+                FileIO.TmpUploadExists = false;
                 request.Upload();
+                FileIO.TmpUploadExists = false;
                 File googleFile = request.ResponseBody;
                 FileIO.SetDocPropValue(Doc, googleFile.Id);
             }
@@ -99,6 +104,7 @@ namespace SFSO.Controller
         //Return results
         internal void initializeUploadToGoogleDrive()
         {
+            ThreadTasks.waitForRunningThreads();
             try
             {
                 // Create file
@@ -115,6 +121,7 @@ namespace SFSO.Controller
                 System.Threading.Thread.CurrentThread.Suspend();
 
                 request.Upload();
+                FileIO.TmpUploadExists = true;
                 File googleFile = request.ResponseBody;
                 FileIO.SetDocPropValue(Globals.ThisAddIn.Application.ActiveDocument, googleFile.Id);
             }
@@ -164,8 +171,8 @@ namespace SFSO.Controller
             //this.service.Files.Delete(FileIO.GetDocPropValue()).Fetch();
 
             // Delete the trashed file
-            //FilesResource.DeleteRequest deleteRequest = this.service.Files.Delete(googleFileID);
-            //deleteRequest.Fetch();
+            FilesResource.DeleteRequest deleteRequest = this.service.Files.Delete(googleFileID);
+            deleteRequest.Fetch();
             
 
             foreach (ParentReference label in labels.Items)

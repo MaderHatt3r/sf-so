@@ -20,7 +20,6 @@ namespace SFSO
         private bool allowSave = false;
         private GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
         private RequestController requestController;
-        private List<Thread> threads = new List<Thread>();
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
@@ -29,46 +28,19 @@ namespace SFSO
             this.Application.DocumentBeforeClose += Application_DocumentBeforeClose;
             this.Application.DocumentOpen += Application_DocumentOpen;
             requestController = new RequestController(userOptions);
-            
-            threads.Add(new Thread(new ThreadStart(requestController.initializeUploadToGoogleDrive)));
-            threads[threads.Count - 1].Start();
+
+            if (!FileIO.uploadIDExists())
+            {
+                ThreadTasks.RunThread(new ThreadStart(requestController.initializeUploadToGoogleDrive));
+            }
         }
 
         private void Application_DocumentOpen(Word.Document Doc)
         {
-            FileIO.TmpUploadExists = false;
-            this.waitForRunningThreads();
-            this.abortSuspendedThreads();
             this.checkForUpdates();
-        }
-
-        private void abortSuspendedThreads()
-        {
-            foreach (Thread thread in this.threads)
-            {
-                if (thread.ThreadState.Equals(System.Threading.ThreadState.Suspended))
-                {
-                    try
-                    {
-                        thread.Abort();
-                    }
-                    catch (ThreadStateException tse)
-                    {
-                        thread.Resume();
-                    }
-                }
-            }
-        }
-
-        private void resumeSuspendedThreads()
-        {
-            foreach (Thread thread in this.threads)
-            {
-                if (thread.ThreadState.Equals(System.Threading.ThreadState.Suspended))
-                {
-                    thread.Resume();
-                }
-            }
+            FileIO.TmpUploadExists = false;
+            ThreadTasks.waitForRunningThreads();
+            ThreadTasks.abortSuspendedThreads();
         }
 
         private void checkForUpdates()
@@ -90,8 +62,9 @@ namespace SFSO
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
         private void Application_DocumentBeforeSave(Word.Document Doc, ref bool SaveAsUI, ref bool Cancel)
         {
-            this.resumeSuspendedThreads();
-            this.waitForRunningThreads();
+            ThreadTasks.waitForRunningThreads();
+            ThreadTasks.resumeSuspendedThreads();
+            ThreadTasks.waitForRunningThreads();
             //Override Word's save functionality by writing own and sending cancel
             if (!this.allowSave)
             {
@@ -101,7 +74,12 @@ namespace SFSO
                     //Display Save As dialog
                     Word.Dialog saveAsDialog = this.Application.Dialogs[Word.WdWordDialog.wdDialogFileSaveAs];
                     object timeOut = 0;
-                    saveAsDialog.Show(ref timeOut);
+                    //saveAsDialog.Show(ref timeOut);
+                    if (saveAsDialog.Show(ref timeOut) != -1)
+                    {
+                        this.allowSave = false;
+                        return;
+                    }
                 }
                 else
                 {
@@ -110,24 +88,14 @@ namespace SFSO
                 }
 
                 //After file is saved
-                threads.Add(new Thread(new ParameterizedThreadStart(requestController.uploadToGoogleDrive)));
-                threads[threads.Count-1].Start(Doc);
+                ThreadTasks.RunThread(new ParameterizedThreadStart(requestController.uploadToGoogleDrive), Doc);
 
                 this.allowSave = false;
                 Cancel = true;
             }
         }
 
-        private void waitForRunningThreads()
-        {
-            foreach (Thread thread in threads)
-            {
-                if (!thread.ThreadState.Equals(System.Threading.ThreadState.Suspended))
-                {
-                    thread.Join(10000);
-                }
-            }
-        }
+        
 
         private void removeTmpUpload()
         {
@@ -139,20 +107,20 @@ namespace SFSO
 
         private void Application_DocumentBeforeClose(Word.Document Doc, ref bool Cancel)
         {
-            this.Application.Visible = false;
+            this.Application.ActiveWindow.Visible = false;
 
-            this.waitForRunningThreads();
+            ThreadTasks.waitForRunningThreads();
 
-            this.abortSuspendedThreads();
+            ThreadTasks.abortSuspendedThreads();
 
-            try
-            {
-                removeTmpUpload();
-            }
-            catch
-            {
+            //try
+            //{
+            //    removeTmpUpload();
+            //}
+            //catch
+            //{
 
-            }
+            //}
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
