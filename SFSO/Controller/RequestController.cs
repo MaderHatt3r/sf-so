@@ -19,6 +19,7 @@ namespace SFSO.Controller
     {
         DriveService service = null;
         UploadBuilder uploadBuilder;
+        private string tmpUploadID;
 
         internal RequestController(GlobalApplicationOptions userOptions)
         {
@@ -44,11 +45,12 @@ namespace SFSO.Controller
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
 
                 // Initiate request and handle response from the server
-                FileIO.TmpUploadExists = false;
+                //FileIO.TmpUploadExists = false;
                 request.Upload();
-                FileIO.TmpUploadExists = false;
+                //FileIO.TmpUploadExists = false;
                 File googleFile = request.ResponseBody;
                 FileIO.SetDocPropValue(Doc, googleFile.Id);
+                this.tmpUploadID = null;
             }
             catch (OperationCanceledException oce)
             {
@@ -67,7 +69,6 @@ namespace SFSO.Controller
         //Return results
         internal void uploadToGoogleDrive()
         {
-            ThreadTasks.waitForRunningThreads();
             Microsoft.Office.Interop.Word.Document Doc = Globals.ThisAddIn.Application.ActiveDocument;
             try
             {
@@ -81,11 +82,12 @@ namespace SFSO.Controller
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
 
                 // Initiate request and handle response from the server
-                FileIO.TmpUploadExists = false;
+                //FileIO.TmpUploadExists = false;
                 request.Upload();
-                FileIO.TmpUploadExists = false;
+                //FileIO.TmpUploadExists = false;
                 File googleFile = request.ResponseBody;
                 FileIO.SetDocPropValue(Doc, googleFile.Id);
+                this.tmpUploadID = null;
             }
             catch (OperationCanceledException oce)
             {
@@ -102,13 +104,13 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        internal void initializeUploadToGoogleDrive()
+        internal void initializeUploadToGoogleDrive(object Document)
         {
-            ThreadTasks.waitForRunningThreads();
+            Microsoft.Office.Interop.Word.Document Doc = (Microsoft.Office.Interop.Word.Document)Document;
             try
             {
                 // Create file
-                string fileName = Globals.ThisAddIn.Application.ActiveDocument.Name;
+                string fileName = "TMP";
                 string fullName = null;
 
                 // Prepare document for upload
@@ -117,13 +119,10 @@ namespace SFSO.Controller
                 // Create request
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, null, stream, fileName);
 
-                // Initiate request and handle response from the server
-                System.Threading.Thread.CurrentThread.Suspend();
-
                 request.Upload();
-                FileIO.TmpUploadExists = true;
                 File googleFile = request.ResponseBody;
-                FileIO.SetDocPropValue(Globals.ThisAddIn.Application.ActiveDocument, googleFile.Id);
+                this.tmpUploadID = googleFile.Id;
+                FileIO.SetDocPropValue(Doc, googleFile.Id);
             }
             catch (OperationCanceledException oce)
             {
@@ -138,8 +137,12 @@ namespace SFSO.Controller
 
         internal void removeTmpUpload()
         {
-            
-            string googleFileID = FileIO.GetDocPropValue();
+            ThreadTasks.WaitForRunningTasks();
+            if (String.IsNullOrEmpty(this.tmpUploadID))
+            {
+                return;
+            }
+            string googleFileID = tmpUploadID;
 
             // Remove labels to prevent dangling pointers
             //ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);

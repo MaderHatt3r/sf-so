@@ -18,9 +18,9 @@ using Google.Apis.Util;
 
 namespace SFSO.Model
 {
-    public static class AuthenticationManager
+    internal static class AuthenticationManager
     {
-        public static IAuthorizationState GetAuthorization(NativeApplicationClient arg)
+        internal static IAuthorizationState GetAuthorization(NativeApplicationClient arg)
         {
             string storage = GlobalApplicationOptions.SERVICE_PATH + GlobalApplicationOptions.SERVICE_FILE_NAME;
             string key = GlobalApplicationOptions.KEY;

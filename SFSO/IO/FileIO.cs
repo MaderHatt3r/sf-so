@@ -13,9 +13,9 @@ using System.Reflection;
 
 namespace SFSO.IO
 {
-    public class FileIO
+    internal class FileIO
     {
-        public static bool TmpUploadExists { get; set; }
+        //internal static bool TmpUploadExists { get; set; }
 
         //Copy Word doc to tmp file for upload
         private static string createTmpCopy(string fileName, string fullFileLocation)
@@ -38,21 +38,21 @@ namespace SFSO.IO
             return fullName;
         }
 
-        private static string createEmptyTmpFile(string fileName)
-        {
-            System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
-            object oFileName = GlobalApplicationOptions.TMP_PATH + fileName + ".docx";
-            object addToRecentFiles = false;
-            object isVisible = false;
-            object missing = Missing.Value;
-            Word._Document emptyDocument = Globals.ThisAddIn.Application.Documents.Add(ref missing, ref missing, ref missing, ref isVisible);
-            emptyDocument.SaveAs2(ref oFileName, ref missing, ref missing, ref missing, ref addToRecentFiles, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
-            emptyDocument.Close();
-            return oFileName + "";
-        }
+        //private static string createEmptyTmpFile(string fileName)
+        //{
+        //    System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
+        //    object oFileName = GlobalApplicationOptions.TMP_PATH + fileName + ".docx";
+        //    object addToRecentFiles = false;
+        //    object isVisible = false;
+        //    object missing = Missing.Value;
+        //    Word._Document emptyDocument = Globals.ThisAddIn.Application.Documents.Add(ref missing, ref missing, ref missing, ref isVisible);
+        //    emptyDocument.SaveAs2(ref oFileName, ref missing, ref missing, ref missing, ref addToRecentFiles, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
+        //    emptyDocument.Close();
+        //    return oFileName + "";
+        //}
 
         //Create MemoryStream for file upload
-        public static MemoryStream createMemoryStream(string fileName, string fullFileLocation)
+        internal static MemoryStream createMemoryStream(string fileName, string fullFileLocation)
         {
             string file = "";
             if (uploadIDExists())
@@ -70,7 +70,7 @@ namespace SFSO.IO
             return stream;
         }
 
-        public static void TearDown(){
+        internal static void TearDown(){
             removeLocalTmpFolder();
         }
 
@@ -82,7 +82,7 @@ namespace SFSO.IO
             }
         }
 
-        public static void SetDocPropValue(Word.Document Doc, string propertyValue)
+        internal static void SetDocPropValue(Word.Document Doc, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
@@ -116,7 +116,7 @@ namespace SFSO.IO
                                        CustomProps, oArgs);
         }
 
-        public static String GetDocPropValue()
+        internal static String GetDocPropValue()
         {
             object CustomProps = Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
@@ -144,7 +144,7 @@ namespace SFSO.IO
 
         }
 
-        public static bool uploadIDExists()
+        internal static bool uploadIDExists()
         {
             if (GetDocPropValue() == null)
             {
