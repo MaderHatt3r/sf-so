@@ -18,31 +18,31 @@ using System.Text;
 
 namespace SFSO.Data
 {
-    public class GlobalApplicationOptions
+    internal class GlobalApplicationOptions
     {
-        public const string CLIENT_ID = "641263753705.apps.googleusercontent.com";
-        public const string CLIENT_SECRET = "RHWZG1O8TtwJF0p0jl8WebYY";
-        public const string MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        public static string SERVICE_PATH = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SFSO\\Services\\";
-        public const string SERVICE_FILE_NAME = "service";
-        public const string GOOGLE_FILE_ID_PROPERTY_NAME = "GoogleFileID";
-        public static string TMP_PATH = Environment.GetEnvironmentVariable("TMP") + "\\SFSO\\";
+        internal const string CLIENT_ID = "641263753705.apps.googleusercontent.com";
+        internal const string CLIENT_SECRET = "RHWZG1O8TtwJF0p0jl8WebYY";
+        internal const string MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        internal static string SERVICE_PATH = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SFSO\\Services\\";
+        internal const string SERVICE_FILE_NAME = "service";
+        internal const string GOOGLE_FILE_ID_PROPERTY_NAME = "GoogleFileID";
+        internal static string TMP_PATH = Environment.GetEnvironmentVariable("TMP") + "\\SFSO\\";
 
         // You should use a more secure way of storing the key here as
         // .NET applications can be disassembled using a reflection tool.
-        public const string KEY = "g},zrztf11x9;98";
+        internal const string KEY = "g},zrztf11x9;98";
 
         /// <summary>
         /// Gets or sets a value indicating whether to save to a new revision in Google Drive or to replace the current head.
         /// </summary>
         /// <value><c>true</c> to save to a new revision; otherwise, <c>false</c>.</value>
-        public bool newRevision { get; set; }
-        public bool syncFileNameOnChange { get; set; }
+        internal bool newRevision { get; set; }
+        internal bool syncFileNameOnChange { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalApplicationOptions"/> class.
         /// </summary>
-        public GlobalApplicationOptions()
+        internal GlobalApplicationOptions()
         {
             this.setUserOptions();
         }

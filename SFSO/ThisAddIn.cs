@@ -26,22 +26,32 @@ namespace SFSO
             this.checkForUpdates();
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
             this.Application.DocumentBeforeClose += Application_DocumentBeforeClose;
-            this.Application.DocumentOpen += Application_DocumentOpen;
+            //this.Application.DocumentOpen += Application_DocumentOpen;
+            this.Application.DocumentChange += Application_DocumentNew;
             requestController = new RequestController(userOptions);
 
             if (!FileIO.uploadIDExists())
             {
-                ThreadTasks.RunThread(new ThreadStart(requestController.initializeUploadToGoogleDrive));
+                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.initializeUploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument)));
             }
         }
 
-        private void Application_DocumentOpen(Word.Document Doc)
+        private void Application_DocumentNew()
+        {
+            this.Application.DocumentChange += Application_DocumentChange;
+        }
+
+        private void Application_DocumentChange()
         {
             this.checkForUpdates();
-            FileIO.TmpUploadExists = false;
-            ThreadTasks.waitForRunningThreads();
-            ThreadTasks.abortSuspendedThreads();
+            ThreadTasks.WaitForRunningTasks();
         }
+
+        //private void Application_DocumentOpen(Word.Document Doc)
+        //{
+        //    this.checkForUpdates();
+        //    ThreadTasks.WaitForRunningTasks();
+        //}
 
         private void checkForUpdates()
         {
@@ -62,9 +72,7 @@ namespace SFSO
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
         private void Application_DocumentBeforeSave(Word.Document Doc, ref bool SaveAsUI, ref bool Cancel)
         {
-            ThreadTasks.waitForRunningThreads();
-            ThreadTasks.resumeSuspendedThreads();
-            ThreadTasks.waitForRunningThreads();
+            ThreadTasks.WaitForRunningTasks();
             //Override Word's save functionality by writing own and sending cancel
             if (!this.allowSave)
             {
@@ -88,39 +96,18 @@ namespace SFSO
                 }
 
                 //After file is saved
-                ThreadTasks.RunThread(new ParameterizedThreadStart(requestController.uploadToGoogleDrive), Doc);
+                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.uploadToGoogleDrive(Doc)));
 
                 this.allowSave = false;
                 Cancel = true;
             }
         }
 
-        
-
-        private void removeTmpUpload()
-        {
-            if (FileIO.TmpUploadExists)
-            {
-                requestController.removeTmpUpload();
-            }
-        }
-
         private void Application_DocumentBeforeClose(Word.Document Doc, ref bool Cancel)
         {
             this.Application.ActiveWindow.Visible = false;
-
-            ThreadTasks.waitForRunningThreads();
-
-            ThreadTasks.abortSuspendedThreads();
-
-            //try
-            //{
-            //    removeTmpUpload();
-            //}
-            //catch
-            //{
-
-            //}
+            ThreadTasks.WaitForRunningTasks();
+            requestController.removeTmpUpload();
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)

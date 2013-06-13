@@ -8,10 +8,10 @@ using System.Drawing;
 
 namespace SFSO.Forms
 {
-    public class AuthenticationForm
+    internal class AuthenticationForm
     {
         /// Modeled using code found at http://www.csharp-examples.net/inputbox/
-        public static DialogResult InputBox(string title, string promptText, ref string value)
+        internal static DialogResult InputBox(string title, string promptText, ref string value)
         {
             Form form = new Form();
             Label label = new Label();

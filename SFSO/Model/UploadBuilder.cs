@@ -21,36 +21,38 @@ using System.Reflection;
 
 namespace SFSO.Model
 {
-    public class UploadBuilder
+    internal class UploadBuilder
     {
-        GlobalApplicationOptions userOptions;
+        private GlobalApplicationOptions userOptions;
 
-        public UploadBuilder(GlobalApplicationOptions userOptions)
+        internal UploadBuilder(GlobalApplicationOptions userOptions)
         {
             this.userOptions = userOptions;
         }
 
         //Check if there is a googleFileID and create update or upload request respectively
-        public Google.Apis.Upload.ResumableUpload<File, File> buildUploadRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName)
+        internal Google.Apis.Upload.ResumableUpload<File, File> buildUploadRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName)
         {
-            File body = this.buildFileBody(service, googleFileID, fileName);
+            File body;
             Google.Apis.Upload.ResumableUpload<File, File> request;
             if (googleFileID.IsNotNullOrEmpty())
             {
-                //Create an upload request
+                body = this.buildFileBody(service, googleFileID, fileName);
+                //Create an update request
                 request = service.Files.Update(body, googleFileID, stream, GlobalApplicationOptions.MIME_TYPE);
                 ((FilesResource.UpdateMediaUpload)request).NewRevision = this.userOptions.newRevision;
                 return request;
             }
             else
             {
+                body = this.buildTMPFileBody(service, googleFileID, fileName);
                 //Create an upload request
                 request = service.Files.Insert(body, stream, GlobalApplicationOptions.MIME_TYPE);
                 return request;
             }
         }
 
-        public File buildFileBody(DriveService service, string googleFileID, string fileName)
+        private File buildFileBody(DriveService service, string googleFileID, string fileName)
         {
             File body;
             if (googleFileID.IsNullOrEmpty())
@@ -67,7 +69,15 @@ namespace SFSO.Model
             return body;
         }
 
-        public DriveService buildService()
+        private File buildTMPFileBody(DriveService service, string googleFileID, string fileName)
+        {
+            File body = buildFileBody(service, googleFileID, fileName);
+            //body.Labels = new File.LabelsData();
+            //body.Labels.Hidden = true;
+            return body;
+        }
+
+        internal DriveService buildService()
         {
             // Register the authenticator and create the service
             var provider = new NativeApplicationClient(GoogleAuthenticationServer.Description, GlobalApplicationOptions.CLIENT_ID, GlobalApplicationOptions.CLIENT_SECRET);
