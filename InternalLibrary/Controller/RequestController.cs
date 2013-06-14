@@ -10,6 +10,7 @@ using SFSO.Model;
 using SFSO.Data;
 
 using Word = Microsoft.Office.Interop.Word;
+using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
 
 namespace SFSO.Controller
@@ -29,16 +30,15 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        internal void uploadToGoogleDrive(object Document)
+        internal void uploadToGoogleDrive(dynamic Doc)
         {
-            Microsoft.Office.Interop.Word.Document Doc = (Microsoft.Office.Interop.Word.Document)Document;
             try
             {
                 // Get Google File ID
-                string googleFileID = FileIO.GetDocPropValue();
+                string googleFileID = FileIO.GetDocPropValue(Doc.CustomDocumentProperties);
 
                 // Prepare document for upload
-                System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.Name, Doc.FullName);
+                System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.CustomDocumentProperties, Doc.Name, Doc.FullName);
 
                 // Create request
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
@@ -66,46 +66,45 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        internal void uploadToGoogleDrive()
-        {
-            Microsoft.Office.Interop.Word.Document Doc = Globals.ThisAddIn.Application.ActiveDocument;
-            try
-            {
-                // Prepare document for upload
-                System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.Name, Doc.FullName);
+        //internal void uploadToGoogleDrive()
+        //{
+        //    Microsoft.Office.Interop.Word.Document Doc = Globals.ThisAddIn.Application.ActiveDocument;
+        //    try
+        //    {
+        //        // Prepare document for upload
+        //        System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.Name, Doc.FullName);
 
-                // Get Google File ID
-                string googleFileID = FileIO.GetDocPropValue();
+        //        // Get Google File ID
+        //        string googleFileID = FileIO.GetDocPropValue();
 
-                // Create request
-                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
+        //        // Create request
+        //        Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
 
-                // Initiate request and handle response from the server
-                //FileIO.TmpUploadExists = false;
-                request.Upload();
-                //FileIO.TmpUploadExists = false;
-                File googleFile = request.ResponseBody;
-                FileIO.SetDocPropValue(Doc, googleFile.Id);
-                this.tmpUploadID = null;
-            }
-            catch (OperationCanceledException oce)
-            {
-                //MessageBox.Show("Sync to Google Drive canceled by user");
-            }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
-                    e.GetType().ToString() + Environment.NewLine + e.Message);
-            }
-        }
+        //        // Initiate request and handle response from the server
+        //        //FileIO.TmpUploadExists = false;
+        //        request.Upload();
+        //        //FileIO.TmpUploadExists = false;
+        //        File googleFile = request.ResponseBody;
+        //        FileIO.SetDocPropValue(Doc, googleFile.Id);
+        //        this.tmpUploadID = null;
+        //    }
+        //    catch (OperationCanceledException oce)
+        //    {
+        //        //MessageBox.Show("Sync to Google Drive canceled by user");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
+        //            e.GetType().ToString() + Environment.NewLine + e.Message);
+        //    }
+        //}
 
         //Create request dependent objects
         //Build the request
         //Initiate the request
         //Return results
-        internal void initializeUploadToGoogleDrive(object Document)
+        internal void initializeUploadToGoogleDrive(dynamic Doc)
         {
-            Microsoft.Office.Interop.Word.Document Doc = (Microsoft.Office.Interop.Word.Document)Document;
             try
             {
                 // Create file
@@ -113,7 +112,7 @@ namespace SFSO.Controller
                 string fullName = null;
 
                 // Prepare document for upload
-                System.IO.MemoryStream stream = FileIO.createMemoryStream(fileName, fullName);
+                System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.CustomDocumentProperties, fileName, fullName);
 
                 // Create request
                 Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, null, stream, fileName);

@@ -5,10 +5,12 @@ using System.Text;
 using System.IO;
 
 using Word = Microsoft.Office.Interop.Word;
+using Excel = Microsoft.Office.Interop.Excel;
 
 using Google.Apis.Util;
 using SFSO.Data;
 using System.Reflection;
+using Microsoft.Win32;
 
 
 namespace SFSO.IO
@@ -28,9 +30,9 @@ namespace SFSO.IO
             return fileCopy;
         }
 
-        private static string createTmpFile()
+        private static string createTmpFile(string fileName)
         {
-            string fullName = GlobalApplicationOptions.TMP_PATH + Globals.ThisAddIn.Application.ActiveDocument.Name + ".docx";
+            string fullName = GlobalApplicationOptions.TMP_PATH + fileName + ".docx";
             System.IO.Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
             System.IO.FileStream fileStream = System.IO.File.Create(fullName);
             fileStream.Close();
@@ -52,16 +54,16 @@ namespace SFSO.IO
         //}
 
         //Create MemoryStream for file upload
-        internal static MemoryStream createMemoryStream(string fileName, string fullFileLocation)
+        internal static MemoryStream createMemoryStream(object CustomProps, string fileName, string fullFileLocation)
         {
             string file = "";
-            if (uploadIDExists())
+            if (uploadIDExists(CustomProps))
             {
                 file = createTmpCopy(fileName, fullFileLocation);
             }
             else
             {
-                file = createTmpFile();
+                file = createTmpFile(fileName);
             }
 
             byte[] byteArray = System.IO.File.ReadAllBytes(file);
@@ -82,7 +84,7 @@ namespace SFSO.IO
             }
         }
 
-        internal static void SetDocPropValue(Word.Document Doc, string propertyValue)
+        internal static void SetDocPropValue(dynamic Doc, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
@@ -102,7 +104,7 @@ namespace SFSO.IO
             }
         }
 
-        private static void addDocProp(Word.Document Doc, string propertyValue)
+        private static void addDocProp(dynamic Doc, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
@@ -116,9 +118,8 @@ namespace SFSO.IO
                                        CustomProps, oArgs);
         }
 
-        internal static String GetDocPropValue()
+        internal static String GetDocPropValue(object CustomProps)
         {
-            object CustomProps = Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
 
             try
@@ -144,14 +145,26 @@ namespace SFSO.IO
 
         }
 
-        internal static bool uploadIDExists()
+        internal static bool uploadIDExists(object CustomProps)
         {
-            if (GetDocPropValue() == null)
+            if (GetDocPropValue(CustomProps) == null)
             {
                 return false;
             }
 
             return true;
+        }
+
+        internal static string GetMIMEType(string fileName)
+        {
+            // get the registry classes root
+            RegistryKey classes = Registry.ClassesRoot;
+
+            // find the sub key based on the file extension
+            RegistryKey fileClass = classes.OpenSubKey(Path.GetExtension(fileName));
+            string contentType = fileClass.GetValue("Content Type").ToString();
+
+            return contentType;
         }
 
     }
