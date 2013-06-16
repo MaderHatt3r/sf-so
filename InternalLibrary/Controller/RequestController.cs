@@ -5,23 +5,23 @@ using System.Text;
 
 using Google.Apis.Drive.v2;
 using Google.Apis.Drive.v2.Data;
-using SFSO.IO;
-using SFSO.Model;
-using SFSO.Data;
+using InternalLibrary.IO;
+using InternalLibrary.Model;
+using InternalLibrary.Data;
 
 using Word = Microsoft.Office.Interop.Word;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
 
-namespace SFSO.Controller
+namespace InternalLibrary.Controller
 {
-    internal class RequestController
+    public class RequestController
     {
         DriveService service = null;
         UploadBuilder uploadBuilder;
         private string tmpUploadID;
 
-        internal RequestController(GlobalApplicationOptions userOptions)
+        public RequestController(GlobalApplicationOptions userOptions)
         {
             uploadBuilder = new UploadBuilder(userOptions);
             this.service = uploadBuilder.buildService();
@@ -30,7 +30,7 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        internal void uploadToGoogleDrive(dynamic Doc)
+        public void uploadToGoogleDrive(dynamic Doc)
         {
             try
             {
@@ -55,18 +55,18 @@ namespace SFSO.Controller
             {
                 //MessageBox.Show("Sync to Google Drive canceled by user");
             }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
-                    e.GetType().ToString() + Environment.NewLine + e.Message);
-            }
+            //catch (Exception e)
+            //{
+            //    System.Windows.Forms.MessageBox.Show("A problem occurred while uploading" + Environment.NewLine +
+            //        e.GetType().ToString() + Environment.NewLine + e.Message);
+            //}
         }
 
         //Create request dependent objects
         //Build the request
         //Initiate the request
         //Return results
-        //internal void uploadToGoogleDrive()
+        //public void uploadToGoogleDrive()
         //{
         //    Microsoft.Office.Interop.Word.Document Doc = Globals.ThisAddIn.Application.ActiveDocument;
         //    try
@@ -103,7 +103,7 @@ namespace SFSO.Controller
         //Build the request
         //Initiate the request
         //Return results
-        internal void initializeUploadToGoogleDrive(dynamic Doc)
+        public void initializeUploadToGoogleDrive(dynamic Doc)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace SFSO.Controller
             //}
         }
 
-        internal void removeTmpUpload()
+        public void removeTmpUpload()
         {
             ThreadTasks.WaitForRunningTasks();
             if (String.IsNullOrEmpty(this.tmpUploadID))

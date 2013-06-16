@@ -6,12 +6,12 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace SFSO.Forms
+namespace InternalLibrary.Forms
 {
-    internal class AuthenticationForm
+    public class AuthenticationForm
     {
         /// Modeled using code found at http://www.csharp-examples.net/inputbox/
-        internal static DialogResult InputBox(string title, string promptText, ref string value)
+        public static DialogResult InputBox(string title, string promptText, ref string value)
         {
             Form form = new Form();
             Label label = new Label();
