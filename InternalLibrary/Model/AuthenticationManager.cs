@@ -6,21 +6,21 @@ using System.Text;
 using Google.Apis.Drive.v2;
 using DotNetOpenAuth.OAuth2;
 using Google.Apis.Authentication.OAuth2.DotNetOpenAuth;
-using SFSO.Data;
+using InternalLibrary.Data;
 using System.Security.Cryptography;
 using System.Diagnostics;
-using SFSO.Forms;
+using InternalLibrary.Forms;
 using Google.Apis.Util;
 
 
 
 
 
-namespace SFSO.Model
+namespace InternalLibrary.Model
 {
-    internal static class AuthenticationManager
+    public static class AuthenticationManager
     {
-        internal static IAuthorizationState GetAuthorization(NativeApplicationClient arg)
+        public static IAuthorizationState GetAuthorization(NativeApplicationClient arg)
         {
             string storage = GlobalApplicationOptions.SERVICE_PATH + GlobalApplicationOptions.SERVICE_FILE_NAME;
             string key = GlobalApplicationOptions.KEY;

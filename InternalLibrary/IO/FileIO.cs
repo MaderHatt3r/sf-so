@@ -8,16 +8,16 @@ using Word = Microsoft.Office.Interop.Word;
 using Excel = Microsoft.Office.Interop.Excel;
 
 using Google.Apis.Util;
-using SFSO.Data;
+using InternalLibrary.Data;
 using System.Reflection;
 using Microsoft.Win32;
 
 
-namespace SFSO.IO
+namespace InternalLibrary.IO
 {
-    internal class FileIO
+    public class FileIO
     {
-        //internal static bool TmpUploadExists { get; set; }
+        //public static bool TmpUploadExists { get; set; }
 
         //Copy Word doc to tmp file for upload
         private static string createTmpCopy(string fileName, string fullFileLocation)
@@ -54,7 +54,7 @@ namespace SFSO.IO
         //}
 
         //Create MemoryStream for file upload
-        internal static MemoryStream createMemoryStream(object CustomProps, string fileName, string fullFileLocation)
+        public static MemoryStream createMemoryStream(object CustomProps, string fileName, string fullFileLocation)
         {
             string file = "";
             if (uploadIDExists(CustomProps))
@@ -72,7 +72,7 @@ namespace SFSO.IO
             return stream;
         }
 
-        internal static void TearDown(){
+        public static void TearDown(){
             removeLocalTmpFolder();
         }
 
@@ -84,7 +84,7 @@ namespace SFSO.IO
             }
         }
 
-        internal static void SetDocPropValue(dynamic Doc, string propertyValue)
+        public static void SetDocPropValue(dynamic Doc, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
@@ -118,7 +118,7 @@ namespace SFSO.IO
                                        CustomProps, oArgs);
         }
 
-        internal static String GetDocPropValue(object CustomProps)
+        public static String GetDocPropValue(object CustomProps)
         {
             Type typeDocCustomProps = CustomProps.GetType();
 
@@ -145,7 +145,7 @@ namespace SFSO.IO
 
         }
 
-        internal static bool uploadIDExists(object CustomProps)
+        public static bool uploadIDExists(object CustomProps)
         {
             if (GetDocPropValue(CustomProps) == null)
             {
@@ -155,16 +155,23 @@ namespace SFSO.IO
             return true;
         }
 
-        internal static string GetMIMEType(string fileName)
+        public static string GetMIMEType(string fileName)
         {
-            // get the registry classes root
-            RegistryKey classes = Registry.ClassesRoot;
+            try
+            {
+                // get the registry classes root
+                RegistryKey classes = Registry.ClassesRoot;
 
-            // find the sub key based on the file extension
-            RegistryKey fileClass = classes.OpenSubKey(Path.GetExtension(fileName));
-            string contentType = fileClass.GetValue("Content Type").ToString();
+                // find the sub key based on the file extension
+                RegistryKey fileClass = classes.OpenSubKey(Path.GetExtension(fileName));
+                string contentType = fileClass.GetValue("Content Type").ToString();
 
-            return contentType;
+                return contentType;
+            }
+            catch (NullReferenceException nre)
+            {
+                return "text/plain";
+            }
         }
 
     }

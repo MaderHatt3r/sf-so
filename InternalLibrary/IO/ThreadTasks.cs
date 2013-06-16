@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFSO.IO
+namespace InternalLibrary.IO
 {
-    internal static class ThreadTasks
+    public static class ThreadTasks
     {
         private static List<Thread> threads = new List<Thread>();
         private static List<Task> tasks = new List<Task>();
@@ -17,7 +17,7 @@ namespace SFSO.IO
         /// Runs the thread.
         /// </summary>
         /// <param name="threadStart">The thread start.</param>
-        //internal static void RunThread(ThreadStart threadStart)
+        //public static void RunThread(ThreadStart threadStart)
         //{
         //    threads.Add(new Thread(threadStart));
         //    threads[threads.Count - 1].Start();
@@ -28,13 +28,13 @@ namespace SFSO.IO
         /// </summary>
         /// <param name="paramThreadStart">The param thread start.</param>
         /// <param name="param">The param.</param>
-        //internal static void RunThread(ParameterizedThreadStart paramThreadStart, object param)
+        //public static void RunThread(ParameterizedThreadStart paramThreadStart, object param)
         //{
         //    threads.Add(new Thread(paramThreadStart));
         //    threads[threads.Count - 1].Start(param);
         //}
 
-        internal static void RunThread(Task newTask)
+        public static void RunThread(Task newTask)
         {
             lock (taskLock)
             {
@@ -53,7 +53,7 @@ namespace SFSO.IO
             newTask.Start();
         }
 
-        internal static void WaitForRunningTasks()
+        public static void WaitForRunningTasks()
         {
             lock (taskLock)
             {
@@ -69,7 +69,7 @@ namespace SFSO.IO
         /// </summary>
         /// <param name="paramThreadStart">The param thread start.</param>
         /// <param name="parameters">The parameters.</param>
-        //internal static void RunThread(ParameterizedThreadStart paramThreadStart, List<object>parameters)
+        //public static void RunThread(ParameterizedThreadStart paramThreadStart, List<object>parameters)
         //{
 
         //}
@@ -77,7 +77,7 @@ namespace SFSO.IO
         /// <summary>
         /// Waits for running threads.
         /// </summary>
-        //internal static void waitForRunningThreads()
+        //public static void waitForRunningThreads()
         //{
         //    foreach (Thread thread in threads)
         //    {
@@ -91,7 +91,7 @@ namespace SFSO.IO
         /// <summary>
         /// Resumes the suspended threads.
         /// </summary>
-        //internal static void resumeSuspendedThreads()
+        //public static void resumeSuspendedThreads()
         //{
         //    foreach (Thread thread in threads)
         //    {
@@ -105,7 +105,7 @@ namespace SFSO.IO
         /// <summary>
         /// Aborts the suspended threads.
         /// </summary>
-        //internal static void abortSuspendedThreads()
+        //public static void abortSuspendedThreads()
         //{
         //    foreach (Thread thread in threads)
         //    {

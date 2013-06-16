@@ -5,7 +5,7 @@ using System.Text;
 
 using Google.Apis.Drive.v2;
 using Google.Apis.Drive.v2.Data;
-using SFSO.Data;
+using InternalLibrary.Data;
 using Google.Apis.Util;
 
 //For build service
@@ -17,21 +17,21 @@ using System.Diagnostics;
 using DotNetOpenAuth.OAuth2;
 using System.Security.Cryptography;
 using System.Reflection;
-using SFSO.IO;
+using InternalLibrary.IO;
 
-namespace SFSO.Model
+namespace InternalLibrary.Model
 {
-    internal class UploadBuilder
+    public class UploadBuilder
     {
         private GlobalApplicationOptions userOptions;
 
-        internal UploadBuilder(GlobalApplicationOptions userOptions)
+        public UploadBuilder(GlobalApplicationOptions userOptions)
         {
             this.userOptions = userOptions;
         }
 
         //Check if there is a googleFileID and create update or upload request respectively
-        internal Google.Apis.Upload.ResumableUpload<File, File> buildUploadRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName)
+        public Google.Apis.Upload.ResumableUpload<File, File> buildUploadRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName)
         {
             File body;
             Google.Apis.Upload.ResumableUpload<File, File> request;
@@ -79,7 +79,7 @@ namespace SFSO.Model
             return body;
         }
 
-        internal DriveService buildService()
+        public DriveService buildService()
         {
             // Register the authenticator and create the service
             var provider = new NativeApplicationClient(GoogleAuthenticationServer.Description, GlobalApplicationOptions.CLIENT_ID, GlobalApplicationOptions.CLIENT_SECRET);

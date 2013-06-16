@@ -7,10 +7,9 @@ using Word = Microsoft.Office.Interop.Word;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Word;
 
-using SFSO.Data;
-using SFSO.Controller;
-using SFSO.IO;
-using System.Threading;
+using InternalLibrary.Data;
+using InternalLibrary.Controller;
+using InternalLibrary.IO;
 
 
 namespace SFSO
@@ -30,7 +29,7 @@ namespace SFSO
             this.Application.DocumentChange += Application_DocumentNew;
             requestController = new RequestController(userOptions);
 
-            if (!FileIO.uploadIDExists())
+            if (!FileIO.uploadIDExists(Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties))
             {
                 ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.initializeUploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument)));
             }
