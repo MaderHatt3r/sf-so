@@ -82,6 +82,7 @@ namespace SFSO
                     Word.Dialog saveAsDialog = this.Application.Dialogs[Word.WdWordDialog.wdDialogFileSaveAs];
                     object timeOut = 0;
                     //saveAsDialog.Show(ref timeOut);
+                    // If Cancel, exit
                     if (saveAsDialog.Show(ref timeOut) != -1)
                     {
                         this.allowSave = false;

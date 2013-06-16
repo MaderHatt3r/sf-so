@@ -78,10 +78,12 @@ namespace SFSO_E
                 if (SaveAsUI)
                 {
                     //Display Save As dialog
-                    var saveAsDialog = Globals.ThisAddIn.Application.get_FileDialog(Microsoft.Office.Core.MsoFileDialogType.msoFileDialogSaveAs);
+                    var saveAsDialog = this.Application.Dialogs[Excel.XlBuiltInDialog.xlDialogSaveAs];
                     object timeOut = 0;
                     //saveAsDialog.Show(ref timeOut);
-                    if (saveAsDialog.Show() != -1)
+                    // If Cancel, exit
+                    bool cancelled = !saveAsDialog.Show();
+                    if (cancelled)
                     {
                         this.allowSave = false;
                         return;
