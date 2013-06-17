@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : InternalLibrary
+// Author           : CTDragon
+// Created          : 06-13-2013
+//
+// Last Modified By : CTDragon
+// Last Modified On : 06-13-2013
+// ***********************************************************************
+// <copyright file="UploadBuilder.cs" company="">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,16 +34,34 @@ using InternalLibrary.IO;
 
 namespace InternalLibrary.Model
 {
+    /// <summary>
+    /// Class UploadBuilder
+    /// </summary>
     public class UploadBuilder
     {
+        /// <summary>
+        /// The user options
+        /// </summary>
         private GlobalApplicationOptions userOptions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UploadBuilder"/> class.
+        /// </summary>
+        /// <param name="userOptions">The user options.</param>
         public UploadBuilder(GlobalApplicationOptions userOptions)
         {
             this.userOptions = userOptions;
         }
 
         //Check if there is a googleFileID and create update or upload request respectively
+        /// <summary>
+        /// Builds the upload request.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="googleFileID">The google file ID.</param>
+        /// <param name="stream">The stream.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>Google.Apis.Upload.ResumableUpload{FileFile}.</returns>
         public Google.Apis.Upload.ResumableUpload<File, File> buildUploadRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName)
         {
             File body;
@@ -54,6 +85,13 @@ namespace InternalLibrary.Model
             }
         }
 
+        /// <summary>
+        /// Builds the file body.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="googleFileID">The google file ID.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>File.</returns>
         private File buildFileBody(DriveService service, string googleFileID, string fileName)
         {
             File body;
@@ -71,6 +109,13 @@ namespace InternalLibrary.Model
             return body;
         }
 
+        /// <summary>
+        /// Builds the TMP file body.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="googleFileID">The google file ID.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>File.</returns>
         private File buildTMPFileBody(DriveService service, string googleFileID, string fileName)
         {
             File body = buildFileBody(service, googleFileID, fileName);
@@ -79,6 +124,10 @@ namespace InternalLibrary.Model
             return body;
         }
 
+        /// <summary>
+        /// Builds the service.
+        /// </summary>
+        /// <returns>DriveService.</returns>
         public DriveService buildService()
         {
             // Register the authenticator and create the service

@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : SFSO-E
+// Author           : CTDragon
+// Created          : 06-13-2013
+//
+// Last Modified By : CTDragon
+// Last Modified On : 06-16-2013
+// ***********************************************************************
+// <copyright file="ThisAddIn.cs" company="">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,12 +26,29 @@ using InternalLibrary.IO;
 
 namespace SFSO_E
 {
+    /// <summary>
+    /// Class ThisAddIn
+    /// </summary>
     public partial class ThisAddIn
     {
+        /// <summary>
+        /// The allow save
+        /// </summary>
         private bool allowSave = false;
+        /// <summary>
+        /// The user options
+        /// </summary>
         private GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
+        /// <summary>
+        /// The request controller
+        /// </summary>
         private RequestController requestController;
 
+        /// <summary>
+        /// Handles the Startup event of the ThisAddIn control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             this.checkForUpdates();
@@ -34,11 +64,19 @@ namespace SFSO_E
             }
         }
 
+        /// <summary>
+        /// Application_s the document new.
+        /// </summary>
+        /// <param name="Wb">The wb.</param>
         private void Application_DocumentNew(Excel.Workbook Wb)
         {
             this.Application.WorkbookActivate += Application_DocumentChange;
         }
 
+        /// <summary>
+        /// Application_s the document change.
+        /// </summary>
+        /// <param name="Wb">The wb.</param>
         private void Application_DocumentChange(Excel.Workbook Wb)
         {
             this.checkForUpdates();
@@ -51,6 +89,9 @@ namespace SFSO_E
         //    ThreadTasks.WaitForRunningTasks();
         //}
 
+        /// <summary>
+        /// Checks for updates.
+        /// </summary>
         private void checkForUpdates()
         {
             DateTime expirationDate = new DateTime(2013, 7, 31);
@@ -68,6 +109,12 @@ namespace SFSO_E
         }
 
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
+        /// <summary>
+        /// Application_s the document before save.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <param name="SaveAsUI">if set to <c>true</c> [save as UI].</param>
+        /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         private void Application_DocumentBeforeSave(Excel.Workbook Doc, bool SaveAsUI, ref bool Cancel)
         {
             ThreadTasks.WaitForRunningTasks();
@@ -103,13 +150,23 @@ namespace SFSO_E
             }
         }
 
+        /// <summary>
+        /// Application_s the document before close.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         private void Application_DocumentBeforeClose(Excel.Workbook Doc, ref bool Cancel)
         {
-            this.Application.ActiveWindow.Visible = false;
+            //this.Application.ActiveWindow.Visible = false;
             ThreadTasks.WaitForRunningTasks();
             requestController.removeTmpUpload();
         }
 
+        /// <summary>
+        /// Handles the Shutdown event of the ThisAddIn control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
             FileIO.TearDown();

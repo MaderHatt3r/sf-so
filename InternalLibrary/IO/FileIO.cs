@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : InternalLibrary
+// Author           : CTDragon
+// Created          : 06-13-2013
+//
+// Last Modified By : CTDragon
+// Last Modified On : 06-13-2013
+// ***********************************************************************
+// <copyright file="FileIO.cs" company="">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,11 +28,20 @@ using Microsoft.Win32;
 
 namespace InternalLibrary.IO
 {
+    /// <summary>
+    /// Class FileIO
+    /// </summary>
     public class FileIO
     {
         //public static bool TmpUploadExists { get; set; }
 
         //Copy Word doc to tmp file for upload
+        /// <summary>
+        /// Creates the TMP copy.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullFileLocation">The full file location.</param>
+        /// <returns>System.String.</returns>
         private static string createTmpCopy(string fileName, string fullFileLocation)
         {
             string tmpPath = GlobalApplicationOptions.TMP_PATH;
@@ -30,6 +52,11 @@ namespace InternalLibrary.IO
             return fileCopy;
         }
 
+        /// <summary>
+        /// Creates the TMP file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>System.String.</returns>
         private static string createTmpFile(string fileName)
         {
             string fullName = GlobalApplicationOptions.TMP_PATH + fileName + ".docx";
@@ -54,6 +81,13 @@ namespace InternalLibrary.IO
         //}
 
         //Create MemoryStream for file upload
+        /// <summary>
+        /// Creates the memory stream.
+        /// </summary>
+        /// <param name="CustomProps">The custom props.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullFileLocation">The full file location.</param>
+        /// <returns>MemoryStream.</returns>
         public static MemoryStream createMemoryStream(object CustomProps, string fileName, string fullFileLocation)
         {
             string file = "";
@@ -72,10 +106,16 @@ namespace InternalLibrary.IO
             return stream;
         }
 
+        /// <summary>
+        /// Tears down.
+        /// </summary>
         public static void TearDown(){
             removeLocalTmpFolder();
         }
 
+        /// <summary>
+        /// Removes the local TMP folder.
+        /// </summary>
         private static void removeLocalTmpFolder()
         {
             if (Directory.Exists(GlobalApplicationOptions.TMP_PATH))
@@ -84,6 +124,11 @@ namespace InternalLibrary.IO
             }
         }
 
+        /// <summary>
+        /// Sets the doc prop value.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <param name="propertyValue">The property value.</param>
         public static void SetDocPropValue(dynamic Doc, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
@@ -104,6 +149,11 @@ namespace InternalLibrary.IO
             }
         }
 
+        /// <summary>
+        /// Adds the doc prop.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <param name="propertyValue">The property value.</param>
         private static void addDocProp(dynamic Doc, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
@@ -118,6 +168,11 @@ namespace InternalLibrary.IO
                                        CustomProps, oArgs);
         }
 
+        /// <summary>
+        /// Gets the doc prop value.
+        /// </summary>
+        /// <param name="CustomProps">The custom props.</param>
+        /// <returns>String.</returns>
         public static String GetDocPropValue(object CustomProps)
         {
             Type typeDocCustomProps = CustomProps.GetType();
@@ -145,6 +200,11 @@ namespace InternalLibrary.IO
 
         }
 
+        /// <summary>
+        /// Uploads the ID exists.
+        /// </summary>
+        /// <param name="CustomProps">The custom props.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
         public static bool uploadIDExists(object CustomProps)
         {
             if (GetDocPropValue(CustomProps) == null)
@@ -155,6 +215,11 @@ namespace InternalLibrary.IO
             return true;
         }
 
+        /// <summary>
+        /// Gets the type of the MIME.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>System.String.</returns>
         public static string GetMIMEType(string fileName)
         {
             try
