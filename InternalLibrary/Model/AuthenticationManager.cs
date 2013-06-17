@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : InternalLibrary
+// Author           : CTDragon
+// Created          : 06-13-2013
+//
+// Last Modified By : CTDragon
+// Last Modified On : 06-13-2013
+// ***********************************************************************
+// <copyright file="AuthenticationManager.cs" company="">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,8 +31,17 @@ using Google.Apis.Util;
 
 namespace InternalLibrary.Model
 {
+    /// <summary>
+    /// Class AuthenticationManager
+    /// </summary>
     public static class AuthenticationManager
     {
+        /// <summary>
+        /// Gets the authorization.
+        /// </summary>
+        /// <param name="arg">The arg.</param>
+        /// <returns>IAuthorizationState.</returns>
+        /// <exception cref="System.OperationCanceledException">Authorization canceled by user</exception>
         public static IAuthorizationState GetAuthorization(NativeApplicationClient arg)
         {
             string storage = GlobalApplicationOptions.SERVICE_PATH + GlobalApplicationOptions.SERVICE_FILE_NAME;
@@ -100,6 +122,9 @@ namespace InternalLibrary.Model
         /// <summary>
         /// Saves a refresh token to the specified storage name, and encrypts it using the specified key.
         /// </summary>
+        /// <param name="storageName">Name of the storage.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="state">The state.</param>
         private static void SetCachedRefreshToken(string storageName,
                                                  string key,
                                                  IAuthorizationState state)

@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : InternalLibrary
+// Author           : CTDragon
+// Created          : 06-13-2013
+//
+// Last Modified By : CTDragon
+// Last Modified On : 06-13-2013
+// ***********************************************************************
+// <copyright file="AuthenticationForm.cs" company="">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +21,18 @@ using System.Drawing;
 
 namespace InternalLibrary.Forms
 {
+    /// <summary>
+    /// Class AuthenticationForm
+    /// </summary>
     public class AuthenticationForm
     {
+        /// <summary>
+        /// Inputs the box.
+        /// </summary>
+        /// <param name="title">The title.</param>
+        /// <param name="promptText">The prompt text.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>DialogResult.</returns>
         /// Modeled using code found at http://www.csharp-examples.net/inputbox/
         public static DialogResult InputBox(string title, string promptText, ref string value)
         {

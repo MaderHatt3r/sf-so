@@ -18,19 +18,49 @@ using System.Text;
 
 namespace InternalLibrary.Data
 {
+    /// <summary>
+    /// Class GlobalApplicationOptions
+    /// </summary>
     public class GlobalApplicationOptions
     {
+        /// <summary>
+        /// The CLIEN t_ ID
+        /// </summary>
         public const string CLIENT_ID = "641263753705.apps.googleusercontent.com";
+        /// <summary>
+        /// The CLIEN t_ SECRET
+        /// </summary>
         public const string CLIENT_SECRET = "RHWZG1O8TtwJF0p0jl8WebYY";
+        /// <summary>
+        /// The WOR d_ MIM e_ TYPE
+        /// </summary>
         public const string WORD_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        /// <summary>
+        /// The EXCE l_ MIM e_ TYPE
+        /// </summary>
         public const string EXCEL_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        /// <summary>
+        /// The SERVIC e_ PATH
+        /// </summary>
         public static string SERVICE_PATH = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Documents\\SFSO\\Services\\";
+        /// <summary>
+        /// The SERVIC e_ FIL e_ NAME
+        /// </summary>
         public const string SERVICE_FILE_NAME = "service";
+        /// <summary>
+        /// The GOOGL e_ FIL e_ I d_ PROPERT y_ NAME
+        /// </summary>
         public const string GOOGLE_FILE_ID_PROPERTY_NAME = "GoogleFileID";
+        /// <summary>
+        /// The TM p_ PATH
+        /// </summary>
         public static string TMP_PATH = Environment.GetEnvironmentVariable("TMP") + "\\SFSO\\";
 
         // You should use a more secure way of storing the key here as
         // .NET applications can be disassembled using a reflection tool.
+        /// <summary>
+        /// The KEY
+        /// </summary>
         public const string KEY = "g},zrztf11x9;98";
 
         /// <summary>
@@ -38,16 +68,23 @@ namespace InternalLibrary.Data
         /// </summary>
         /// <value><c>true</c> to save to a new revision; otherwise, <c>false</c>.</value>
         public bool newRevision { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether [sync file name on change].
+        /// </summary>
+        /// <value><c>true</c> if [sync file name on change]; otherwise, <c>false</c>.</value>
         public bool syncFileNameOnChange { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GlobalApplicationOptions"/> class.
+        /// Initializes a new instance of the <see cref="GlobalApplicationOptions" /> class.
         /// </summary>
         public GlobalApplicationOptions()
         {
             this.setUserOptions();
         }
 
+        /// <summary>
+        /// Sets the user options.
+        /// </summary>
         private void setUserOptions(){
             newRevision = true;
         }
