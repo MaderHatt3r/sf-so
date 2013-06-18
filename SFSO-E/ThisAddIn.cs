@@ -33,7 +33,13 @@ namespace SFSO_E
     /// </summary>
     public partial class ThisAddIn
     {
+        /// <summary>
+        /// The handlers
+        /// </summary>
         private Handlers handlers;
+        /// <summary>
+        /// The save as dialog
+        /// </summary>
         public Excel.XlBuiltInDialog SaveAsDialog = Excel.XlBuiltInDialog.xlDialogSaveAs;
 
         /// <summary>
@@ -45,12 +51,12 @@ namespace SFSO_E
         {
             this.checkForUpdates();
 
-            this.handlers = new Handlers(Globals.ThisAddIn);
+            this.handlers = new Handlers(this.SaveAsDialog);
             this.Application.WorkbookBeforeSave += new Excel.AppEvents_WorkbookBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
             this.Application.WorkbookBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.WorkbookActivate += Application_DocumentNew;
 
-            handlers.InitializeUpload(Globals.ThisAddIn.Application.ActiveWorkbook, Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties);
+            handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveWorkbook, Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties);
         }
 
         /// <summary>
@@ -62,6 +68,16 @@ namespace SFSO_E
             this.checkForUpdates();
             this.Application.WorkbookActivate -= Application_DocumentNew;
             this.Application.WorkbookActivate += this.handlers.Application_DocumentChange;
+        }
+
+        /// <summary>
+        /// Handles the Shutdown event of the ThisAddIn control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        public void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        {
+            this.handlers.AddIn_Shutdown();
         }
 
         /// <summary>
@@ -81,16 +97,6 @@ namespace SFSO_E
                     }
                 }
             }
-        }
-
-        // <summary>
-        /// Handles the Shutdown event of the ThisAddIn control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        public void ThisAddIn_Shutdown(object sender, System.EventArgs e)
-        {
-            this.handlers.AddIn_Shutdown();
         }
 
         #region VSTO generated code

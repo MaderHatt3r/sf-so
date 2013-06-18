@@ -96,6 +96,14 @@ namespace InternalLibrary.Controller
             }
         }
 
+        public void InitializeUpload(dynamic document, dynamic customProps)
+        {
+            if (!FileIO.uploadIDExists(customProps))
+            {
+                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => this.initializeUploadToGoogleDrive(document)));
+            }
+        }
+
         //Create request dependent objects
         //Build the request
         //Initiate the request
@@ -104,7 +112,7 @@ namespace InternalLibrary.Controller
         /// Initializes the upload to google drive.
         /// </summary>
         /// <param name="Doc">The doc.</param>
-        public void initializeUploadToGoogleDrive(dynamic Doc)
+        private void initializeUploadToGoogleDrive(dynamic Doc)
         {
             try
             {
