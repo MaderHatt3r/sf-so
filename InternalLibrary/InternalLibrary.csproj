@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\EventHandlers\Handlers.cs" />
     <Compile Include="Controller\RequestController.cs" />
     <Compile Include="Data\GlobalApplicationOptions.cs" />
     <Compile Include="Forms\AuthenticationForm.cs" />

@@ -44,7 +44,7 @@ namespace InternalLibrary.Controller
         /// <summary>
         /// The TMP upload ID
         /// </summary>
-        private string tmpUploadID;
+        private List<string> tmpUploadID = new List<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestController"/> class.
@@ -83,7 +83,7 @@ namespace InternalLibrary.Controller
                 //FileIO.TmpUploadExists = false;
                 File googleFile = request.ResponseBody;
                 FileIO.SetDocPropValue(Doc, googleFile.Id);
-                this.tmpUploadID = null;
+                this.tmpUploadID.Remove(googleFile.Id);
             }
             catch (OperationCanceledException oce)
             {
@@ -120,7 +120,7 @@ namespace InternalLibrary.Controller
 
                 request.Upload();
                 File googleFile = request.ResponseBody;
-                this.tmpUploadID = googleFile.Id;
+                this.tmpUploadID.Add(googleFile.Id);
                 FileIO.SetDocPropValue(Doc, googleFile.Id);
             }
             catch (OperationCanceledException oce)
@@ -140,14 +140,15 @@ namespace InternalLibrary.Controller
         public void removeTmpUpload()
         {
             ThreadTasks.WaitForRunningTasks();
-            if (String.IsNullOrEmpty(this.tmpUploadID))
+
+            foreach (string googleFileID in this.tmpUploadID)
             {
-                return;
+                ThreadTasks.RunThreadUnmanaged(new System.Threading.Tasks.Task(() => removeTmpUpload(googleFileID)));
             }
-            string googleFileID = tmpUploadID;
+        }
 
-            //System.Threading.Thread.Sleep(2000);
-
+        private void removeTmpUpload(string googleFileID)
+        {
             // Trash file
             FilesResource.TrashRequest trashRequest = this.service.Files.Trash(googleFileID);
             File trashResponse = this.service.Files.Trash(googleFileID).Fetch();
@@ -156,7 +157,7 @@ namespace InternalLibrary.Controller
             {
                 continue;
             }
-            
+
             //System.Threading.Thread.Sleep(2000);
 
 
@@ -170,12 +171,13 @@ namespace InternalLibrary.Controller
             // Delete the trashed file
             FilesResource.DeleteRequest deleteRequest = this.service.Files.Delete(googleFileID);
             deleteRequest.Fetch();
-            
+
 
             foreach (ParentReference label in labels.Items)
             {
                 this.service.Children.Delete(label.Id, googleFileID);
             }
         }
+        
     }
 }

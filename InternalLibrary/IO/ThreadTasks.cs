@@ -47,6 +47,15 @@ namespace InternalLibrary.IO
             }
         }
 
+        public static void RunThreadUnmanaged(Task newTask)
+        {
+            lock (taskLock)
+            {
+                tasks.Add(newTask);
+            }
+            newTask.Start();
+        }
+
         /// <summary>
         /// Runs the thread.
         /// </summary>
