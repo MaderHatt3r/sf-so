@@ -20,6 +20,8 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Excel;
 
+using InternalLibrary.Controller.EventHandlers;
+
 using InternalLibrary.Data;
 using InternalLibrary.Controller;
 using InternalLibrary.IO;
@@ -31,18 +33,8 @@ namespace SFSO_E
     /// </summary>
     public partial class ThisAddIn
     {
-        /// <summary>
-        /// The allow save
-        /// </summary>
-        private bool allowSave = false;
-        /// <summary>
-        /// The user options
-        /// </summary>
-        private GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
-        /// <summary>
-        /// The request controller
-        /// </summary>
-        private RequestController requestController;
+        private Handlers handlers;
+        public Excel.XlBuiltInDialog SaveAsDialog = Excel.XlBuiltInDialog.xlDialogSaveAs;
 
         /// <summary>
         /// Handles the Startup event of the ThisAddIn control.
@@ -52,16 +44,13 @@ namespace SFSO_E
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             this.checkForUpdates();
-            this.Application.WorkbookBeforeSave += new Excel.AppEvents_WorkbookBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
-            this.Application.WorkbookBeforeClose += Application_DocumentBeforeClose;
-            //this.Application.DocumentOpen += Application_DocumentOpen;
-            this.Application.WorkbookActivate += Application_DocumentNew;
-            requestController = new RequestController(userOptions);
 
-            if (!FileIO.uploadIDExists(Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties))
-            {
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.initializeUploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveWorkbook)));
-            }
+            this.handlers = new Handlers(Globals.ThisAddIn);
+            this.Application.WorkbookBeforeSave += new Excel.AppEvents_WorkbookBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
+            this.Application.WorkbookBeforeClose += handlers.Application_DocumentBeforeClose;
+            this.Application.WorkbookActivate += Application_DocumentNew;
+
+            handlers.InitializeUpload(Globals.ThisAddIn.Application.ActiveWorkbook, Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties);
         }
 
         /// <summary>
@@ -70,24 +59,10 @@ namespace SFSO_E
         /// <param name="Wb">The wb.</param>
         private void Application_DocumentNew(Excel.Workbook Wb)
         {
-            this.Application.WorkbookActivate += Application_DocumentChange;
-        }
-
-        /// <summary>
-        /// Application_s the document change.
-        /// </summary>
-        /// <param name="Wb">The wb.</param>
-        private void Application_DocumentChange(Excel.Workbook Wb)
-        {
             this.checkForUpdates();
-            ThreadTasks.WaitForRunningTasks();
+            this.Application.WorkbookActivate -= Application_DocumentNew;
+            this.Application.WorkbookActivate += this.handlers.Application_DocumentChange;
         }
-
-        //private void Application_DocumentOpen(Word.Document Doc)
-        //{
-        //    this.checkForUpdates();
-        //    ThreadTasks.WaitForRunningTasks();
-        //}
 
         /// <summary>
         /// Checks for updates.
@@ -108,68 +83,14 @@ namespace SFSO_E
             }
         }
 
-        //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
-        /// <summary>
-        /// Application_s the document before save.
-        /// </summary>
-        /// <param name="Doc">The doc.</param>
-        /// <param name="SaveAsUI">if set to <c>true</c> [save as UI].</param>
-        /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
-        private void Application_DocumentBeforeSave(Excel.Workbook Doc, bool SaveAsUI, ref bool Cancel)
-        {
-            ThreadTasks.WaitForRunningTasks();
-            //Override Word's save functionality by writing own and sending cancel
-            if (!this.allowSave)
-            {
-                this.allowSave = true;
-                if (SaveAsUI)
-                {
-                    //Display Save As dialog
-                    var saveAsDialog = this.Application.Dialogs[Excel.XlBuiltInDialog.xlDialogSaveAs];
-                    object timeOut = 0;
-                    //saveAsDialog.Show(ref timeOut);
-                    // If Cancel, exit
-                    bool cancelled = !saveAsDialog.Show();
-                    if (cancelled)
-                    {
-                        this.allowSave = false;
-                        return;
-                    }
-                }
-                else
-                {
-                    //Simple save
-                    Doc.Save();
-                }
-
-                //After file is saved
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.uploadToGoogleDrive(Doc)));
-
-                this.allowSave = false;
-                Cancel = true;
-            }
-        }
-
-        /// <summary>
-        /// Application_s the document before close.
-        /// </summary>
-        /// <param name="Doc">The doc.</param>
-        /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
-        private void Application_DocumentBeforeClose(Excel.Workbook Doc, ref bool Cancel)
-        {
-            //this.Application.ActiveWindow.Visible = false;
-            ThreadTasks.WaitForRunningTasks();
-            requestController.removeTmpUpload();
-        }
-
-        /// <summary>
+        // <summary>
         /// Handles the Shutdown event of the ThisAddIn control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        public void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
-            FileIO.TearDown();
+            this.handlers.AddIn_Shutdown();
         }
 
         #region VSTO generated code
@@ -180,8 +101,8 @@ namespace SFSO_E
         /// </summary>
         private void InternalStartup()
         {
-            this.Startup += new System.EventHandler(ThisAddIn_Startup);
-            this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
+            this.Startup += new System.EventHandler(this.ThisAddIn_Startup);
+            this.Shutdown += new System.EventHandler(this.ThisAddIn_Shutdown);
         }
         
         #endregion

@@ -55,7 +55,6 @@ namespace SFSO
             this.checkForUpdates();
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
             this.Application.DocumentBeforeClose += Application_DocumentBeforeClose;
-            //this.Application.DocumentOpen += Application_DocumentOpen;
             this.Application.DocumentChange += Application_DocumentNew;
             requestController = new RequestController(userOptions);
 
@@ -81,12 +80,6 @@ namespace SFSO
             this.checkForUpdates();
             ThreadTasks.WaitForRunningTasks();
         }
-
-        //private void Application_DocumentOpen(Word.Document Doc)
-        //{
-        //    this.checkForUpdates();
-        //    ThreadTasks.WaitForRunningTasks();
-        //}
 
         /// <summary>
         /// Checks for updates.
