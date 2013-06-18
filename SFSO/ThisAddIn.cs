@@ -60,7 +60,7 @@ namespace SFSO
 
             if (!FileIO.uploadIDExists(Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties))
             {
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.initializeUploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument)));
+                //ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.initializeUploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument)));
             }
         }
 

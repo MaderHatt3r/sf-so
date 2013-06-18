@@ -23,20 +23,29 @@ namespace InternalLibrary.Controller.EventHandlers
         /// The request controller
         /// </summary>
         private RequestController requestController;
-        private dynamic ThisAddIn;
+        /// <summary>
+        /// The save as dialog
+        /// </summary>
+        private dynamic SaveAsDialog;
 
-        public Handlers(dynamic ThisAddIn)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Handlers"/> class.
+        /// </summary>
+        /// <param name="ThisAddIn">The this add in.</param>
+        public Handlers(dynamic SaveAsDialog)
         {
             this.requestController = new RequestController(userOptions);
-            this.ThisAddIn = ThisAddIn;
+            this.SaveAsDialog = SaveAsDialog;
         }
 
-        public void InitializeUpload(dynamic document, dynamic customProps)
+        /// <summary>
+        /// Handles the Startup event of the ThisAddIn control.
+        /// </summary>
+        /// <param name="doc">The doc.</param>
+        /// <param name="customProp">The custom prop.</param>
+        public void AddIn_Startup(dynamic doc, dynamic customProp)
         {
-            if (!FileIO.uploadIDExists(customProps))
-            {
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.initializeUploadToGoogleDrive(document)));
-            }
+            this.requestController.InitializeUpload(doc, customProp);
         }
 
         /// <summary>
@@ -70,7 +79,7 @@ namespace InternalLibrary.Controller.EventHandlers
         public void Application_DocumentChange(dynamic Doc)
         {
             ThreadTasks.WaitForRunningTasks();
-            this.InitializeUpload(Doc, Doc.CustomDocumentProperties);
+            this.requestController.InitializeUpload(Doc, Doc.CustomDocumentProperties);
         }
 
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
@@ -82,7 +91,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         public void Application_DocumentBeforeSave(dynamic Doc, bool SaveAsUI, ref bool Cancel)
         {
-            this.InitializeUpload(Doc, Doc.CustomDocumentProperties);
+            this.requestController.InitializeUpload(Doc, Doc.CustomDocumentProperties);
             ThreadTasks.WaitForRunningTasks();
             //Override Word's save functionality by writing own and sending cancel
             if (!this.allowSave)
@@ -91,7 +100,7 @@ namespace InternalLibrary.Controller.EventHandlers
                 if (SaveAsUI)
                 {
                     //Display Save As dialog
-                    var saveAsDialog = Doc.Application.Dialogs[this.ThisAddIn.SaveAsDialog];
+                    var saveAsDialog = Doc.Application.Dialogs[this.SaveAsDialog];
                     object timeOut = 0;
                     //saveAsDialog.Show(ref timeOut);
                     // If Cancel, exit
