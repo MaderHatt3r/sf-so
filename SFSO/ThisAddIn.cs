@@ -20,6 +20,8 @@ using Word = Microsoft.Office.Interop.Word;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Word;
 
+using InternalLibrary.Controller.EventHandlers;
+
 using InternalLibrary.Data;
 using InternalLibrary.Controller;
 using InternalLibrary.IO;
@@ -33,17 +35,13 @@ namespace SFSO
     public partial class ThisAddIn
     {
         /// <summary>
-        /// The allow save
+        /// The handlers
         /// </summary>
-        private bool allowSave = false;
+        private Handlers handlers;
         /// <summary>
-        /// The user options
+        /// The save as dialog
         /// </summary>
-        private GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
-        /// <summary>
-        /// The request controller
-        /// </summary>
-        private RequestController requestController;
+        public Word.WdWordDialog SaveAsDialog = Word.WdWordDialog.wdDialogFileSaveAs;
 
         /// <summary>
         /// Handles the Startup event of the ThisAddIn control.
@@ -53,32 +51,43 @@ namespace SFSO
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             this.checkForUpdates();
-            this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(this.Application_DocumentBeforeSave);
-            this.Application.DocumentBeforeClose += Application_DocumentBeforeClose;
+
+            this.handlers = new Handlers(this.SaveAsDialog);
+            this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
+            this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.DocumentChange += Application_DocumentNew;
-            requestController = new RequestController(userOptions);
 
-            if (!FileIO.uploadIDExists(Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties))
-            {
-                //ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.initializeUploadToGoogleDrive(Globals.ThisAddIn.Application.ActiveDocument)));
-            }
-        }
-
-        /// <summary>
-        /// Application_s the document new.
-        /// </summary>
-        private void Application_DocumentNew()
-        {
-            this.Application.DocumentChange += Application_DocumentChange;
+            handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
         }
 
         /// <summary>
         /// Application_s the document change.
         /// </summary>
-        private void Application_DocumentChange()
+        /// <param name="Wb">The wb.</param>
+        public void Application_DocumentChange()
+        {
+            this.handlers.Application_DocumentChange(this.Application.ActiveDocument);
+        }
+
+        /// <summary>
+        /// Application_s the document new.
+        /// </summary>
+        /// <param name="Wb">The wb.</param>
+        private void Application_DocumentNew()
         {
             this.checkForUpdates();
-            ThreadTasks.WaitForRunningTasks();
+            this.Application.DocumentChange -= this.Application_DocumentNew;
+            this.Application.DocumentChange += this.Application_DocumentChange;
+        }
+
+        /// <summary>
+        /// Handles the Shutdown event of the ThisAddIn control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        public void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        {
+            this.handlers.AddIn_Shutdown();
         }
 
         /// <summary>
@@ -98,69 +107,6 @@ namespace SFSO
                     }
                 }
             }
-        }
-
-        //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
-        /// <summary>
-        /// Application_s the document before save.
-        /// </summary>
-        /// <param name="Doc">The doc.</param>
-        /// <param name="SaveAsUI">if set to <c>true</c> [save as UI].</param>
-        /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
-        private void Application_DocumentBeforeSave(Word.Document Doc, ref bool SaveAsUI, ref bool Cancel)
-        {
-            ThreadTasks.WaitForRunningTasks();
-            //Override Word's save functionality by writing own and sending cancel
-            if (!this.allowSave)
-            {
-                this.allowSave = true;
-                if (SaveAsUI)
-                {
-                    //Display Save As dialog
-                    Word.Dialog saveAsDialog = this.Application.Dialogs[Word.WdWordDialog.wdDialogFileSaveAs];
-                    object timeOut = 0;
-                    //saveAsDialog.Show(ref timeOut);
-                    // If Cancel, exit
-                    if (saveAsDialog.Show(ref timeOut) != -1)
-                    {
-                        this.allowSave = false;
-                        return;
-                    }
-                }
-                else
-                {
-                    //Simple save
-                    Doc.Save();
-                }
-
-                //After file is saved
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.uploadToGoogleDrive(Doc)));
-
-                this.allowSave = false;
-                Cancel = true;
-            }
-        }
-
-        /// <summary>
-        /// Application_s the document before close.
-        /// </summary>
-        /// <param name="Doc">The doc.</param>
-        /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
-        private void Application_DocumentBeforeClose(Word.Document Doc, ref bool Cancel)
-        {
-            //this.Application.ActiveWindow.Visible = false;
-            ThreadTasks.WaitForRunningTasks();
-            requestController.removeTmpUpload();
-        }
-
-        /// <summary>
-        /// Handles the Shutdown event of the ThisAddIn control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
-        {
-            FileIO.TearDown();
         }
 
         #region VSTO generated code

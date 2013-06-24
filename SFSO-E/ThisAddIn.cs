@@ -60,14 +60,23 @@ namespace SFSO_E
         }
 
         /// <summary>
+        /// Application_s the document change.
+        /// </summary>
+        /// <param name="Wb">The wb.</param>
+        public void Application_DocumentChange(Excel.Workbook Wb)
+        {
+            this.handlers.Application_DocumentChange(Wb);
+        }
+
+        /// <summary>
         /// Application_s the document new.
         /// </summary>
         /// <param name="Wb">The wb.</param>
         private void Application_DocumentNew(Excel.Workbook Wb)
         {
             this.checkForUpdates();
-            this.Application.WorkbookActivate -= Application_DocumentNew;
-            this.Application.WorkbookActivate += this.handlers.Application_DocumentChange;
+            this.Application.WorkbookActivate -= this.Application_DocumentNew;
+            this.Application.WorkbookActivate += this.Application_DocumentChange;
         }
 
         /// <summary>
