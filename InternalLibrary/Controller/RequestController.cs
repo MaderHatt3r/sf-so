@@ -116,6 +116,11 @@ namespace InternalLibrary.Controller
         {
             try
             {
+                if (FileIO.uploadIDExists(Doc))
+                {
+                    return;
+                }
+
                 // Create file
                 string fileName = "TMP";
                 string fullName = null;
@@ -144,6 +149,7 @@ namespace InternalLibrary.Controller
 
         /// <summary>
         /// Removes the TMP upload.
+        /// <Postcondition>Spawns threads. Should wait for threads before closing application.</Postcondition>
         /// </summary>
         public void removeTmpUpload()
         {
@@ -166,12 +172,20 @@ namespace InternalLibrary.Controller
                 continue;
             }
 
+            // Wait for the File to actually move to the trash to avoid the dangling pointer issue
+            bool? trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
+            while (!trashed.HasValue || !trashed.Value)
+            {
+                trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
+                continue;
+            }
+
             //System.Threading.Thread.Sleep(2000);
 
 
             // Remove labels to prevent dangling pointers
-            ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);
-            ParentList labels = listRequest.Fetch();
+            //ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);
+            //ParentList labels = listRequest.Fetch();
 
             // Delete the trashed file
             //this.service.Files.Delete(FileIO.GetDocPropValue()).Fetch();
@@ -181,10 +195,10 @@ namespace InternalLibrary.Controller
             deleteRequest.Fetch();
 
 
-            foreach (ParentReference label in labels.Items)
-            {
-                this.service.Children.Delete(label.Id, googleFileID);
-            }
+            //foreach (ParentReference label in labels.Items)
+            //{
+            //    this.service.Children.Delete(label.Id, googleFileID);
+            //}
         }
         
     }

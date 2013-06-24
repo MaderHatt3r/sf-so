@@ -68,8 +68,8 @@ namespace InternalLibrary.Controller.EventHandlers
         public void AddIn_Shutdown()
         {
             requestController.removeTmpUpload();
-            ThreadTasks.WaitForRunningTasks();
             FileIO.TearDown();
+            ThreadTasks.WaitForRunningTasks();
         }
 
         /// <summary>
@@ -91,8 +91,10 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         public void Application_DocumentBeforeSave(dynamic Doc, bool SaveAsUI, ref bool Cancel)
         {
-            this.requestController.InitializeUpload(Doc, Doc.CustomDocumentProperties);
+            //this.requestController.InitializeUpload(Doc, Doc.CustomDocumentProperties);
             ThreadTasks.WaitForRunningTasks();
+            this.Application_DocumentChange(Doc);
+
             //Override Word's save functionality by writing own and sending cancel
             if (!this.allowSave)
             {
@@ -107,6 +109,7 @@ namespace InternalLibrary.Controller.EventHandlers
                     bool cancelled = !saveAsDialog.Show();
                     if (cancelled)
                     {
+                        Cancel = true;
                         this.allowSave = false;
                         return;
                     }
@@ -119,10 +122,14 @@ namespace InternalLibrary.Controller.EventHandlers
 
                 //After file is saved
                 ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.uploadToGoogleDrive(Doc)));
-
                 this.allowSave = false;
                 Cancel = true;
             }
+        }
+
+        public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
+        {
+            this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
         }
     }
 }
