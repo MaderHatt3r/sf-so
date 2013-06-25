@@ -66,7 +66,14 @@ namespace SFSO
         /// <param name="Wb">The wb.</param>
         public void Application_DocumentChange()
         {
-            this.handlers.Application_DocumentChange(this.Application.ActiveDocument);
+            try
+            {
+                this.handlers.Application_DocumentChange(this.Application.ActiveDocument);
+            }
+            catch (System.Runtime.InteropServices.COMException ce)
+            {
+
+            }
         }
 
         /// <summary>

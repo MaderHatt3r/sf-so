@@ -106,7 +106,7 @@ namespace InternalLibrary.Controller.EventHandlers
                     object timeOut = 0;
                     //saveAsDialog.Show(ref timeOut);
                     // If Cancel, exit
-                    bool cancelled = !saveAsDialog.Show();
+                    bool cancelled = this.cancelled(saveAsDialog.Show());
                     if (cancelled)
                     {
                         Cancel = true;
@@ -130,6 +130,20 @@ namespace InternalLibrary.Controller.EventHandlers
         public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
         {
             this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
+        }
+
+        // saveAsDialog.Show() returns bool type for Excel, short type for Word
+        // the following is needed to handle the result returned when a user cancels a save
+        private bool cancelled(dynamic dialogResult)
+        {
+            try
+            {
+                return !dialogResult;
+            }
+            catch
+            {
+                return dialogResult != -1;
+            }
         }
     }
 }
