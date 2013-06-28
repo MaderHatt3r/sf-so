@@ -163,42 +163,51 @@ namespace InternalLibrary.Controller
 
         private void removeTmpUpload(string googleFileID)
         {
-            // Trash file
-            FilesResource.TrashRequest trashRequest = this.service.Files.Trash(googleFileID);
-            File trashResponse = this.service.Files.Trash(googleFileID).Fetch();
-
-            while (trashResponse == null)
+            try
             {
-                continue;
-            }
+                // Trash file
+                FilesResource.TrashRequest trashRequest = this.service.Files.Trash(googleFileID);
+                File trashResponse = this.service.Files.Trash(googleFileID).Fetch();
 
-            // Wait for the File to actually move to the trash to avoid the dangling pointer issue
-            bool? trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
-            while (!trashed.HasValue || !trashed.Value)
+                while (trashResponse == null)
+                {
+                    continue;
+                }
+
+                // Wait for the File to actually move to the trash to avoid the dangling pointer issue
+                bool? trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
+                while (!trashed.HasValue || !trashed.Value)
+                {
+                    trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
+                    continue;
+                }
+
+                //System.Threading.Thread.Sleep(2000);
+
+
+                // Remove labels to prevent dangling pointers
+                //ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);
+                //ParentList labels = listRequest.Fetch();
+
+                // Delete the trashed file
+                //this.service.Files.Delete(FileIO.GetDocPropValue()).Fetch();
+
+                // Delete the trashed file
+                FilesResource.DeleteRequest deleteRequest = this.service.Files.Delete(googleFileID);
+                deleteRequest.Fetch();
+
+
+                //foreach (ParentReference label in labels.Items)
+                //{
+                //    this.service.Children.Delete(label.Id, googleFileID);
+                //}
+
+            }
+            catch (Exception e)
             {
-                trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
-                continue;
+                System.Windows.Forms.MessageBox.Show("A problem initializing the upload" + Environment.NewLine +
+                    e.GetType().ToString() + Environment.NewLine + e.Message);
             }
-
-            //System.Threading.Thread.Sleep(2000);
-
-
-            // Remove labels to prevent dangling pointers
-            //ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);
-            //ParentList labels = listRequest.Fetch();
-
-            // Delete the trashed file
-            //this.service.Files.Delete(FileIO.GetDocPropValue()).Fetch();
-
-            // Delete the trashed file
-            FilesResource.DeleteRequest deleteRequest = this.service.Files.Delete(googleFileID);
-            deleteRequest.Fetch();
-
-
-            //foreach (ParentReference label in labels.Items)
-            //{
-            //    this.service.Children.Delete(label.Id, googleFileID);
-            //}
         }
         
     }
