@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Office = Microsoft.Office.Core;
+
 using InternalLibrary.IO;
 using InternalLibrary.Controller;
 using InternalLibrary.Data;
@@ -82,6 +84,8 @@ namespace InternalLibrary.Controller.EventHandlers
             this.requestController.InitializeUpload(Doc, Doc.CustomDocumentProperties);
         }
 
+        #region DocBeforeSave
+
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
         /// <summary>
         /// Application_s the document before save.
@@ -91,7 +95,6 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         public void Application_DocumentBeforeSave(dynamic Doc, bool SaveAsUI, ref bool Cancel)
         {
-            //this.requestController.InitializeUpload(Doc, Doc.CustomDocumentProperties);
             ThreadTasks.WaitForRunningTasks();
             this.Application_DocumentChange(Doc);
 
@@ -103,7 +106,7 @@ namespace InternalLibrary.Controller.EventHandlers
                 {
                     //Display Save As dialog
                     var saveAsDialog = Doc.Application.Dialogs[this.SaveAsDialog];
-                    object timeOut = 0;
+                    //object timeOut = 0;
                     //saveAsDialog.Show(ref timeOut);
                     // If Cancel, exit
                     bool cancelled = this.cancelled(saveAsDialog.Show());
@@ -143,6 +146,27 @@ namespace InternalLibrary.Controller.EventHandlers
             catch
             {
                 return dialogResult != -1;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Checks for updates.
+        /// </summary>
+        public void CheckForUpdates(Office.COMAddIns COMAddIns)
+        {
+            DateTime expirationDate = new DateTime(2013, 7, 31);
+            if (DateTime.Now.CompareTo(expirationDate) >= 0)
+            {
+                foreach (Office.COMAddIn addin in COMAddIns)
+                {
+                    if (addin.Description.ToUpper().Equals("SFSO"))
+                    {
+                        System.Windows.Forms.MessageBox.Show("This beta version of SFSO has expired. Please upgrade to the newest release by visiting http://ctdragon.com. This add-in will now uninstall itself.");
+                        addin.Connect = false;
+                    }
+                }
             }
         }
     }
