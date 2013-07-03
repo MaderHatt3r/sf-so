@@ -181,8 +181,7 @@ namespace InternalLibrary.Controller
                     trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
                     continue;
                 }
-
-                //System.Threading.Thread.Sleep(2000);
+                System.Threading.Thread.Sleep(2000);
 
 
                 // Remove labels to prevent dangling pointers
