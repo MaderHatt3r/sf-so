@@ -64,7 +64,7 @@ namespace InternalLibrary.Controller
         /// Uploads to google drive.
         /// </summary>
         /// <param name="Doc">The doc.</param>
-        public void uploadToGoogleDrive(dynamic Doc)
+        public void updateDriveFile(dynamic Doc)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace InternalLibrary.Controller
         {
             if (!FileIO.uploadIDExists(customProps))
             {
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => this.initializeUploadToGoogleDrive(document)));
+                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => this.initializeDriveFile(document)));
             }
         }
 
@@ -112,7 +112,7 @@ namespace InternalLibrary.Controller
         /// Initializes the upload to google drive.
         /// </summary>
         /// <param name="Doc">The doc.</param>
-        private void initializeUploadToGoogleDrive(dynamic Doc)
+        private void initializeDriveFile(dynamic Doc)
         {
             try
             {
