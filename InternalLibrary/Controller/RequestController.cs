@@ -69,21 +69,10 @@ namespace InternalLibrary.Controller
             try
             {
                 // Get Google File ID
-                string googleFileID = FileIO.GetDocPropValue(Doc.CustomDocumentProperties);
-
-                // Prepare document for upload
-                System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.CustomDocumentProperties, Doc.Name, Doc.FullName);
-
-                // Create request
-                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, googleFileID, stream, Doc.Name);
-
-                // Initiate request and handle response from the server
-                //FileIO.TmpUploadExists = false;
-                request.Upload();
-                //FileIO.TmpUploadExists = false;
-                File googleFile = request.ResponseBody;
-                FileIO.SetDocPropValue(Doc, googleFile.Id);
-                this.tmpUploadID.Remove(googleFile.Id);
+                string fileID = FileIO.GetDocPropValue(Doc.CustomDocumentProperties);
+                string newFileID = this.upload(Doc, Doc.Name, Doc.FullName);
+                this.tmpUploadID.Remove(fileID);
+                this.tmpUploadID.Remove(newFileID);
             }
             catch (OperationCanceledException oce)
             {
@@ -116,25 +105,12 @@ namespace InternalLibrary.Controller
         {
             try
             {
-                if (FileIO.uploadIDExists(Doc))
-                {
-                    return;
-                }
-
-                // Create file
                 string fileName = "TMP";
                 string fullName = null;
 
-                // Prepare document for upload
-                System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.CustomDocumentProperties, fileName, fullName);
+                string newFileID = upload(Doc, fileName, fullName);
 
-                // Create request
-                Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, null, stream, fileName);
-
-                request.Upload();
-                File googleFile = request.ResponseBody;
-                this.tmpUploadID.Add(googleFile.Id);
-                FileIO.SetDocPropValue(Doc, googleFile.Id);
+                this.tmpUploadID.Add(newFileID);
             }
             catch (OperationCanceledException oce)
             {
@@ -145,6 +121,22 @@ namespace InternalLibrary.Controller
                 System.Windows.Forms.MessageBox.Show("A problem initializing the upload" + Environment.NewLine +
                     e.GetType().ToString() + Environment.NewLine + e.Message);
             }
+        }
+
+        private string upload(dynamic Doc, string fileName, string fullName)
+        {
+            // Prepare document for upload
+            System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.CustomDocumentProperties, fileName, fullName);
+
+            // Create request
+            Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, null, stream, fileName);
+
+            request.Upload();
+            File googleFile = request.ResponseBody;
+            
+            FileIO.SetDocPropValue(Doc, googleFile.Id);
+
+            return googleFile.Id;
         }
 
         /// <summary>
