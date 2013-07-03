@@ -123,6 +123,13 @@ namespace InternalLibrary.Controller
             }
         }
 
+        /// <summary>
+        /// Uploads the specified doc.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullName">The full name.</param>
+        /// <returns>System.String google file id returned from the upload</returns>
         private string upload(dynamic Doc, string fileName, string fullName)
         {
             // Prepare document for upload
