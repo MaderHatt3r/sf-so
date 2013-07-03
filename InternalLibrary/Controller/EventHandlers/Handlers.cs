@@ -124,7 +124,7 @@ namespace InternalLibrary.Controller.EventHandlers
                 }
 
                 //After file is saved
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.uploadToGoogleDrive(Doc)));
+                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.updateDriveFile(Doc)));
                 this.allowSave = false;
                 Cancel = true;
             }
