@@ -58,6 +58,7 @@ namespace InternalLibrary.Controller.EventHandlers
         public void Application_DocumentBeforeClose(dynamic Doc, ref bool Cancel)
         {
             //this.Application.ActiveWindow.Visible = false;
+            GlobalApplicationOptions.ThreadTaskTimeout = new TimeSpan(0, 0, 2);
             ThreadTasks.WaitForRunningTasks();
             //requestController.removeTmpUpload();
         }
@@ -124,10 +125,16 @@ namespace InternalLibrary.Controller.EventHandlers
                 }
 
                 //After file is saved
-                ThreadTasks.RunThread(() => requestController.updateDriveFile(Doc));
+                this.Application_DocumentAfterSave(Doc);
                 this.allowSave = false;
                 Cancel = true;
             }
+        }
+
+        public void Application_DocumentAfterSave(dynamic Doc)
+        {
+            //After file is saved
+            ThreadTasks.RunThread(() => requestController.updateDriveFile(Doc));
         }
 
         public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
