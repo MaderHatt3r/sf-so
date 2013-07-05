@@ -88,10 +88,10 @@ namespace InternalLibrary.IO
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fullFileLocation">The full file location.</param>
         /// <returns>MemoryStream.</returns>
-        public static MemoryStream createMemoryStream(object CustomProps, string fileName, string fullFileLocation)
+        public static MemoryStream createMemoryStream(dynamic Doc, string fileName, string fullFileLocation)
         {
             string file = "";
-            if (uploadIDExists(CustomProps))
+            if (uploadIDExists_ThreadSafe(Doc))
             {
                 file = createTmpCopy(fileName, fullFileLocation);
             }
@@ -122,6 +122,11 @@ namespace InternalLibrary.IO
             {
                 Directory.Delete(GlobalApplicationOptions.TMP_PATH, true);
             }
+        }
+
+        public static void SetDocPropValue_ThreadSafe(dynamic Doc, string propertyValue)
+        {
+            ThreadTasks.ActionProtectOfficeObjectModel(() => FileIO.SetDocPropValue(Doc, propertyValue));
         }
 
         /// <summary>
@@ -168,13 +173,19 @@ namespace InternalLibrary.IO
                                        CustomProps, oArgs);
         }
 
+        public static String GetDocPropValue_ThreadSafe(dynamic Doc)
+        {
+            return (string)ThreadTasks.FunctionProtectOfficeObjectModel(() => FileIO.GetDocPropValue(Doc));
+        }
+
         /// <summary>
         /// Gets the doc prop value.
         /// </summary>
         /// <param name="CustomProps">The custom props.</param>
         /// <returns>String.</returns>
-        public static String GetDocPropValue(object CustomProps)
+        public static String GetDocPropValue(dynamic Doc)
         {
+            object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
 
             try
@@ -200,14 +211,19 @@ namespace InternalLibrary.IO
 
         }
 
+        public static bool uploadIDExists_ThreadSafe(dynamic Doc)
+        {
+            return (bool)ThreadTasks.FunctionProtectOfficeObjectModel(() => FileIO.uploadIDExists(Doc));
+        }
+
         /// <summary>
         /// Uploads the ID exists.
         /// </summary>
         /// <param name="CustomProps">The custom props.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
-        public static bool uploadIDExists(object CustomProps)
+        public static bool uploadIDExists(dynamic Doc)
         {
-            if (GetDocPropValue(CustomProps) == null)
+            if (GetDocPropValue(Doc) == null)
             {
                 return false;
             }

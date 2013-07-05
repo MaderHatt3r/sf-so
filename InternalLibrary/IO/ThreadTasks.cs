@@ -62,7 +62,7 @@ namespace InternalLibrary.IO
             {
                 task.Wait();
             }
-            Task newTask = new Task(() => protectOfficeObjectModel(operation));
+            Task newTask = new Task(() => operation());
             tasks.Add(newTask);
             newTask.Start();
         }
@@ -76,28 +76,33 @@ namespace InternalLibrary.IO
             newTask.Start();
         }
 
-        private static void protectOfficeObjectModel(Action operation)
+        public static void ActionProtectOfficeObjectModel(Action operation)
         {
-            bool success = false;
+            FunctionProtectOfficeObjectModel(() => { operation(); return 0; });
+        }
+
+        public static object FunctionProtectOfficeObjectModel(Func<object> operation)
+        {
+            //bool success = false;
             System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();
             TimeSpan maxTime = new TimeSpan(0, 1, 30);
 
-            while (timer.Elapsed < maxTime && !success)
+            while (timer.Elapsed < maxTime)
             {
                 try
                 {
-                    operation();
-                    success = true;
+                    return operation();
+                    //success = true;
                 }
                 catch (System.Runtime.InteropServices.COMException)
                 {
-                    success = false;
+                    //success = false;
                 }
             }
 
             try
             {
-                operation();
+                return operation();
             }
             catch (System.Runtime.InteropServices.COMException come)
             {
@@ -106,6 +111,7 @@ namespace InternalLibrary.IO
                 come.GetType().ToString() + Environment.NewLine + come.Message);
             }
 
+            return null;
         }
 
         /// <summary>
