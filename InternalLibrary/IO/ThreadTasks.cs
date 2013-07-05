@@ -38,13 +38,33 @@ namespace InternalLibrary.IO
         /// Runs the thread.
         /// </summary>
         /// <param name="newTask">The new task.</param>
-        public static void RunThread(Task newTask)
+        //public static void RunThread(Task newTask)
+        //{
+        //    lock (taskLock)
+        //    {
+        //        Task run = new Task(() => runThread(newTask));
+        //        run.Start();
+        //    }
+        //}
+
+        public static void RunThread(Action operation)
         {
             lock (taskLock)
             {
-                Task run = new Task(() => runThread(newTask));
+                Task run = new Task(() => runThread(operation));
                 run.Start();
             }
+        }
+
+        private static void runThread(Action operation)
+        {
+            foreach (Task task in tasks)
+            {
+                task.Wait();
+            }
+            Task newTask = new Task(() => protectOfficeObjectModel(operation));
+            tasks.Add(newTask);
+            newTask.Start();
         }
 
         public static void RunThreadUnmanaged(Task newTask)
@@ -56,19 +76,51 @@ namespace InternalLibrary.IO
             newTask.Start();
         }
 
+        private static void protectOfficeObjectModel(Action operation)
+        {
+            bool success = false;
+            System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();
+            TimeSpan maxTime = new TimeSpan(0, 1, 30);
+
+            while (timer.Elapsed < maxTime && !success)
+            {
+                try
+                {
+                    operation();
+                    success = true;
+                }
+                catch (System.Runtime.InteropServices.COMException)
+                {
+                    success = false;
+                }
+            }
+
+            try
+            {
+                operation();
+            }
+            catch (System.Runtime.InteropServices.COMException come)
+            {
+                System.Windows.Forms.MessageBox.Show("A problem occurred uploading the file to Google Drive" + Environment.NewLine +
+                    "If the following message indicates that the application is busy, please exit all dialogs and try saving the document again:" + Environment.NewLine + Environment.NewLine +
+                come.GetType().ToString() + Environment.NewLine + come.Message);
+            }
+
+        }
+
         /// <summary>
         /// Runs the thread.
         /// </summary>
         /// <param name="newTask">The new task.</param>
-        private static void runThread(Task newTask)
-        {
-            foreach (Task task in tasks)
-            {
-                task.Wait();
-            }
-            tasks.Add(newTask);
-            newTask.Start();
-        }
+        //private static void runThread(Task newTask)
+        //{
+        //    foreach (Task task in tasks)
+        //    {
+        //        task.Wait();
+        //    }
+        //    tasks.Add(newTask);
+        //    newTask.Start();
+        //}
 
         /// <summary>
         /// Waits for running tasks.
