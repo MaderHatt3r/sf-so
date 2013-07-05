@@ -53,6 +53,7 @@ namespace SFSO_E
             this.handlers.CheckForUpdates(this.Application.COMAddIns);
 
             this.Application.WorkbookBeforeSave += new Excel.AppEvents_WorkbookBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
+            this.Application.WorkbookAfterSave += new Excel.AppEvents_WorkbookAfterSaveEventHandler(handlers.Application_DocumentAfterSave);
             this.Application.WorkbookBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.WorkbookActivate += Application_DocumentNew;
 

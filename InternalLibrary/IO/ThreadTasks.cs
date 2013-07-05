@@ -110,6 +110,11 @@ namespace InternalLibrary.IO
                     "If the following message indicates that the application is busy, please exit all dialogs and try saving the document again:" + Environment.NewLine + Environment.NewLine +
                 come.GetType().ToString() + Environment.NewLine + come.Message);
             }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show("A problem occurred uploading the file" + Environment.NewLine +
+                    e.GetType().ToString() + Environment.NewLine + e.Message);
+            }
 
             return null;
         }
