@@ -58,7 +58,7 @@ namespace InternalLibrary.Controller.EventHandlers
         public void Application_DocumentBeforeClose(dynamic Doc, ref bool Cancel)
         {
             //this.Application.ActiveWindow.Visible = false;
-            GlobalApplicationOptions.ThreadTaskTimeout = new TimeSpan(0, 0, 2);
+            GlobalApplicationOptions.ThreadTaskTimeout = new TimeSpan(0, 0, 6);
             ThreadTasks.WaitForRunningTasks();
             //requestController.removeTmpUpload();
         }
@@ -70,6 +70,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         public void AddIn_Shutdown()
         {
+            ThreadTasks.WaitForRunningTasks();
             requestController.removeTmpUpload();
             FileIO.TearDown();
             ThreadTasks.WaitForRunningTasks();
@@ -89,7 +90,7 @@ namespace InternalLibrary.Controller.EventHandlers
 
         //Modeled with code on http://social.msdn.microsoft.com/Forums/en-US/worddev/thread/33332b5b-992a-49a4-9ec2-17739b3a1259
         /// <summary>
-        /// Application_s the document before save.
+        /// Application_s the document before save for Excel.
         /// </summary>
         /// <param name="Doc">The doc.</param>
         /// <param name="SaveAsUI">if set to <c>true</c> [save as UI].</param>
@@ -98,6 +99,26 @@ namespace InternalLibrary.Controller.EventHandlers
         {
             ThreadTasks.WaitForRunningTasks();
             this.Application_DocumentChange(Doc);
+        }
+
+        public void Application_DocumentAfterSave(dynamic Doc, bool Success)
+        {
+            if (Success)
+            {
+                this.documentAfterSave(Doc);
+            }
+        }
+
+        private void documentAfterSave(dynamic Doc)
+        {
+            //After file is saved
+            ThreadTasks.RunThread(() => requestController.updateDriveFile(Doc));
+        }
+
+        // Word's event handler
+        public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
+        {
+            this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
 
             //Override Word's save functionality by writing own and sending cancel
             if (!this.allowSave)
@@ -125,21 +146,20 @@ namespace InternalLibrary.Controller.EventHandlers
                 }
 
                 //After file is saved
-                this.Application_DocumentAfterSave(Doc);
+                if (SaveAsUI)
+                {
+                    // if(SaveAsUI) is needed in the event that the user chooses yes after
+                    // starting a document, not saving it, closing, then selecting yes to 
+                    // save the document
+                    requestController.updateDriveFile(Doc);
+                }
+                else
+                {
+                    this.documentAfterSave(Doc);
+                }
                 this.allowSave = false;
                 Cancel = true;
             }
-        }
-
-        public void Application_DocumentAfterSave(dynamic Doc)
-        {
-            //After file is saved
-            ThreadTasks.RunThread(() => requestController.updateDriveFile(Doc));
-        }
-
-        public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
-        {
-            this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
         }
 
         // saveAsDialog.Show() returns bool type for Excel, short type for Word
