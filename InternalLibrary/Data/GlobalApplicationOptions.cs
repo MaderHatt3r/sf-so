@@ -55,6 +55,7 @@ namespace InternalLibrary.Data
         /// The TM p_ PATH
         /// </summary>
         public static string TMP_PATH = Environment.GetEnvironmentVariable("TMP") + "\\SFSO\\";
+        public static TimeSpan ThreadTaskTimeout = new TimeSpan(1, 0, 0);
 
         // You should use a more secure way of storing the key here as
         // .NET applications can be disassembled using a reflection tool.

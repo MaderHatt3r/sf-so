@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using InternalLibrary.Data;
 
 namespace InternalLibrary.IO
 {
@@ -85,9 +86,8 @@ namespace InternalLibrary.IO
         {
             //bool success = false;
             System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();
-            TimeSpan maxTime = new TimeSpan(0, 1, 30);
 
-            while (timer.Elapsed < maxTime)
+            while (timer.Elapsed < GlobalApplicationOptions.ThreadTaskTimeout)
             {
                 try
                 {
