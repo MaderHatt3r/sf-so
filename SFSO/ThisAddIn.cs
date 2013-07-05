@@ -70,7 +70,7 @@ namespace SFSO
             {
                 this.handlers.Application_DocumentChange(this.Application.ActiveDocument);
             }
-            catch (System.Runtime.InteropServices.COMException ce)
+            catch (System.Runtime.InteropServices.COMException)
             {
                 // The document is closed, so you cannot access the "Active" Document because there isn't one
             }

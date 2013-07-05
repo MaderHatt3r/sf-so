@@ -66,30 +66,35 @@ namespace InternalLibrary.Controller
         /// <param name="Doc">The doc.</param>
         public void updateDriveFile(dynamic Doc)
         {
-            try
-            {
+            //try
+            //{
                 // Get Google File ID
-                string fileID = FileIO.GetDocPropValue(Doc.CustomDocumentProperties);
+                
+                //this.checkForDocumentChanges(fileID);
                 string newFileID = this.upload(Doc, Doc.Name, Doc.FullName);
-                this.tmpUploadID.Remove(fileID);
                 this.tmpUploadID.Remove(newFileID);
-            }
-            catch (OperationCanceledException oce)
-            {
-                //MessageBox.Show("Sync to Google Drive canceled by user");
-            }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show("A problem occurred uploading the file" + Environment.NewLine +
-                    e.GetType().ToString() + Environment.NewLine + e.Message);
-            }
+            //}
+            //catch (OperationCanceledException)
+            //{
+            //    //MessageBox.Show("Sync to Google Drive canceled by user");
+            //}
+            //catch (Exception e)
+            //{
+            //    System.Windows.Forms.MessageBox.Show("A problem occurred uploading the file" + Environment.NewLine +
+            //        e.GetType().ToString() + Environment.NewLine + e.Message);
+            //}
         }
 
-        public void InitializeUpload(dynamic document, dynamic customProps)
+        private void checkForDocumentChanges(string fileID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SpawnInitializeUploadThread(dynamic document, dynamic customProps)
         {
             if (!FileIO.uploadIDExists(customProps))
             {
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => this.initializeDriveFile(document)));
+                ThreadTasks.RunThread(() => this.initializeDriveFile(document));
             }
         }
 
@@ -103,24 +108,24 @@ namespace InternalLibrary.Controller
         /// <param name="Doc">The doc.</param>
         private void initializeDriveFile(dynamic Doc)
         {
-            try
-            {
+            //try
+            //{
                 string fileName = "TMP";
                 string fullName = null;
 
                 string newFileID = upload(Doc, fileName, fullName);
 
                 this.tmpUploadID.Add(newFileID);
-            }
-            catch (OperationCanceledException oce)
-            {
-                //MessageBox.Show("Sync to Google Drive canceled by user");
-            }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show("A problem initializing the upload" + Environment.NewLine +
-                    e.GetType().ToString() + Environment.NewLine + e.Message);
-            }
+            //}
+            //catch (OperationCanceledException)
+            //{
+            //    //MessageBox.Show("Sync to Google Drive canceled by user");
+            //}
+            //catch (Exception e)
+            //{
+            //    System.Windows.Forms.MessageBox.Show("A problem initializing the upload" + Environment.NewLine +
+            //        e.GetType().ToString() + Environment.NewLine + e.Message);
+            //}
         }
 
         /// <summary>
@@ -132,11 +137,14 @@ namespace InternalLibrary.Controller
         /// <returns>System.String google file id returned from the upload</returns>
         private string upload(dynamic Doc, string fileName, string fullName)
         {
+            // Get Google File ID
+            string fileID = FileIO.GetDocPropValue(Doc.CustomDocumentProperties);
+
             // Prepare document for upload
             System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.CustomDocumentProperties, fileName, fullName);
 
             // Create request
-            Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, null, stream, fileName);
+            Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, fileID, stream, fileName);
 
             request.Upload();
             File googleFile = request.ResponseBody;

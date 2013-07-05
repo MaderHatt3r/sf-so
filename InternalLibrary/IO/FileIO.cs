@@ -233,7 +233,7 @@ namespace InternalLibrary.IO
 
                 return contentType;
             }
-            catch (NullReferenceException nre)
+            catch (NullReferenceException)
             {
                 return "text/plain";
             }

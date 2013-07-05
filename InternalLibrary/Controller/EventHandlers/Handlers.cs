@@ -47,7 +47,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="customProp">The custom prop.</param>
         public void AddIn_Startup(dynamic doc, dynamic customProp)
         {
-            this.requestController.InitializeUpload(doc, customProp);
+            this.requestController.SpawnInitializeUploadThread(doc, customProp);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace InternalLibrary.Controller.EventHandlers
         public void Application_DocumentChange(dynamic Doc)
         {
             ThreadTasks.WaitForRunningTasks();
-            this.requestController.InitializeUpload(Doc, Doc.CustomDocumentProperties);
+            this.requestController.SpawnInitializeUploadThread(Doc, Doc.CustomDocumentProperties);
         }
 
         #region DocBeforeSave
@@ -124,7 +124,7 @@ namespace InternalLibrary.Controller.EventHandlers
                 }
 
                 //After file is saved
-                ThreadTasks.RunThread(new System.Threading.Tasks.Task(() => requestController.updateDriveFile(Doc)));
+                ThreadTasks.RunThread(() => requestController.updateDriveFile(Doc));
                 this.allowSave = false;
                 Cancel = true;
             }
