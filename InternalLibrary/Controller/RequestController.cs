@@ -92,7 +92,7 @@ namespace InternalLibrary.Controller
 
         public void SpawnInitializeUploadThread(dynamic document, dynamic customProps)
         {
-            if (!FileIO.uploadIDExists(customProps))
+            if (!FileIO.uploadIDExists(document))
             {
                 ThreadTasks.RunThread(() => this.initializeDriveFile(document));
             }
@@ -138,10 +138,10 @@ namespace InternalLibrary.Controller
         private string upload(dynamic Doc, string fileName, string fullName)
         {
             // Get Google File ID
-            string fileID = FileIO.GetDocPropValue(Doc.CustomDocumentProperties);
+            string fileID = FileIO.GetDocPropValue_ThreadSafe(Doc);
 
             // Prepare document for upload
-            System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc.CustomDocumentProperties, fileName, fullName);
+            System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc, fileName, fullName);
 
             // Create request
             Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, fileID, stream, fileName);
@@ -149,7 +149,7 @@ namespace InternalLibrary.Controller
             request.Upload();
             File googleFile = request.ResponseBody;
             
-            FileIO.SetDocPropValue(Doc, googleFile.Id);
+            FileIO.SetDocPropValue_ThreadSafe(Doc, googleFile.Id);
 
             return googleFile.Id;
         }
