@@ -33,8 +33,6 @@ namespace InternalLibrary.IO
     /// </summary>
     public class FileIO
     {
-        //public static bool TmpUploadExists { get; set; }
-
         //Copy Word doc to tmp file for upload
         /// <summary>
         /// Creates the TMP copy.
@@ -84,7 +82,7 @@ namespace InternalLibrary.IO
         /// <summary>
         /// Creates the memory stream.
         /// </summary>
-        /// <param name="CustomProps">The custom props.</param>
+        /// <param name="Doc">The doc.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fullFileLocation">The full file location.</param>
         /// <returns>MemoryStream.</returns>
@@ -124,6 +122,11 @@ namespace InternalLibrary.IO
             }
         }
 
+        /// <summary>
+        /// Sets the doc prop value_ thread safe.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <param name="propertyValue">The property value.</param>
         public static void SetDocPropValue_ThreadSafe(dynamic Doc, string propertyValue)
         {
             ThreadTasks.ActionProtectOfficeObjectModel(() => FileIO.SetDocPropValue(Doc, propertyValue));
@@ -173,6 +176,11 @@ namespace InternalLibrary.IO
                                        CustomProps, oArgs);
         }
 
+        /// <summary>
+        /// Gets the doc prop value_ thread safe.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <returns>String.</returns>
         public static String GetDocPropValue_ThreadSafe(dynamic Doc)
         {
             return (string)ThreadTasks.FunctionProtectOfficeObjectModel(() => FileIO.GetDocPropValue(Doc));
@@ -181,7 +189,7 @@ namespace InternalLibrary.IO
         /// <summary>
         /// Gets the doc prop value.
         /// </summary>
-        /// <param name="CustomProps">The custom props.</param>
+        /// <param name="Doc">The doc.</param>
         /// <returns>String.</returns>
         public static String GetDocPropValue(dynamic Doc)
         {
@@ -211,6 +219,11 @@ namespace InternalLibrary.IO
 
         }
 
+        /// <summary>
+        /// Uploads the ID exists_ thread safe.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
         public static bool uploadIDExists_ThreadSafe(dynamic Doc)
         {
             return (bool)ThreadTasks.FunctionProtectOfficeObjectModel(() => FileIO.uploadIDExists(Doc));
@@ -219,8 +232,8 @@ namespace InternalLibrary.IO
         /// <summary>
         /// Uploads the ID exists.
         /// </summary>
-        /// <param name="CustomProps">The custom props.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise</returns>
+        /// <param name="Doc">The doc.</param>
+        /// <returns><c>true</c> if upload id exists, <c>false</c> otherwise</returns>
         public static bool uploadIDExists(dynamic Doc)
         {
             if (GetDocPropValue(Doc) == null)

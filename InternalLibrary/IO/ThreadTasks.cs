@@ -35,19 +35,6 @@ namespace InternalLibrary.IO
         /// </summary>
         private static Object taskLock = new Object();
 
-        /// <summary>
-        /// Runs the thread.
-        /// </summary>
-        /// <param name="newTask">The new task.</param>
-        //public static void RunThread(Task newTask)
-        //{
-        //    lock (taskLock)
-        //    {
-        //        Task run = new Task(() => runThread(newTask));
-        //        run.Start();
-        //    }
-        //}
-
         public static void RunThread(Action operation)
         {
             lock (taskLock)
@@ -84,7 +71,6 @@ namespace InternalLibrary.IO
 
         public static object FunctionProtectOfficeObjectModel(Func<object> operation)
         {
-            //bool success = false;
             System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();
 
             while (timer.Elapsed < GlobalApplicationOptions.ThreadTaskTimeout)
@@ -92,11 +78,10 @@ namespace InternalLibrary.IO
                 try
                 {
                     return operation();
-                    //success = true;
                 }
                 catch (System.Runtime.InteropServices.COMException)
                 {
-                    //success = false;
+
                 }
             }
 
@@ -118,20 +103,6 @@ namespace InternalLibrary.IO
 
             return null;
         }
-
-        /// <summary>
-        /// Runs the thread.
-        /// </summary>
-        /// <param name="newTask">The new task.</param>
-        //private static void runThread(Task newTask)
-        //{
-        //    foreach (Task task in tasks)
-        //    {
-        //        task.Wait();
-        //    }
-        //    tasks.Add(newTask);
-        //    newTask.Start();
-        //}
 
         /// <summary>
         /// Waits for running tasks.
