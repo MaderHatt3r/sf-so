@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : InternalLibrary
+// Author           : CTDragon
+// Created          : 06-17-2013
+//
+// Last Modified By : CTDragon
+// Last Modified On : 07-06-2013
+// ***********************************************************************
+// <copyright file="Handlers.cs" company="">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +24,9 @@ using InternalLibrary.Data;
 
 namespace InternalLibrary.Controller.EventHandlers
 {
+    /// <summary>
+    /// Class Handlers
+    /// </summary>
     public class Handlers
     {
         /// <summary>
@@ -31,9 +47,9 @@ namespace InternalLibrary.Controller.EventHandlers
         private dynamic SaveAsDialog;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Handlers"/> class.
+        /// Initializes a new instance of the <see cref="Handlers" /> class.
         /// </summary>
-        /// <param name="ThisAddIn">The this add in.</param>
+        /// <param name="SaveAsDialog">The save as dialog.</param>
         public Handlers(dynamic SaveAsDialog)
         {
             this.requestController = new RequestController(userOptions);
@@ -60,14 +76,11 @@ namespace InternalLibrary.Controller.EventHandlers
             //this.Application.ActiveWindow.Visible = false;
             GlobalApplicationOptions.ThreadTaskTimeout = new TimeSpan(0, 0, 6);
             ThreadTasks.WaitForRunningTasks();
-            //requestController.removeTmpUpload();
         }
 
         /// <summary>
         /// Handles the Shutdown event of the ThisAddIn control.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         public void AddIn_Shutdown()
         {
             ThreadTasks.WaitForRunningTasks();
@@ -79,7 +92,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <summary>
         /// Application_s the document change.
         /// </summary>
-        /// <param name="Wb">The wb.</param>
+        /// <param name="Doc">The doc.</param>
         public void Application_DocumentChange(dynamic Doc)
         {
             ThreadTasks.WaitForRunningTasks();
@@ -101,6 +114,11 @@ namespace InternalLibrary.Controller.EventHandlers
             this.Application_DocumentChange(Doc);
         }
 
+        /// <summary>
+        /// Application_s the document after save.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <param name="Success">if set to <c>true</c> [success].</param>
         public void Application_DocumentAfterSave(dynamic Doc, bool Success)
         {
             if (Success)
@@ -109,6 +127,10 @@ namespace InternalLibrary.Controller.EventHandlers
             }
         }
 
+        /// <summary>
+        /// Documents the after save.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
         private void documentAfterSave(dynamic Doc)
         {
             //After file is saved
@@ -116,6 +138,12 @@ namespace InternalLibrary.Controller.EventHandlers
         }
 
         // Word's event handler
+        /// <summary>
+        /// Application_s the document before save.
+        /// </summary>
+        /// <param name="Doc">The doc.</param>
+        /// <param name="SaveAsUI">if set to <c>true</c> [save as UI].</param>
+        /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
         {
             this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
@@ -164,6 +192,11 @@ namespace InternalLibrary.Controller.EventHandlers
 
         // saveAsDialog.Show() returns bool type for Excel, short type for Word
         // the following is needed to handle the result returned when a user cancels a save
+        /// <summary>
+        /// Cancelleds the specified dialog result.
+        /// </summary>
+        /// <param name="dialogResult">The dialog result.</param>
+        /// <returns><c>true</c> if the save was cancelled, <c>false</c> otherwise</returns>
         private bool cancelled(dynamic dialogResult)
         {
             try
@@ -181,6 +214,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <summary>
         /// Checks for updates.
         /// </summary>
+        /// <param name="COMAddIns">The COM add ins.</param>
         public void CheckForUpdates(Office.COMAddIns COMAddIns)
         {
             DateTime expirationDate = new DateTime(2013, 7, 31);
