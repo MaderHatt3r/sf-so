@@ -56,40 +56,21 @@ namespace InternalLibrary.Controller
             this.service = uploadBuilder.buildService();
         }
 
-        //Create request dependent objects
-        //Build the request
-        //Initiate the request
-        //Return results
         /// <summary>
         /// Uploads to google drive.
         /// </summary>
         /// <param name="Doc">The doc.</param>
         public void updateDriveFile(dynamic Doc)
         {
-            //try
-            //{
-                // Get Google File ID
-                
-                //this.checkForDocumentChanges(fileID);
-                string newFileID = this.upload(Doc, Doc.Name, Doc.FullName);
-                this.tmpUploadID.Remove(newFileID);
-            //}
-            //catch (OperationCanceledException)
-            //{
-            //    //MessageBox.Show("Sync to Google Drive canceled by user");
-            //}
-            //catch (Exception e)
-            //{
-            //    System.Windows.Forms.MessageBox.Show("A problem occurred uploading the file" + Environment.NewLine +
-            //        e.GetType().ToString() + Environment.NewLine + e.Message);
-            //}
+            string newFileID = this.upload(Doc, Doc.Name, Doc.FullName);
+            this.tmpUploadID.Remove(newFileID);
         }
 
-        private void checkForDocumentChanges(string fileID)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Spawns the initialize upload thread.
+        /// </summary>
+        /// <param name="document">The document.</param>
+        /// <param name="customProps">The custom props.</param>
         public void SpawnInitializeUploadThread(dynamic document, dynamic customProps)
         {
             if (!FileIO.uploadIDExists(document))
@@ -98,34 +79,18 @@ namespace InternalLibrary.Controller
             }
         }
 
-        //Create request dependent objects
-        //Build the request
-        //Initiate the request
-        //Return results
         /// <summary>
         /// Initializes the upload to google drive.
         /// </summary>
         /// <param name="Doc">The doc.</param>
         private void initializeDriveFile(dynamic Doc)
         {
-            //try
-            //{
-                string fileName = "TMP";
-                string fullName = null;
+            string fileName = "TMP";
+            string fullName = null;
 
-                string newFileID = upload(Doc, fileName, fullName);
+            string newFileID = upload(Doc, fileName, fullName);
 
-                this.tmpUploadID.Add(newFileID);
-            //}
-            //catch (OperationCanceledException)
-            //{
-            //    //MessageBox.Show("Sync to Google Drive canceled by user");
-            //}
-            //catch (Exception e)
-            //{
-            //    System.Windows.Forms.MessageBox.Show("A problem initializing the upload" + Environment.NewLine +
-            //        e.GetType().ToString() + Environment.NewLine + e.Message);
-            //}
+            this.tmpUploadID.Add(newFileID);
         }
 
         /// <summary>
@@ -168,6 +133,10 @@ namespace InternalLibrary.Controller
             }
         }
 
+        /// <summary>
+        /// Removes the TMP upload.
+        /// </summary>
+        /// <param name="googleFileID">The google file ID.</param>
         private void removeTmpUpload(string googleFileID)
         {
             try
@@ -181,39 +150,33 @@ namespace InternalLibrary.Controller
                     continue;
                 }
 
-                // Wait for the File to actually move to the trash to avoid the dangling pointer issue
-                bool? trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
-                while (!trashed.HasValue || !trashed.Value)
-                {
-                    trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
-                    continue;
-                }
-                System.Threading.Thread.Sleep(2000);
-
-
-                // Remove labels to prevent dangling pointers
-                //ParentsResource.ListRequest listRequest = this.service.Parents.List(googleFileID);
-                //ParentList labels = listRequest.Fetch();
-
-                // Delete the trashed file
-                //this.service.Files.Delete(FileIO.GetDocPropValue()).Fetch();
+                this.waitForTrashCompletion(googleFileID);
 
                 // Delete the trashed file
                 FilesResource.DeleteRequest deleteRequest = this.service.Files.Delete(googleFileID);
                 deleteRequest.Fetch();
-
-
-                //foreach (ParentReference label in labels.Items)
-                //{
-                //    this.service.Children.Delete(label.Id, googleFileID);
-                //}
-
             }
             catch (Exception e)
             {
-                System.Windows.Forms.MessageBox.Show("A problem initializing the upload" + Environment.NewLine +
+                System.Windows.Forms.MessageBox.Show("A problem occurred removing TMP file:" + Environment.NewLine +
                     e.GetType().ToString() + Environment.NewLine + e.Message);
             }
+        }
+
+        /// <summary>
+        /// Waits for trash completion.
+        /// </summary>
+        /// <param name="googleFileID">The google file ID.</param>
+        private void waitForTrashCompletion(string googleFileID)
+        {
+            // Wait for the File to actually move to the trash to avoid the dangling pointer issue
+            bool? trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
+            while (!trashed.HasValue || !trashed.Value)
+            {
+                trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
+                continue;
+            }
+            System.Threading.Thread.Sleep(2000);
         }
         
     }
