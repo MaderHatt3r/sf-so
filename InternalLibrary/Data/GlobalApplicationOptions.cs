@@ -51,6 +51,7 @@ namespace InternalLibrary.Data
         /// The GOOGL e_ FIL e_ I d_ PROPERT y_ NAME
         /// </summary>
         public const string GOOGLE_FILE_ID_PROPERTY_NAME = "GoogleFileID";
+        public static string HEAD_REVISION_ID_PROPERTY_NAME = "HeadRevisionID";
         /// <summary>
         /// The TM p_ PATH
         /// </summary>

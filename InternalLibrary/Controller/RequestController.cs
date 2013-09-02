@@ -115,6 +115,7 @@ namespace InternalLibrary.Controller
             File googleFile = request.ResponseBody;
             
             FileIO.SetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, googleFile.Id);
+            FileIO.SetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME, googleFile.HeadRevisionId);
 
             return googleFile.Id;
         }
