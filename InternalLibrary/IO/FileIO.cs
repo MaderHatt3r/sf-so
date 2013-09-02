@@ -127,9 +127,9 @@ namespace InternalLibrary.IO
         /// </summary>
         /// <param name="Doc">The doc.</param>
         /// <param name="propertyValue">The property value.</param>
-        public static void SetDocPropValue_ThreadSafe(dynamic Doc, string propertyValue)
+        public static void SetDocPropValue_ThreadSafe(dynamic Doc, string propertyName, string propertyValue)
         {
-            ThreadTasks.ActionProtectOfficeObjectModel(() => FileIO.SetDocPropValue(Doc, propertyValue));
+            ThreadTasks.ActionProtectOfficeObjectModel(() => FileIO.SetDocPropValue(Doc, propertyName, propertyValue));
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace InternalLibrary.IO
         /// </summary>
         /// <param name="Doc">The doc.</param>
         /// <param name="propertyValue">The property value.</param>
-        public static void SetDocPropValue(dynamic Doc, string propertyValue)
+        public static void SetDocPropValue(dynamic Doc, string propertyName, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
@@ -148,7 +148,7 @@ namespace InternalLibrary.IO
                               BindingFlags.Default |
                               BindingFlags.SetProperty,
                               null, CustomProps,
-                              new object[] { GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, propertyValue });
+                              new object[] { propertyName, propertyValue });
 
             }
             catch
