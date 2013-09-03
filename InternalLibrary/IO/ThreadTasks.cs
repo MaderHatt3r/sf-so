@@ -115,6 +115,7 @@ namespace InternalLibrary.IO
                 {
                     task.Wait();
                 }
+                tasks.Clear();
             }
         }
 
