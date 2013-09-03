@@ -56,8 +56,33 @@ namespace SFSO_E
             this.Application.WorkbookAfterSave += new Excel.AppEvents_WorkbookAfterSaveEventHandler(handlers.Application_DocumentAfterSave);
             this.Application.WorkbookBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.WorkbookActivate += Application_DocumentNew;
+            this.Application.WorkbookOpen += Application_WorkbookOpen;
 
             handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveWorkbook, Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties);
+        }
+
+
+        /// <summary>
+        /// Handles the workbook open.
+        /// This is needed because the program disposes of the current wb when a document is opened
+        /// and the methods that make calls to FunctionProtectOfficeObjectModel and ActionProtect...
+        /// never stop throwing errors, and the threads calling them never complete until the timeout 
+        /// which is set for 1 hr.
+        /// This handler for Open (don't know if before or after) seems to keep the wb document
+        /// alive long enough for the work to complete.
+        /// To reproduce the bug: 
+        /// - Open then save a new document
+        /// - Close Excel
+        /// - Open excel, click File, then the name of your document
+        /// --(recent should already be selected, if not then you are not reproducing the error)
+        /// - Type anything, then click save. The program locks up.
+        /// Hint: look at the Output window in VS to see a first time exception that is thrown,
+        /// then find where that exception is being caught (FunctionProtectionOfficeObjectModel)
+        /// </summary>
+        /// <param name="Wb">The wb.</param>
+        void Application_WorkbookOpen(Excel.Workbook Wb)
+        {
+            ThreadTasks.WaitForRunningTasks();
         }
 
         /// <summary>
