@@ -144,7 +144,7 @@ namespace InternalLibrary.Controller
             {
                 // Trash file
                 FilesResource.TrashRequest trashRequest = this.service.Files.Trash(googleFileID);
-                File trashResponse = this.service.Files.Trash(googleFileID).Fetch();
+                File trashResponse = this.service.Files.Trash(googleFileID).Execute();
 
                 while (trashResponse == null)
                 {
@@ -155,7 +155,7 @@ namespace InternalLibrary.Controller
 
                 // Delete the trashed file
                 FilesResource.DeleteRequest deleteRequest = this.service.Files.Delete(googleFileID);
-                deleteRequest.Fetch();
+                deleteRequest.Execute();
             }
             catch (Exception e)
             {
@@ -171,10 +171,10 @@ namespace InternalLibrary.Controller
         private void waitForTrashCompletion(string googleFileID)
         {
             // Wait for the File to actually move to the trash to avoid the dangling pointer issue
-            bool? trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
+            bool? trashed = this.service.Files.Get(googleFileID).Execute().Labels.Trashed;
             while (!trashed.HasValue || !trashed.Value)
             {
-                trashed = this.service.Files.Get(googleFileID).Fetch().Labels.Trashed;
+                trashed = this.service.Files.Get(googleFileID).Execute().Labels.Trashed;
                 continue;
             }
             System.Threading.Thread.Sleep(100);
