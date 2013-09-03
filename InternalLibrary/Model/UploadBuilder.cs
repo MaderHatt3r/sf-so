@@ -69,7 +69,7 @@ namespace InternalLibrary.Model
 
             body = this.buildFileBody(service, googleFileID, fileName);
             string mimeType = FileIO.GetMIMEType(fileName);
-            if (googleFileID.IsNotNullOrEmpty())
+            if (!googleFileID.IsNullOrEmpty())
             {
                 
                 //Create an update request
@@ -101,7 +101,7 @@ namespace InternalLibrary.Model
             }
             else
             {
-                body = service.Files.Get(googleFileID).Fetch();
+                body = service.Files.Get(googleFileID).Execute();
             }
             body.Title = fileName;
             body.Description = "A test document";

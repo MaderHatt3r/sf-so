@@ -31,15 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetOpenAuth">
-      <HintPath>..\..\..\drive\Lib\DotNetOpenAuth.dll</HintPath>
+    <Reference Include="DotNetOpenAuth, Version=4.0.0.11165, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Google.Apis.Authentication.1.5.0-beta\lib\net40\DotNetOpenAuth.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis, Version=1.5.0.28972, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Google.Apis.1.5.0-beta\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Authentication.OAuth2">
-      <HintPath>..\..\..\drive\Lib\Google.Apis.Authentication.OAuth2.dll</HintPath>
+    <Reference Include="Google.Apis.Authentication.OAuth2, Version=1.5.0.28991, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Google.Apis.Authentication.1.5.0-beta\lib\net40\Google.Apis.Authentication.OAuth2.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Drive.v2, Version=1.5.0.95, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

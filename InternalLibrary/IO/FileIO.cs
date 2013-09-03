@@ -153,7 +153,7 @@ namespace InternalLibrary.IO
             }
             catch
             {
-                addDocProp(Doc, propertyValue);
+                addDocProp(Doc, propertyName, propertyValue);
             }
         }
 
@@ -162,12 +162,12 @@ namespace InternalLibrary.IO
         /// </summary>
         /// <param name="Doc">The doc.</param>
         /// <param name="propertyValue">The property value.</param>
-        private static void addDocProp(dynamic Doc, string propertyValue)
+        private static void addDocProp(dynamic Doc, string propertyName, string propertyValue)
         {
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
 
-            object[] oArgs = {GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME,false,
+            object[] oArgs = {propertyName,false,
                      Microsoft.Office.Core.MsoDocProperties.msoPropertyTypeString,
                      propertyValue};
 
