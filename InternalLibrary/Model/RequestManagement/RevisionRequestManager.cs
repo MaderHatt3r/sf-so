@@ -55,35 +55,6 @@ namespace InternalLibrary.Model.RequestManagement
             return null;
         }
 
-        //private static bool RevisionIsSequential(string fileID, string previousID, string nextID)
-        //{
-        //    foreach (Revision currentRevision in RetrieveRevisions(fileID))
-        //    {
-                
-        //    }
-        //    return false;
-        //}
-
-        ///// <summary>
-        ///// Retrieve a list of revisions.
-        ///// </summary>
-        ///// <param name="service">Drive API service instance.</param>
-        ///// <param name="fileId">ID of the file to retrieve revisions for.</param>
-        ///// <returns>List of revisions.</returns>
-        //private static IList<Revision> RetrieveRevisions(DriveService service, String fileId)
-        //{
-        //    try
-        //    {
-        //        RevisionList revisions = service.Revisions.List(fileId).Execute();
-        //        return revisions.Items;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine("An error occurred: " + e.Message);
-        //    }
-        //    return null;
-        //}
-
 
     }
 }

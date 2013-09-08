@@ -19,7 +19,7 @@ namespace InternalLibrary.Model.RequestManagement
         }
 
 
-        public static RequestController UploadRequestManager { get; set; }
+        public static UploadRequestManager UploadRequestManager { get; set; }
         public static RevisionRequestManager RevisionRequestManager { get; set; }
         
     }

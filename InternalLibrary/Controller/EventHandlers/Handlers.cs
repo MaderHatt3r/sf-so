@@ -40,7 +40,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <summary>
         /// The request controller
         /// </summary>
-        private RequestController requestController;
+        private UploadRequestManager requestController;
         /// <summary>
         /// The save as dialog
         /// </summary>
@@ -52,7 +52,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="SaveAsDialog">The save as dialog.</param>
         public Handlers(dynamic SaveAsDialog)
         {
-            this.requestController = new RequestController(userOptions);
+            this.requestController = new UploadRequestManager(userOptions);
             this.SaveAsDialog = SaveAsDialog;
         }
 
