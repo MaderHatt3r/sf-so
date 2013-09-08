@@ -19,14 +19,14 @@ using System.Text;
 using Google.Apis.Drive.v2;
 using Google.Apis.Drive.v2.Data;
 using InternalLibrary.IO;
-using InternalLibrary.Model;
 using InternalLibrary.Data;
 
 using Word = Microsoft.Office.Interop.Word;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
+using InternalLibrary.Model.Bulilder;
 
-namespace InternalLibrary.Controller
+namespace InternalLibrary.Model.RequestManagement
 {
     /// <summary>
     /// Class RequestController
@@ -53,7 +53,7 @@ namespace InternalLibrary.Controller
         public RequestController(GlobalApplicationOptions userOptions)
         {
             uploadBuilder = new UploadBuilder(userOptions);
-            this.service = uploadBuilder.buildService();
+            this.service = ServiceRequestManagement.Service;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace InternalLibrary.Controller
         private string upload(dynamic Doc, string fileName, string fullName)
         {
             // Get Google File ID
-            string fileID = FileIO.GetDocPropValue_ThreadSafe(Doc);
+            string fileID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
 
             // Prepare document for upload
             System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc, fileName, fullName);
@@ -115,10 +115,51 @@ namespace InternalLibrary.Controller
             File googleFile = request.ResponseBody;
             
             FileIO.SetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, googleFile.Id);
+            string previousRevision = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME);
             FileIO.SetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME, googleFile.HeadRevisionId);
+            ConflictResolution.CheckForConflicts(googleFile.Id, previousRevision, googleFile.HeadRevisionId);
 
             return googleFile.Id;
         }
+
+        ///// <summary>
+        ///// Retrieve a list of revisions.
+        ///// </summary>
+        ///// <param name="service">Drive API service instance.</param>
+        ///// <param name="fileId">ID of the file to retrieve revisions for.</param>
+        ///// <returns>List of revisions.</returns>
+        //private IList<Revision> RetrieveRevisions(String fileId)
+        //{
+        //    try
+        //    {
+        //        RevisionList revisions = this.service.Revisions.List(fileId).Execute();
+        //        return revisions.Items;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine("An error occurred: " + e.Message);
+        //    }
+        //    return null;
+        //}
+
+
+        ///// <summary>
+        ///// Determines whether [is revision sequential] [the specified revision unique identifier].
+        ///// Tested by saving the file, getting a revision id, saving the file a couple more times,
+        ///// adding a break point to this method, replacing the previousID with the old one, then hitting continue
+        ///// </summary>
+        ///// <param name="fileID">The file unique identifier.</param>
+        ///// <param name="previousID">The previous unique identifier.</param>
+        ///// <param name="nextID">The next unique identifier.</param>
+        ///// <returns><c>true</c> if [is revision sequential] [the specified file unique identifier]; otherwise, <c>false</c>.</returns>
+        //private bool IsRevisionSequential(string fileID, string previousID, string nextID)
+        //{
+        //    IList<Revision> revisions = RetrieveRevisions(fileID);
+        //    int prevIndex = revisions.IndexOf(revisions.First(r => r.Id == previousID));
+        //    int nextIndex = revisions.IndexOf(revisions.First(r => r.Id == nextID));
+
+        //    return nextIndex == (prevIndex + 1);
+        //}
 
         /// <summary>
         /// Removes the TMP upload.

@@ -19,8 +19,8 @@ using System.Text;
 using Office = Microsoft.Office.Core;
 
 using InternalLibrary.IO;
-using InternalLibrary.Controller;
 using InternalLibrary.Data;
+using InternalLibrary.Model.RequestManagement;
 
 namespace InternalLibrary.Controller.EventHandlers
 {
