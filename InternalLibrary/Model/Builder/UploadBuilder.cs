@@ -32,7 +32,7 @@ using System.Security.Cryptography;
 using System.Reflection;
 using InternalLibrary.IO;
 
-namespace InternalLibrary.Model
+namespace InternalLibrary.Model.Bulilder
 {
     /// <summary>
     /// Class UploadBuilder
@@ -124,22 +124,22 @@ namespace InternalLibrary.Model
             return body;
         }
 
-        /// <summary>
-        /// Builds the service.
-        /// </summary>
-        /// <returns>DriveService.</returns>
-        public DriveService buildService()
-        {
-            // Register the authenticator and create the service
-            var provider = new NativeApplicationClient(GoogleAuthenticationServer.Description, GlobalApplicationOptions.CLIENT_ID, GlobalApplicationOptions.CLIENT_SECRET);
-            var auth = new OAuth2Authenticator<NativeApplicationClient>(provider, AuthenticationManager.GetAuthorization);
-            var service = new DriveService(new BaseClientService.Initializer()
-            {
-                Authenticator = auth
-            });
+        ///// <summary>
+        ///// Builds the service.
+        ///// </summary>
+        ///// <returns>DriveService.</returns>
+        //public DriveService buildService()
+        //{
+        //    // Register the authenticator and create the service
+        //    var provider = new NativeApplicationClient(GoogleAuthenticationServer.Description, GlobalApplicationOptions.CLIENT_ID, GlobalApplicationOptions.CLIENT_SECRET);
+        //    var auth = new OAuth2Authenticator<NativeApplicationClient>(provider, AuthenticationManager.GetAuthorization);
+        //    var service = new DriveService(new BaseClientService.Initializer()
+        //    {
+        //        Authenticator = auth
+        //    });
 
-            return service;
-        }
+        //    return service;
+        //}
 
     }
 }

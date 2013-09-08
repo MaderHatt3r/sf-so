@@ -112,13 +112,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\EventHandlers\Handlers.cs" />
-    <Compile Include="Controller\RequestController.cs" />
+    <Compile Include="Model\RequestManagement\RequestController.cs" />
     <Compile Include="Data\GlobalApplicationOptions.cs" />
+    <Compile Include="Model\RequestManagement\ServiceRequestManagement.cs" />
     <Compile Include="Forms\AuthenticationForm.cs" />
     <Compile Include="IO\FileIO.cs" />
     <Compile Include="IO\ThreadTasks.cs" />
     <Compile Include="Model\AuthenticationManager.cs" />
-    <Compile Include="Model\UploadBuilder.cs" />
+    <Compile Include="Model\ConflictResolution.cs" />
+    <Compile Include="Model\RequestManagement\RevisionRequestManager.cs" />
+    <Compile Include="Model\Builder\ServiceBuilder.cs" />
+    <Compile Include="Model\Builder\UploadBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

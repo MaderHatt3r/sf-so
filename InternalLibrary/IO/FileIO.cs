@@ -181,9 +181,9 @@ namespace InternalLibrary.IO
         /// </summary>
         /// <param name="Doc">The doc.</param>
         /// <returns>String.</returns>
-        public static String GetDocPropValue_ThreadSafe(dynamic Doc)
+        public static String GetDocPropValue_ThreadSafe(dynamic Doc, string docPropName)
         {
-            return (string)ThreadTasks.FunctionProtectOfficeObjectModel(() => FileIO.GetDocPropValue(Doc));
+            return (string)ThreadTasks.FunctionProtectOfficeObjectModel(() => FileIO.GetDocPropValue(Doc, docPropName));
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace InternalLibrary.IO
         /// </summary>
         /// <param name="Doc">The doc.</param>
         /// <returns>String.</returns>
-        public static String GetDocPropValue(dynamic Doc)
+        public static String GetDocPropValue(dynamic Doc, string docPropName)
         {
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
@@ -202,7 +202,7 @@ namespace InternalLibrary.IO
                                            BindingFlags.Default |
                                            BindingFlags.GetProperty,
                                            null, CustomProps,
-                                           new object[] { GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME });
+                                           new object[] { docPropName });
                 Type typeDocAuthorProp = property.GetType();
                 String strValue = typeDocAuthorProp.InvokeMember("Value",
                                            BindingFlags.Default |
@@ -236,7 +236,7 @@ namespace InternalLibrary.IO
         /// <returns><c>true</c> if upload id exists, <c>false</c> otherwise</returns>
         public static bool uploadIDExists(dynamic Doc)
         {
-            if (GetDocPropValue(Doc) == null)
+            if (GetDocPropValue(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME) == null)
             {
                 return false;
             }
