@@ -31,7 +31,7 @@ namespace InternalLibrary.Model.RequestManagement
     /// <summary>
     /// Class RequestController
     /// </summary>
-    public class RequestController
+    public class UploadRequestManager
     {
         /// <summary>
         /// The service
@@ -47,10 +47,10 @@ namespace InternalLibrary.Model.RequestManagement
         private List<string> tmpUploadID = new List<string>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestController"/> class.
+        /// Initializes a new instance of the <see cref="UploadRequestManager"/> class.
         /// </summary>
         /// <param name="userOptions">The user options.</param>
-        public RequestController(GlobalApplicationOptions userOptions)
+        public UploadRequestManager(GlobalApplicationOptions userOptions)
         {
             uploadBuilder = new UploadBuilder(userOptions);
             this.service = ServiceRequestManagement.Service;
@@ -121,45 +121,6 @@ namespace InternalLibrary.Model.RequestManagement
 
             return googleFile.Id;
         }
-
-        ///// <summary>
-        ///// Retrieve a list of revisions.
-        ///// </summary>
-        ///// <param name="service">Drive API service instance.</param>
-        ///// <param name="fileId">ID of the file to retrieve revisions for.</param>
-        ///// <returns>List of revisions.</returns>
-        //private IList<Revision> RetrieveRevisions(String fileId)
-        //{
-        //    try
-        //    {
-        //        RevisionList revisions = this.service.Revisions.List(fileId).Execute();
-        //        return revisions.Items;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine("An error occurred: " + e.Message);
-        //    }
-        //    return null;
-        //}
-
-
-        ///// <summary>
-        ///// Determines whether [is revision sequential] [the specified revision unique identifier].
-        ///// Tested by saving the file, getting a revision id, saving the file a couple more times,
-        ///// adding a break point to this method, replacing the previousID with the old one, then hitting continue
-        ///// </summary>
-        ///// <param name="fileID">The file unique identifier.</param>
-        ///// <param name="previousID">The previous unique identifier.</param>
-        ///// <param name="nextID">The next unique identifier.</param>
-        ///// <returns><c>true</c> if [is revision sequential] [the specified file unique identifier]; otherwise, <c>false</c>.</returns>
-        //private bool IsRevisionSequential(string fileID, string previousID, string nextID)
-        //{
-        //    IList<Revision> revisions = RetrieveRevisions(fileID);
-        //    int prevIndex = revisions.IndexOf(revisions.First(r => r.Id == previousID));
-        //    int nextIndex = revisions.IndexOf(revisions.First(r => r.Id == nextID));
-
-        //    return nextIndex == (prevIndex + 1);
-        //}
 
         /// <summary>
         /// Removes the TMP upload.

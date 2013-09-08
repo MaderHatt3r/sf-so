@@ -124,22 +124,5 @@ namespace InternalLibrary.Model.Bulilder
             return body;
         }
 
-        ///// <summary>
-        ///// Builds the service.
-        ///// </summary>
-        ///// <returns>DriveService.</returns>
-        //public DriveService buildService()
-        //{
-        //    // Register the authenticator and create the service
-        //    var provider = new NativeApplicationClient(GoogleAuthenticationServer.Description, GlobalApplicationOptions.CLIENT_ID, GlobalApplicationOptions.CLIENT_SECRET);
-        //    var auth = new OAuth2Authenticator<NativeApplicationClient>(provider, AuthenticationManager.GetAuthorization);
-        //    var service = new DriveService(new BaseClientService.Initializer()
-        //    {
-        //        Authenticator = auth
-        //    });
-
-        //    return service;
-        //}
-
     }
 }

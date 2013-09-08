@@ -112,7 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\EventHandlers\Handlers.cs" />
-    <Compile Include="Model\RequestManagement\RequestController.cs" />
+    <Compile Include="Model\RequestManagement\UploadRequestManager.cs" />
     <Compile Include="Data\GlobalApplicationOptions.cs" />
     <Compile Include="Model\RequestManagement\ServiceRequestManagement.cs" />
     <Compile Include="Forms\AuthenticationForm.cs" />
