@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : InternalLibrary
+// Author           : CTDragon
+// Created          : 09-07-2013
+//
+// Last Modified By : CTDragon
+// Last Modified On : 09-07-2013
+// ***********************************************************************
+// <copyright file="RevisionRequestManager.cs" company="">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +21,19 @@ using InternalLibrary.Data;
 
 namespace InternalLibrary.Model.RequestManagement
 {
+    /// <summary>
+    /// Class RevisionRequestManager.
+    /// </summary>
     public class RevisionRequestManager
     {
+        /// <summary>
+        /// The service
+        /// </summary>
         private DriveService service = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RevisionRequestManager" /> class.
+        /// </summary>
         public RevisionRequestManager()
         {
             this.service = ServiceRequestManagement.Service;
@@ -38,7 +60,6 @@ namespace InternalLibrary.Model.RequestManagement
         /// <summary>
         /// Retrieve a list of revisions.
         /// </summary>
-        /// <param name="service">Drive API service instance.</param>
         /// <param name="fileId">ID of the file to retrieve revisions for.</param>
         /// <returns>List of revisions.</returns>
         private IList<Revision> RetrieveRevisions(String fileId)

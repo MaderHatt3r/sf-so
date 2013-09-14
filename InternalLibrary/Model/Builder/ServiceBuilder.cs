@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : InternalLibrary
+// Author           : CTDragon
+// Created          : 09-07-2013
+//
+// Last Modified By : CTDragon
+// Last Modified On : 09-07-2013
+// ***********************************************************************
+// <copyright file="ServiceBuilder.cs" company="">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +23,9 @@ using InternalLibrary.Data;
 
 namespace InternalLibrary.Model.Builder
 {
+    /// <summary>
+    /// Class ServiceBuilder.
+    /// </summary>
     public static class ServiceBuilder
     {
 

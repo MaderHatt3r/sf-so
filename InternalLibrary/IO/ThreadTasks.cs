@@ -35,6 +35,10 @@ namespace InternalLibrary.IO
         /// </summary>
         private static Object taskLock = new Object();
 
+        /// <summary>
+        /// Runs the thread.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
         public static void RunThread(Action operation)
         {
             lock (taskLock)
@@ -44,6 +48,10 @@ namespace InternalLibrary.IO
             }
         }
 
+        /// <summary>
+        /// Runs the thread.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
         private static void runThread(Action operation)
         {
             foreach (Task task in tasks)
@@ -55,6 +63,10 @@ namespace InternalLibrary.IO
             newTask.Start();
         }
 
+        /// <summary>
+        /// Runs the thread unmanaged.
+        /// </summary>
+        /// <param name="newTask">The new task.</param>
         public static void RunThreadUnmanaged(Task newTask)
         {
             lock (taskLock)
@@ -64,11 +76,20 @@ namespace InternalLibrary.IO
             newTask.Start();
         }
 
+        /// <summary>
+        /// Actions the protect office object model.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
         public static void ActionProtectOfficeObjectModel(Action operation)
         {
             FunctionProtectOfficeObjectModel(() => { operation(); return 0; });
         }
 
+        /// <summary>
+        /// Functions the protect office object model.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <returns>System.Object.</returns>
         public static object FunctionProtectOfficeObjectModel(Func<object> operation)
         {
             System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();
