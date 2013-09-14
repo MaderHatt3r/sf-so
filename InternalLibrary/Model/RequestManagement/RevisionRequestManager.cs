@@ -34,9 +34,9 @@ namespace InternalLibrary.Model.RequestManagement
         /// <summary>
         /// Initializes a new instance of the <see cref="RevisionRequestManager" /> class.
         /// </summary>
-        public RevisionRequestManager()
+        public RevisionRequestManager(DriveService service)
         {
-            this.service = ServiceRequestManagement.Service;
+            this.service = service;
         }
 
         /// <summary>

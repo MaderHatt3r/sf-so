@@ -50,10 +50,10 @@ namespace InternalLibrary.Model.RequestManagement
         /// Initializes a new instance of the <see cref="UploadRequestManager"/> class.
         /// </summary>
         /// <param name="userOptions">The user options.</param>
-        public UploadRequestManager(GlobalApplicationOptions userOptions)
+        public UploadRequestManager(DriveService service)
         {
-            uploadBuilder = new UploadBuilder(userOptions);
-            this.service = ServiceRequestManagement.Service;
+            uploadBuilder = new UploadBuilder();
+            this.service = service;
         }
 
         /// <summary>

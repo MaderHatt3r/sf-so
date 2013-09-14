@@ -32,26 +32,43 @@ namespace InternalLibrary.Model.RequestManagement
         private static DriveService _service = ServiceBuilder.BuildService();
 
         /// <summary>
-        /// Gets or sets the service.
+        /// The _upload request manager
         /// </summary>
-        /// <value>The service.</value>
-        public static DriveService Service
-        {
-            get { return _service; }
-            set { _service = value; }
-        }
-
-
+        private static UploadRequestManager _uploadRequestManager;
         /// <summary>
         /// Gets or sets the upload request manager.
         /// </summary>
         /// <value>The upload request manager.</value>
-        public static UploadRequestManager UploadRequestManager { get; set; }
+        public static UploadRequestManager UploadRequestManager
+        {
+            get
+            {
+                if (_uploadRequestManager == null)
+                {
+                    _uploadRequestManager = new UploadRequestManager(_service);
+                }
+                return _uploadRequestManager;
+            }
+            set { _uploadRequestManager = value; }
+        }
+
+        /// <summary>
+        /// The _revision request manager
+        /// </summary>
+        private static RevisionRequestManager _revisionRequestManager;
         /// <summary>
         /// Gets or sets the revision request manager.
         /// </summary>
         /// <value>The revision request manager.</value>
-        public static RevisionRequestManager RevisionRequestManager { get; set; }
+        public static RevisionRequestManager RevisionRequestManager
+        {
+            get {
+                if(_revisionRequestManager == null){
+                    _revisionRequestManager = new RevisionRequestManager(_service);
+                }
+                return _revisionRequestManager; }
+            set { _revisionRequestManager = value; }
+        }
         
     }
 }

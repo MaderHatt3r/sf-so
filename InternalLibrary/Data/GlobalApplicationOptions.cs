@@ -21,7 +21,7 @@ namespace InternalLibrary.Data
     /// <summary>
     /// Class GlobalApplicationOptions
     /// </summary>
-    public class GlobalApplicationOptions
+    public static class GlobalApplicationOptions
     {
         /// <summary>
         /// The CLIEN t_ ID
@@ -69,26 +69,49 @@ namespace InternalLibrary.Data
         /// Gets or sets a value indicating whether to save to a new revision in Google Drive or to replace the current head.
         /// </summary>
         /// <value><c>true</c> to save to a new revision; otherwise, <c>false</c>.</value>
-        public bool newRevision { get; set; }
+        //public static bool newRevision { get; set; }
+
+        private static bool _newRevision = true;
+        /// <summary>
+        /// Gets or sets a value indicating whether to save to a new revision in Google Drive or to replace the current head.
+        /// </summary>
+        /// <value><c>true</c> to save to a new revision; otherwise, <c>false</c>.</value>
+        public static bool NewRevision
+        {
+            get { return _newRevision; }
+            set { _newRevision = value; }
+        }
+
+        private static bool _syncFileNameOnChange = true;
         /// <summary>
         /// Gets or sets a value indicating whether [sync file name on change].
         /// </summary>
         /// <value><c>true</c> if [sync file name on change]; otherwise, <c>false</c>.</value>
-        public bool syncFileNameOnChange { get; set; }
+        public static bool SyncFileNameOnChange
+        {
+            get { return _syncFileNameOnChange; }
+            set { _syncFileNameOnChange = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [sync file name on change].
+        /// </summary>
+        /// <value><c>true</c> if [sync file name on change]; otherwise, <c>false</c>.</value>
+        //public static bool syncFileNameOnChange { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalApplicationOptions" /> class.
         /// </summary>
-        public GlobalApplicationOptions()
-        {
-            this.setUserOptions();
-        }
+        //public GlobalApplicationOptions()
+        //{
+        //    this.setUserOptions();
+        //}
 
-        /// <summary>
-        /// Sets the user options.
-        /// </summary>
-        private void setUserOptions(){
-            newRevision = true;
-        }
+        ///// <summary>
+        ///// Sets the user options.
+        ///// </summary>
+        //private void setUserOptions(){
+        //    newRevision = true;
+        //}
     }
 }
