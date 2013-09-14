@@ -34,10 +34,6 @@ namespace InternalLibrary.Controller.EventHandlers
         /// </summary>
         private bool allowSave = false;
         /// <summary>
-        /// The user options
-        /// </summary>
-        private GlobalApplicationOptions userOptions = new GlobalApplicationOptions();
-        /// <summary>
         /// The request controller
         /// </summary>
         private UploadRequestManager requestController;
@@ -52,7 +48,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="SaveAsDialog">The save as dialog.</param>
         public Handlers(dynamic SaveAsDialog)
         {
-            this.requestController = new UploadRequestManager(userOptions);
+            this.requestController = ServiceRequestManagement.UploadRequestManager;
             this.SaveAsDialog = SaveAsDialog;
         }
 

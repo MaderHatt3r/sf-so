@@ -39,18 +39,13 @@ namespace InternalLibrary.Model.Bulilder
     /// </summary>
     public class UploadBuilder
     {
-        /// <summary>
-        /// The user options
-        /// </summary>
-        private GlobalApplicationOptions userOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UploadBuilder"/> class.
         /// </summary>
         /// <param name="userOptions">The user options.</param>
-        public UploadBuilder(GlobalApplicationOptions userOptions)
+        public UploadBuilder()
         {
-            this.userOptions = userOptions;
         }
 
         //Check if there is a googleFileID and create update or upload request respectively
@@ -74,7 +69,7 @@ namespace InternalLibrary.Model.Bulilder
                 
                 //Create an update request
                 request = service.Files.Update(body, googleFileID, stream, mimeType);
-                ((FilesResource.UpdateMediaUpload)request).NewRevision = this.userOptions.newRevision;
+                ((FilesResource.UpdateMediaUpload)request).NewRevision = GlobalApplicationOptions.NewRevision;
                 return request;
             }
             else
