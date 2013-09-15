@@ -62,13 +62,38 @@ namespace InternalLibrary.Model.RequestManagement
         /// <value>The revision request manager.</value>
         public static RevisionRequestManager RevisionRequestManager
         {
-            get {
-                if(_revisionRequestManager == null){
+            get
+            {
+                if (_revisionRequestManager == null)
+                {
                     _revisionRequestManager = new RevisionRequestManager(_service);
                 }
-                return _revisionRequestManager; }
+                return _revisionRequestManager;
+            }
             set { _revisionRequestManager = value; }
         }
+
+        /// <summary>
+        /// The _get request manager
+        /// </summary>
+        private static GetRequestManager _getRequestManager;
+        /// <summary>
+        /// Gets or sets the get request manager.
+        /// </summary>
+        /// <value>The get request manager.</value>
+        public static GetRequestManager GetRequestManager
+        {
+            get
+            {
+                if (_getRequestManager == null)
+                {
+                    _getRequestManager = new GetRequestManager(_service);
+                }
+                return _getRequestManager;
+            }
+            set { _getRequestManager = value; }
+        }
+
         
     }
 }

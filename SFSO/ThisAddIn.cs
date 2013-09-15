@@ -56,7 +56,7 @@ namespace SFSO
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
             this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.DocumentChange += Application_DocumentNew;
-
+            
             handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
         }
 
