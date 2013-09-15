@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Google.Apis.Drive.v2.Data;
 using InternalLibrary.Data;
 using InternalLibrary.IO;
 using InternalLibrary.Model.RequestManagement;
@@ -31,17 +32,20 @@ namespace InternalLibrary.Model
         {
             string fileID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
             string currentRevisionID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME);
-            string newRevisionID = ServiceRequestManagement.GetRequestManager.GetMetadata(fileID).HeadRevisionId;
-            if (currentRevisionID != newRevisionID)
+            File googleFile = ServiceRequestManagement.GetRequestManager.GetMetadata(fileID);
+            string newRevisionID = googleFile.HeadRevisionId;
+            if (!string.IsNullOrEmpty(currentRevisionID) && !string.IsNullOrEmpty(newRevisionID) && currentRevisionID != newRevisionID)
             {
-                ResolveNewRevision(Doc, fileID);
+                ResolveNewRevision(Doc, fileID, googleFile);
             }
         }
 
-        private static void ResolveNewRevision(dynamic Doc, string fileID)
+        private static void ResolveNewRevision(dynamic Doc, string fileID, File googleFile)
         {
-            string fileName = ServiceRequestManagement.GetRequestManager.Save(fileID);
 
+            string fileName = ServiceRequestManagement.GetRequestManager.Save(googleFile);
+            //Doc.Compare(fileName, googleFile.LastModifyingUserName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetCurrent, true, false, false, false);
+            
             Doc.Merge(fileName, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
         }
 

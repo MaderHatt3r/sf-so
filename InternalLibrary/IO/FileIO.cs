@@ -129,7 +129,11 @@ namespace InternalLibrary.IO
         {
             if (Directory.Exists(GlobalApplicationOptions.TMP_PATH))
             {
-                Directory.Delete(GlobalApplicationOptions.TMP_PATH, true);
+                try
+                {
+                    Directory.Delete(GlobalApplicationOptions.TMP_PATH, true);
+                }
+                catch { }
             }
         }
 

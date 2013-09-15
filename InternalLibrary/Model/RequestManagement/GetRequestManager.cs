@@ -36,14 +36,18 @@ namespace InternalLibrary.Model.RequestManagement
             return FileIO.SaveFile(Download(fileID));
         }
 
-        private System.IO.Stream Download(string fileID)
+        public string Save(File googleFile)
         {
-            File file = GetMetadata(fileID);
-            if (!String.IsNullOrEmpty(file.DownloadUrl))
+            return FileIO.SaveFile(Download(googleFile));
+        }
+
+        private System.IO.Stream Download(File googleFile)
+        {
+            if (!String.IsNullOrEmpty(googleFile.DownloadUrl))
             {
                 try
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(file.DownloadUrl));
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(googleFile.DownloadUrl));
                     service.Authenticator.ApplyAuthenticationToRequest(request);
                     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                     if (response.StatusCode == HttpStatusCode.OK)
@@ -67,7 +71,14 @@ namespace InternalLibrary.Model.RequestManagement
                 // The file doesn't have any content stored on Drive.
                 return null;
             }
-
         }
+
+
+        private System.IO.Stream Download(string fileID)
+        {
+            File file = GetMetadata(fileID);
+            return Download(file);
+        }
+
     }
 }
