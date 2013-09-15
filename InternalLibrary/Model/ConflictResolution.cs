@@ -15,6 +15,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using InternalLibrary.Data;
+using InternalLibrary.IO;
 using InternalLibrary.Model.RequestManagement;
 
 namespace InternalLibrary.Model
@@ -24,6 +26,30 @@ namespace InternalLibrary.Model
     /// </summary>
     public class ConflictResolution
     {
+
+        public static void CheckForNewSaves(dynamic Doc)
+        {
+            string fileID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
+            string currentRevisionID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME);
+            string newRevisionID = ServiceRequestManagement.GetRequestManager.GetMetadata(fileID).HeadRevisionId;
+            if (currentRevisionID != newRevisionID)
+            {
+                ResolveNewRevision(Doc, fileID);
+            }
+        }
+
+        private static void ResolveNewRevision(dynamic Doc, string fileID)
+        {
+            string fileName = ServiceRequestManagement.GetRequestManager.Save(fileID);
+
+            Doc.Merge(fileName, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
+        }
+
+        public static void MergeNewSave()
+        {
+
+        }
+
         /// <summary>
         /// Checks for conflicts.
         /// </summary>
@@ -37,7 +63,7 @@ namespace InternalLibrary.Model
             {
                 if (!ServiceRequestManagement.RevisionRequestManager.IsRevisionSequential(fileID, previousRevisionID, nextRevisionID))
                 {
-                    throw new InvalidOperationException("The head revision was overwritten without a proper merge.");
+                    //throw new InvalidOperationException("The head revision was overwritten without a proper merge.");
                 }
             }
         }

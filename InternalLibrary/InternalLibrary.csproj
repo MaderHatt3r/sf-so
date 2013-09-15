@@ -112,6 +112,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\EventHandlers\Handlers.cs" />
+    <Compile Include="Model\Builder\DownloadBuilder.cs" />
+    <Compile Include="Model\RequestManagement\GetRequestManager.cs" />
     <Compile Include="Model\RequestManagement\UploadRequestManager.cs" />
     <Compile Include="Data\GlobalApplicationOptions.cs" />
     <Compile Include="Model\RequestManagement\ServiceRequestManagement.cs" />

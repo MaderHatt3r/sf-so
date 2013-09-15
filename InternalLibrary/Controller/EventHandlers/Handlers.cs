@@ -135,7 +135,7 @@ namespace InternalLibrary.Controller.EventHandlers
 
         // Word's event handler
         /// <summary>
-        /// Application_s the document before save.
+        /// Application_s the document before save for Word.
         /// </summary>
         /// <param name="Doc">The doc.</param>
         /// <param name="SaveAsUI">if set to <c>true</c> [save as UI].</param>
@@ -143,6 +143,7 @@ namespace InternalLibrary.Controller.EventHandlers
         public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
         {
             this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
+            InternalLibrary.Model.ConflictResolution.CheckForNewSaves(Doc);
 
             //Override Word's save functionality by writing own and sending cancel
             if (!this.allowSave)

@@ -36,11 +36,11 @@ namespace InternalLibrary.Model.RequestManagement
         /// <summary>
         /// The service
         /// </summary>
-        DriveService service = null;
+        private DriveService service = null;
         /// <summary>
         /// The upload builder
         /// </summary>
-        UploadBuilder uploadBuilder;
+        private UploadBuilder uploadBuilder;
         /// <summary>
         /// The TMP upload ID
         /// </summary>
