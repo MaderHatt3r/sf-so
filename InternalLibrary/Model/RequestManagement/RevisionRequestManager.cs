@@ -50,7 +50,7 @@ namespace InternalLibrary.Model.RequestManagement
         /// <returns><c>true</c> if [is revision sequential] [the specified file unique identifier]; otherwise, <c>false</c>.</returns>
         public bool IsRevisionSequential(string fileID, string previousID, string nextID)
         {
-            IList<Revision> revisions = RetrieveRevisions(fileID);
+            IList<Revision> revisions = GetRevisions(fileID);
             int prevIndex = revisions.IndexOf(revisions.First(r => r.Id == previousID));
             int nextIndex = revisions.IndexOf(revisions.First(r => r.Id == nextID));
 
@@ -62,7 +62,7 @@ namespace InternalLibrary.Model.RequestManagement
         /// </summary>
         /// <param name="fileId">ID of the file to retrieve revisions for.</param>
         /// <returns>List of revisions.</returns>
-        public IList<Revision> RetrieveRevisions(String fileId)
+        public IList<Revision> GetRevisions(String fileId)
         {
             try
             {

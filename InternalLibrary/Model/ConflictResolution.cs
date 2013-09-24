@@ -40,7 +40,11 @@ namespace InternalLibrary.Model
             string newRevisionID = googleFile.HeadRevisionId;
             if (!string.IsNullOrEmpty(prevRevisionID) && !string.IsNullOrEmpty(newRevisionID) && prevRevisionID != newRevisionID)
             {
-                ResolveNewRevision(Doc, prevFileID, googleFile);
+                try
+                {
+                    ResolveNewRevision(Doc, prevFileID, prevRevisionID, googleFile);
+                }
+                catch (NullReferenceException) { }
             }
         }
 
@@ -50,13 +54,29 @@ namespace InternalLibrary.Model
         /// <param name="Doc">The document.</param>
         /// <param name="prevFileID">The previous file unique identifier.</param>
         /// <param name="googleFile">The google file.</param>
-        private static void ResolveNewRevision(dynamic Doc, string prevFileID, File googleFile)
+        private static void ResolveNewRevision(dynamic Doc, string prevFileID, string prevRevisionID, File googleFile)
         {
+            IList<Revision> revisions = ServiceRequestManagement.RevisionRequestManager.GetRevisions(googleFile.Id);
+            Dictionary<string, Revision> revisionForks = new Dictionary<string, Revision>();
+            for (int i = revisions.IndexOf(revisions.First(r => r.Id == prevRevisionID))+1; i < revisions.Count; i++)
+            {
+                string fullFilePath = ServiceRequestManagement.GetRequestManager.Save(revisions[i], "SFSO_TempMerge" + revisions[i].Id);
+                revisionForks[fullFilePath] = revisions[i];
+            }
 
-            string fileName = ServiceRequestManagement.GetRequestManager.Save(googleFile);
-            //Doc.Compare(fileName, googleFile.LastModifyingUserName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetCurrent, true, false, false, false);
+            foreach (string revision in revisionForks.Keys)
+            {
+                ThreadTasks.RunThread(() => Doc.Compare(revision, revisionForks[revision].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetSelected, true, false, false, false));
+            }
             
-            Doc.Merge(fileName, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
+            foreach (string update in revisionForks.Keys)
+            {
+                Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
+            }
+
+            //string fileName = ServiceRequestManagement.GetRequestManager.Save(googleFile);
+            //Doc.Compare(fileName, googleFile.LastModifyingUserName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetCurrent, true, false, false, false);
+            //Doc.Merge(fileName, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
         }
 
         public static void MergeNewSave()
