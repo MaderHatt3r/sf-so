@@ -28,19 +28,29 @@ namespace InternalLibrary.Model
     public class ConflictResolution
     {
 
+        /// <summary>
+        /// Checks for new saves.
+        /// </summary>
+        /// <param name="Doc">The document.</param>
         public static void CheckForNewSaves(dynamic Doc)
         {
-            string fileID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
-            string currentRevisionID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME);
-            File googleFile = ServiceRequestManagement.GetRequestManager.GetMetadata(fileID);
+            string prevFileID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
+            string prevRevisionID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME);
+            File googleFile = ServiceRequestManagement.GetRequestManager.GetMetadata(prevFileID);
             string newRevisionID = googleFile.HeadRevisionId;
-            if (!string.IsNullOrEmpty(currentRevisionID) && !string.IsNullOrEmpty(newRevisionID) && currentRevisionID != newRevisionID)
+            if (!string.IsNullOrEmpty(prevRevisionID) && !string.IsNullOrEmpty(newRevisionID) && prevRevisionID != newRevisionID)
             {
-                ResolveNewRevision(Doc, fileID, googleFile);
+                ResolveNewRevision(Doc, prevFileID, googleFile);
             }
         }
 
-        private static void ResolveNewRevision(dynamic Doc, string fileID, File googleFile)
+        /// <summary>
+        /// Resolves the new revision.
+        /// </summary>
+        /// <param name="Doc">The document.</param>
+        /// <param name="prevFileID">The previous file unique identifier.</param>
+        /// <param name="googleFile">The google file.</param>
+        private static void ResolveNewRevision(dynamic Doc, string prevFileID, File googleFile)
         {
 
             string fileName = ServiceRequestManagement.GetRequestManager.Save(googleFile);
