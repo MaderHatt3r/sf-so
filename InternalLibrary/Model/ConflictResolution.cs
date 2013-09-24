@@ -40,11 +40,11 @@ namespace InternalLibrary.Model
             string newRevisionID = googleFile.HeadRevisionId;
             if (!string.IsNullOrEmpty(prevRevisionID) && !string.IsNullOrEmpty(newRevisionID) && prevRevisionID != newRevisionID)
             {
-                try
-                {
+                //try
+                //{
                     ResolveNewRevision(Doc, prevFileID, prevRevisionID, googleFile);
-                }
-                catch (NullReferenceException) { }
+                //}
+                //catch (NullReferenceException) { }
             }
         }
 
@@ -58,15 +58,30 @@ namespace InternalLibrary.Model
         {
             IList<Revision> revisions = ServiceRequestManagement.RevisionRequestManager.GetRevisions(googleFile.Id);
             Dictionary<string, Revision> revisionForks = new Dictionary<string, Revision>();
-            for (int i = revisions.IndexOf(revisions.First(r => r.Id == prevRevisionID))+1; i < revisions.Count; i++)
+
+            int firstRevisionIndex = revisions.IndexOf(revisions.First(r => r.Id == prevRevisionID));
+            string firstRevision = null;
+            for (int i = firstRevisionIndex; i < revisions.Count; i++)
             {
                 string fullFilePath = ServiceRequestManagement.GetRequestManager.Save(revisions[i], "SFSO_TempMerge" + revisions[i].Id);
                 revisionForks[fullFilePath] = revisions[i];
+                if (i == firstRevisionIndex)
+                {
+                    firstRevision = fullFilePath;
+                }
             }
-
+            Microsoft.Office.Interop.Word.Application myApp = (Microsoft.Office.Interop.Word.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Word.Application"); ;
+            //Microsoft.Office.Interop.Word.Application myApp = new Microsoft.Office.Interop.Word.Application();
+            
             foreach (string revision in revisionForks.Keys)
             {
-                ThreadTasks.RunThread(() => Doc.Compare(revision, revisionForks[revision].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetSelected, true, false, false, false));
+                Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision);
+                Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(revision);
+                lock (myApp.ActiveDocument)
+                {
+                    Microsoft.Office.Interop.Word.Document result = myApp.CompareDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationRevised, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, revisionForks[revision].LastModifyingUser.DisplayName, false);
+                }
+                //Doc.Compare(revision, revisionForks[revision].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetSelected, true, false, false, false);
             }
             
             foreach (string update in revisionForks.Keys)
