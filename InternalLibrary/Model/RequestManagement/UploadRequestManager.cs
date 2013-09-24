@@ -132,7 +132,7 @@ namespace InternalLibrary.Model.RequestManagement
 
             foreach (string googleFileID in this.tmpUploadID)
             {
-                ThreadTasks.RunThreadUnmanaged(new System.Threading.Tasks.Task(() => removeTmpUpload(googleFileID)));
+                ThreadTasks.RunThreadUnmanaged(() => removeTmpUpload(googleFileID));
             }
         }
 

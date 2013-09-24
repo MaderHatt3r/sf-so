@@ -58,6 +58,7 @@ namespace InternalLibrary.IO
             {
                 task.Wait();
             }
+
             Task newTask = new Task(() => operation());
             tasks.Add(newTask);
             newTask.Start();
@@ -67,8 +68,9 @@ namespace InternalLibrary.IO
         /// Runs the thread unmanaged.
         /// </summary>
         /// <param name="newTask">The new task.</param>
-        public static void RunThreadUnmanaged(Task newTask)
+        public static void RunThreadUnmanaged(Action operation)
         {
+            Task newTask = new Task(() => operation());
             lock (taskLock)
             {
                 tasks.Add(newTask);
