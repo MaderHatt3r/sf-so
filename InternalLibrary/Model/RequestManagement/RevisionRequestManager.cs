@@ -62,7 +62,7 @@ namespace InternalLibrary.Model.RequestManagement
         /// </summary>
         /// <param name="fileId">ID of the file to retrieve revisions for.</param>
         /// <returns>List of revisions.</returns>
-        private IList<Revision> RetrieveRevisions(String fileId)
+        public IList<Revision> RetrieveRevisions(String fileId)
         {
             try
             {

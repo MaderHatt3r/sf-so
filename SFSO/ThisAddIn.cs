@@ -56,7 +56,9 @@ namespace SFSO
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
             this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.DocumentChange += Application_DocumentNew;
-            //Globals.ThisAddIn.Application.ActiveDocument.Compare(fileName, googleAuthor, Word.WdCompareTarget.wdCompareTargetCurrent, true, false, false, false);
+            //bool canMerge = Globals.ThisAddIn.Application.ActiveDocument.CoAuthoring.CanMerge;
+            //Globals.ThisAddIn.Application.ActiveDocument.CoAuthoring.;
+            //Compare(fileName, googleAuthor, Word.WdCompareTarget.wdCompareTargetCurrent, true, false, false, false);
             //    (fileName, Word.WdMergeTarget.wdMergeTargetCurrent, true, Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
             handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
         }
