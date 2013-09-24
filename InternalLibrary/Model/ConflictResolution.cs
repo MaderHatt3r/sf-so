@@ -60,33 +60,36 @@ namespace InternalLibrary.Model
             Dictionary<string, Revision> revisionForks = new Dictionary<string, Revision>();
 
             int firstRevisionIndex = revisions.IndexOf(revisions.First(r => r.Id == prevRevisionID));
-            string firstRevision = null;
+            //string firstRevision = null;
             for (int i = firstRevisionIndex; i < revisions.Count; i++)
             {
                 string fullFilePath = ServiceRequestManagement.GetRequestManager.Save(revisions[i], "SFSO_TempMerge" + revisions[i].Id);
                 revisionForks[fullFilePath] = revisions[i];
-                if (i == firstRevisionIndex)
-                {
-                    firstRevision = fullFilePath;
-                }
+                //if (i == firstRevisionIndex)
+                //{
+                //    firstRevision = fullFilePath;
+                //}
             }
             Microsoft.Office.Interop.Word.Application myApp = (Microsoft.Office.Interop.Word.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Word.Application"); ;
             //Microsoft.Office.Interop.Word.Application myApp = new Microsoft.Office.Interop.Word.Application();
-            
-            foreach (string revision in revisionForks.Keys)
+
+            ThreadTasks.RunThreadUnmanaged(() =>
             {
-                Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision);
-                Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(revision);
-                lock (myApp.ActiveDocument)
+                foreach (string revision in revisionForks.Keys)
                 {
-                    Microsoft.Office.Interop.Word.Document result = myApp.CompareDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationRevised, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, revisionForks[revision].LastModifyingUser.DisplayName, false);
+                    //Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision);
+                    //Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(revision);
+                    //lock (myApp.ActiveDocument)
+                    //{
+                    //    Microsoft.Office.Interop.Word.Document result = myApp.CompareDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationRevised, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, revisionForks[revision].LastModifyingUser.DisplayName, false);
+                    //}
+                    Doc.Compare(revision, revisionForks[revision].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetSelected, true, false, false, false);
                 }
-                //Doc.Compare(revision, revisionForks[revision].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetSelected, true, false, false, false);
-            }
+            });
             
             foreach (string update in revisionForks.Keys)
             {
-                Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
+                //ThreadTasks.RunThread(() => Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false));
             }
 
             //string fileName = ServiceRequestManagement.GetRequestManager.Save(googleFile);
