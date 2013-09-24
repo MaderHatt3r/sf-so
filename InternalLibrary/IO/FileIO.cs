@@ -65,15 +65,15 @@ namespace InternalLibrary.IO
             return fullName;
         }
 
-        public static string SaveFile(Stream documentStream)
+        public static string SaveFile(Stream documentStream, string fileName)
         {
-            string fileName = GlobalApplicationOptions.TMP_PATH + "TMP_SFSO_MERGE.docx";
-            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+            string fullFilePath = GlobalApplicationOptions.TMP_PATH + fileName;
+            FileStream fs = new FileStream(fullFilePath, FileMode.Create, FileAccess.Write);
             documentStream.CopyTo(fs);
             fs.Flush();
             fs.Close();
 
-            return fileName;
+            return fullFilePath;
         }
 
         //private static string createEmptyTmpFile(string fileName)
