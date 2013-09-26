@@ -120,6 +120,16 @@ namespace InternalLibrary.Model
                 Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(update);
                 Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
             }
+
+            foreach (Microsoft.Office.Interop.Word.Document document in myApp.Documents)
+            {
+                object missing = Type.Missing;
+                if (!document.FullName.Equals(Doc.FullName))
+                {
+                    document.Close(false, ref missing, ref missing);
+                }
+            }
+            
             //System.Threading.Thread.Sleep(1000);
             //object miss = Type.Missing;
             //Microsoft.Office.Interop.Word.Document endResult = myApp.Documents.Open(firstRevision, ref miss, ref miss, false, ref miss, ref miss, ref miss, ref miss, ref miss, ref miss, ref miss, true, ref miss, ref miss, ref miss, ref miss);
