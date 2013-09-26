@@ -40,7 +40,7 @@ namespace InternalLibrary.IO
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fullFileLocation">The full file location.</param>
         /// <returns>System.String.</returns>
-        private static string createTmpCopy(string fileName, string fullFileLocation)
+        public static string createTmpCopy(string fileName, string fullFileLocation)
         {
             string tmpPath = GlobalApplicationOptions.TMP_PATH;
             string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.');
