@@ -138,33 +138,33 @@ namespace InternalLibrary.Model
             //}
 
 
-            
 
-            //foreach (string update in revisionForks.Keys)
-            //{
-            //    System.Threading.Thread.Sleep(1000);
-            //    //object missing = Type.Missing;
-            //    //Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
-            //    //Microsoft.Office.Interop.Word.Document individualRevision = myApp.Documents.Open(update, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
 
-            //    //myApp.MergeDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationOriginal, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, revisionForks[firstRevision].LastModifyingUser.DisplayName, revisionForks[update].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdMergeFormatFrom.wdMergeFormatFromPrompt);
-
-            //    //baseRevision.Close(true, ref missing, ref missing);
-            //    //individualRevision.Close(false, ref missing, ref missing);
-
-            //    //Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision);
-            //    //Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(update);
-            //    //Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
-            //}
-
-            foreach (Microsoft.Office.Interop.Word.Document document in myApp.Documents)
+            foreach (string update in revisionForks.Keys)
             {
-                object missing = Type.Missing;
-                if (!document.FullName.Equals(Doc.FullName))
-                {
-                    document.Close(false, ref missing, ref missing);
-                }
+                System.Threading.Thread.Sleep(1000);
+                //object missing = Type.Missing;
+                //Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
+                //Microsoft.Office.Interop.Word.Document individualRevision = myApp.Documents.Open(update, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
+
+                //myApp.MergeDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationOriginal, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, revisionForks[firstRevision].LastModifyingUser.DisplayName, revisionForks[update].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdMergeFormatFrom.wdMergeFormatFromPrompt);
+
+                //baseRevision.Close(true, ref missing, ref missing);
+                //individualRevision.Close(false, ref missing, ref missing);
+
+                //Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision);
+                //Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(update);
+                Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
             }
+
+            //foreach (Microsoft.Office.Interop.Word.Document document in myApp.Documents)
+            //{
+            //    object missing = Type.Missing;
+            //    if (!document.FullName.Equals(Doc.FullName))
+            //    {
+            //        document.Close(false, ref missing, ref missing);
+            //    }
+            //}
             
             //System.Threading.Thread.Sleep(1000);
             //object miss = Type.Missing;
