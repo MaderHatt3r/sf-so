@@ -72,10 +72,10 @@ namespace InternalLibrary.Model
             }
             Microsoft.Office.Interop.Word.Application myApp = (Microsoft.Office.Interop.Word.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Word.Application"); ;
             //Microsoft.Office.Interop.Word.Application myApp = new Microsoft.Office.Interop.Word.Application();
-            System.Threading.Thread.Sleep(1000);
+            //System.Threading.Thread.Sleep(1000);
 
             {
-                System.Threading.Thread.Sleep(1000);
+                //System.Threading.Thread.Sleep(1000);
                 object missing = Type.Missing;
                 Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
 
@@ -89,7 +89,7 @@ namespace InternalLibrary.Model
             {
                 //Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision); //.IsSubdocument;
                 //Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(revision);
-                System.Threading.Thread.Sleep(1000);
+                //System.Threading.Thread.Sleep(1000);
                 object missing = Type.Missing;
                 Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
                 Microsoft.Office.Interop.Word.Document individualRevision = myApp.Documents.Open(revision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
@@ -142,7 +142,7 @@ namespace InternalLibrary.Model
 
             foreach (string update in revisionForks.Keys)
             {
-                System.Threading.Thread.Sleep(1000);
+                //System.Threading.Thread.Sleep(1000);
                 //object missing = Type.Missing;
                 //Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
                 //Microsoft.Office.Interop.Word.Document individualRevision = myApp.Documents.Open(update, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
@@ -157,14 +157,14 @@ namespace InternalLibrary.Model
                 Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
             }
 
-            //foreach (Microsoft.Office.Interop.Word.Document document in myApp.Documents)
-            //{
-            //    object missing = Type.Missing;
-            //    if (!document.FullName.Equals(Doc.FullName))
-            //    {
-            //        document.Close(false, ref missing, ref missing);
-            //    }
-            //}
+            foreach (Microsoft.Office.Interop.Word.Document document in myApp.Documents)
+            {
+                object missing = Type.Missing;
+                if (!document.FullName.Equals(Doc.FullName))
+                {
+                    document.Close(false, ref missing, ref missing);
+                }
+            }
             
             //System.Threading.Thread.Sleep(1000);
             //object miss = Type.Missing;
