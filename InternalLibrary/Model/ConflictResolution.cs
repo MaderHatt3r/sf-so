@@ -74,6 +74,17 @@ namespace InternalLibrary.Model
             //Microsoft.Office.Interop.Word.Application myApp = new Microsoft.Office.Interop.Word.Application();
             System.Threading.Thread.Sleep(1000);
 
+            {
+                System.Threading.Thread.Sleep(1000);
+                object missing = Type.Missing;
+                Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
+
+                Microsoft.Office.Interop.Word.Document result = myApp.CompareDocuments(baseRevision, Doc, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationRevised, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, "CTDragon", false);
+
+                baseRevision.Close(false, ref missing, ref missing);
+            }
+
+            List<Microsoft.Office.Interop.Word.Range> endChanges = new List<Microsoft.Office.Interop.Word.Range>();
             foreach (string revision in revisionForks.Keys)
             {
                 //Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision); //.IsSubdocument;
@@ -85,41 +96,66 @@ namespace InternalLibrary.Model
 
                 Microsoft.Office.Interop.Word.Document result = myApp.CompareDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationRevised, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, revisionForks[revision].LastModifyingUser.DisplayName, false);
 
+                foreach (Microsoft.Office.Interop.Word.Revision change in result.Revisions)
+                {
+                    if (change.Range.Start >= baseRevision.Content.End)
+                    {
+                        change.Range.Copy();
+                        Doc.Range(Doc.Content.End-1, Doc.Content.End).Paste();
+                        change.Reject();
+                    }
+                }
+
                 baseRevision.Close(false, ref missing, ref missing);
                 //result.Close(false, ref missing, ref missing);
 
                 //Doc.Compare(revision, revisionForks[revision].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdCompareTarget.wdCompareTargetSelected, true, false, false, false);
             }
 
-            {
-                string thisDocument = FileIO.createTmpCopy(Doc.Name, Doc.FullName);
-                revisionForks[thisDocument] = null;
-                System.Threading.Thread.Sleep(1000);
-                object missing = Type.Missing;
-                Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
-                Microsoft.Office.Interop.Word.Document individualRevision = myApp.Documents.Open(thisDocument, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
+            
 
-                Microsoft.Office.Interop.Word.Document result = myApp.CompareDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationRevised, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, "CTDragon", false);
+            //foreach (Microsoft.Office.Interop.Word.Range change in endChanges)
+            //{
+            //    change.Copy();
+            //    Doc.Range(Doc.Content.End, Doc.Content.End).Paste();
+            //    //Doc.Range(Doc.Content.End, Doc.Content.End).Select();
+            //    //change.Copy();
+            //    //Doc.ActiveWindow.Selection.PasteAndFormat(Microsoft.Office.Interop.Word.WdRecoveryType.wdPasteDefault);
+            //}
 
-                baseRevision.Close(false, ref missing, ref missing);
-            }
 
-            foreach (string update in revisionForks.Keys)
-            {
-                System.Threading.Thread.Sleep(1000);
-                //object missing = Type.Missing;
-                //Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
-                //Microsoft.Office.Interop.Word.Document individualRevision = myApp.Documents.Open(update, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
+            //{
+            //    string thisDocument = FileIO.createTmpCopy(Doc.Name, Doc.FullName);
+            //    revisionForks[thisDocument] = null;
+            //    System.Threading.Thread.Sleep(1000);
+            //    object missing = Type.Missing;
+            //    Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
+            //    Microsoft.Office.Interop.Word.Document individualRevision = myApp.Documents.Open(thisDocument, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
 
-                //myApp.MergeDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationOriginal, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, revisionForks[firstRevision].LastModifyingUser.DisplayName, revisionForks[update].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdMergeFormatFrom.wdMergeFormatFromPrompt);
+            //    Microsoft.Office.Interop.Word.Document result = myApp.CompareDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationRevised, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, "CTDragon", false);
 
-                //baseRevision.Close(true, ref missing, ref missing);
-                //individualRevision.Close(false, ref missing, ref missing);
+            //    baseRevision.Close(false, ref missing, ref missing);
+            //}
 
-                Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision);
-                Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(update);
-                Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
-            }
+
+            
+
+            //foreach (string update in revisionForks.Keys)
+            //{
+            //    System.Threading.Thread.Sleep(1000);
+            //    //object missing = Type.Missing;
+            //    //Microsoft.Office.Interop.Word.Document baseRevision = myApp.Documents.Open(firstRevision, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
+            //    //Microsoft.Office.Interop.Word.Document individualRevision = myApp.Documents.Open(update, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
+
+            //    //myApp.MergeDocuments(baseRevision, individualRevision, Microsoft.Office.Interop.Word.WdCompareDestination.wdCompareDestinationOriginal, Microsoft.Office.Interop.Word.WdGranularity.wdGranularityWordLevel, true, true, true, true, true, true, true, true, true, true, revisionForks[firstRevision].LastModifyingUser.DisplayName, revisionForks[update].LastModifyingUser.DisplayName, Microsoft.Office.Interop.Word.WdMergeFormatFrom.wdMergeFormatFromPrompt);
+
+            //    //baseRevision.Close(true, ref missing, ref missing);
+            //    //individualRevision.Close(false, ref missing, ref missing);
+
+            //    //Microsoft.Office.Interop.Word.Document baseRevision = new Microsoft.Office.Interop.Word.Document(firstRevision);
+            //    //Microsoft.Office.Interop.Word.Document individualRevision = new Microsoft.Office.Interop.Word.Document(update);
+            //    //Doc.Merge(update, Microsoft.Office.Interop.Word.WdMergeTarget.wdMergeTargetCurrent, true, Microsoft.Office.Interop.Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
+            //}
 
             foreach (Microsoft.Office.Interop.Word.Document document in myApp.Documents)
             {
