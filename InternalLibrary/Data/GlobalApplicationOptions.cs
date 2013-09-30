@@ -18,6 +18,11 @@ using System.Text;
 
 namespace InternalLibrary.Data
 {
+    public enum ConflictResolutionOptions
+    {
+        PULL, FORCE_PUSH, MERGE, CREATE_NEW
+    }
+
     /// <summary>
     /// Class GlobalApplicationOptions
     /// </summary>
