@@ -112,6 +112,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\EventHandlers\Handlers.cs" />
+    <Compile Include="Forms\ConflictingSaveDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConflictingSaveDialog.Designer.cs">
+      <DependentUpon>ConflictingSaveDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model\Builder\DownloadBuilder.cs" />
     <Compile Include="Model\RequestManagement\GetRequestManager.cs" />
     <Compile Include="Model\RequestManagement\UploadRequestManager.cs" />
@@ -129,6 +135,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\ConflictingSaveDialog.resx">
+      <DependentUpon>ConflictingSaveDialog.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" />
