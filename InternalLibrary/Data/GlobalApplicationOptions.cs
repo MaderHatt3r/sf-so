@@ -20,7 +20,7 @@ namespace InternalLibrary.Data
 {
     public enum ConflictResolutionOptions
     {
-        PULL, FORCE_PUSH, MERGE, CREATE_NEW
+        PULL, MERGE, CREATE_NEW, FORCE_PUSH
     }
 
     /// <summary>
