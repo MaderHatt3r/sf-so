@@ -214,7 +214,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="COMAddIns">The COM add ins.</param>
         public void CheckForUpdates(Office.COMAddIns COMAddIns)
         {
-            DateTime expirationDate = new DateTime(2013, 9, 30);
+            DateTime expirationDate = new DateTime(2013, 10, 30);
             if (DateTime.Now.CompareTo(expirationDate) >= 0)
             {
                 foreach (Office.COMAddIn addin in COMAddIns)

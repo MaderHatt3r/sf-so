@@ -112,11 +112,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\EventHandlers\Handlers.cs" />
-    <Compile Include="Forms\ConflictingSaveDialog.cs">
+    <Compile Include="Forms\ConflictingVersionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ConflictingSaveDialog.Designer.cs">
-      <DependentUpon>ConflictingSaveDialog.cs</DependentUpon>
+    <Compile Include="Forms\ConflictingVersionDialog.Designer.cs">
+      <DependentUpon>ConflictingVersionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Builder\DownloadBuilder.cs" />
     <Compile Include="Model\RequestManagement\GetRequestManager.cs" />
@@ -137,8 +137,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\ConflictingSaveDialog.resx">
-      <DependentUpon>ConflictingSaveDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ConflictingVersionDialog.resx">
+      <DependentUpon>ConflictingVersionDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

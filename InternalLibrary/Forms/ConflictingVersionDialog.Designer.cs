@@ -1,6 +1,6 @@
 ﻿namespace InternalLibrary.Forms
 {
-    partial class ConflictingSaveDialog
+    partial class ConflictingVersionDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConflictingSaveDialog));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConflictingVersionDialog));
             this.conflictOptionsTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.pullLatestVersionButton = new System.Windows.Forms.Button();
             this.overwriteDriveVersionButton = new System.Windows.Forms.Button();
