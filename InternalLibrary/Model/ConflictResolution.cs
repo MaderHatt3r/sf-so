@@ -27,12 +27,26 @@ namespace InternalLibrary.Model
     /// </summary>
     public class ConflictResolution
     {
+        private bool _allowSaves;
+
+        private bool AllowSaves
+        {
+            get { return _allowSaves; }
+            // If the value is at any point set to false, we don't want to re-assign it as true
+            set { _allowSaves = _allowSaves && value; }
+        }
+
+        public ConflictResolution()
+        {
+            _allowSaves = true;
+        }
 
         /// <summary>
         /// Checks for new saves.
         /// </summary>
         /// <param name="Doc">The document.</param>
-        public static void CheckForNewSaves(dynamic Doc)
+        /// <returns><c>true</c> if save allowed, <c>false</c> otherwise.</returns>
+        public bool CheckForNewSaves(dynamic Doc)
         {
             string prevFileID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
             string prevRevisionID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME);
@@ -41,8 +55,10 @@ namespace InternalLibrary.Model
 
             if (!string.IsNullOrEmpty(prevRevisionID) && !string.IsNullOrEmpty(newRevisionID) && prevRevisionID != newRevisionID)
             {
-                ResolveNewRevision(Doc, prevFileID, prevRevisionID, googleFile);
+                ResolveNewRevision(Doc, prevFileID, prevRevisionID, prevFileID);
             }
+
+            return AllowSaves;
         }
 
         /// <summary>
@@ -51,7 +67,7 @@ namespace InternalLibrary.Model
         /// <param name="Doc">The document.</param>
         /// <param name="prevFileID">The previous file unique identifier.</param>
         /// <param name="googleFile">The google file.</param>
-        private static void ResolveNewRevision(dynamic Doc, string prevFileID, string prevRevisionID, File googleFile)
+        private void ResolveNewRevision(dynamic Doc, string prevFileID, string prevRevisionID, string fileID)
         {
             InternalLibrary.Forms.ConflictingVersionDialog dialog = new InternalLibrary.Forms.ConflictingVersionDialog();
             dialog.ShowDialog();
@@ -60,10 +76,11 @@ namespace InternalLibrary.Model
             switch (result)
             {
                 case ConflictResolutionOptions.PULL:
-                    System.Windows.Forms.MessageBox.Show("This feature is not yet implemented. Please download the latest version from Google Drive until this feature is developed.");
+                    PullLatest(Doc, fileID);
+                    //System.Windows.Forms.MessageBox.Show("This feature is not yet implemented. Please download the latest version from Google Drive until this feature is developed.");
                     break;
                 case ConflictResolutionOptions.MERGE:
-                    MergeRevisions(Doc, prevRevisionID, googleFile);
+                    MergeRevisions(Doc, prevRevisionID, fileID);
                     break;
                 case ConflictResolutionOptions.CREATE_NEW:
                     System.Windows.Forms.MessageBox.Show("This feature is not yet available.");
@@ -75,9 +92,31 @@ namespace InternalLibrary.Model
             }
         }
 
-        private static void MergeRevisions(dynamic Doc, string prevRevisionID, File googleFile)
+        private void PullLatest(dynamic Doc, string fileID)
         {
-            IList<Revision> revisions = ServiceRequestManagement.RevisionRequestManager.GetRevisions(googleFile.Id);
+            string newVersion = ServiceRequestManagement.GetRequestManager.Save(fileID, Doc.Name);
+
+            object missing = Type.Missing;
+            //Doc.Close(false, ref missing, ref missing);
+
+            Microsoft.Office.Interop.Word.Application myApp = (Microsoft.Office.Interop.Word.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Word.Application");
+            Microsoft.Office.Interop.Word.Document pulledDocument = myApp.Documents.Open(newVersion, ref missing, ref missing, true, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, true, ref missing, ref missing, ref missing, ref missing);
+
+            //foreach (Microsoft.Office.Interop.Word.Document openDocument in myApp.Documents)
+            //{
+            //    if (openDocument == Doc)
+            //    {
+            //        openDocument.Close(false, ref missing, ref missing);
+            //    }
+            //}
+
+            AllowSaves = false;
+            //throw new OperationCanceledException("The save was cancelled due to a pull request for the latest version");
+        }
+
+        private void MergeRevisions(dynamic Doc, string prevRevisionID, string fileID)
+        {
+            IList<Revision> revisions = ServiceRequestManagement.RevisionRequestManager.GetRevisions(fileID);
             Dictionary<string, Revision> revisionForks = new Dictionary<string, Revision>();
 
             int firstRevisionIndex = revisions.IndexOf(revisions.First(r => r.Id == prevRevisionID));
@@ -96,7 +135,7 @@ namespace InternalLibrary.Model
                     lastRevision = fullFilePath;
                 }
             }
-            Microsoft.Office.Interop.Word.Application myApp = (Microsoft.Office.Interop.Word.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Word.Application"); ;
+            Microsoft.Office.Interop.Word.Application myApp = (Microsoft.Office.Interop.Word.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Word.Application");
 
             {
                 object missing = Type.Missing;
