@@ -143,47 +143,50 @@ namespace InternalLibrary.Controller.EventHandlers
         public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
         {
             this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
-            InternalLibrary.Model.ConflictResolution.CheckForNewSaves(Doc);
-
-            //Override Word's save functionality by writing own and sending cancel
-            if (!this.allowSave)
+            Model.ConflictResolution conflictManager = new Model.ConflictResolution();
+            if (conflictManager.CheckForNewSaves(Doc))
             {
-                this.allowSave = true;
-                if (SaveAsUI)
-                {
-                    //Display Save As dialog
-                    var saveAsDialog = Doc.Application.Dialogs[this.SaveAsDialog];
-                    //object timeOut = 0;
-                    //saveAsDialog.Show(ref timeOut);
-                    // If Cancel, exit
-                    bool cancelled = this.cancelled(saveAsDialog.Show());
-                    if (cancelled)
-                    {
-                        Cancel = true;
-                        this.allowSave = false;
-                        return;
-                    }
-                }
-                else
-                {
-                    //Simple save
-                    Doc.Save();
-                }
 
-                //After file is saved
-                if (SaveAsUI)
+                //Override Word's save functionality by writing own and sending cancel
+                if (!this.allowSave)
                 {
-                    // if(SaveAsUI) is needed in the event that the user chooses yes after
-                    // starting a document, not saving it, closing, then selecting yes to 
-                    // save the document
-                    requestController.updateDriveFile(Doc);
+                    this.allowSave = true;
+                    if (SaveAsUI)
+                    {
+                        //Display Save As dialog
+                        var saveAsDialog = Doc.Application.Dialogs[this.SaveAsDialog];
+                        //object timeOut = 0;
+                        //saveAsDialog.Show(ref timeOut);
+                        // If Cancel, exit
+                        bool cancelled = this.cancelled(saveAsDialog.Show());
+                        if (cancelled)
+                        {
+                            Cancel = true;
+                            this.allowSave = false;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        //Simple save
+                        Doc.Save();
+                    }
+
+                    //After file is saved
+                    if (SaveAsUI)
+                    {
+                        // if(SaveAsUI) is needed in the event that the user chooses yes after
+                        // starting a document, not saving it, closing, then selecting yes to 
+                        // save the document
+                        requestController.updateDriveFile(Doc);
+                    }
+                    else
+                    {
+                        this.documentAfterSave(Doc);
+                    }
+                    this.allowSave = false;
+                    Cancel = true;
                 }
-                else
-                {
-                    this.documentAfterSave(Doc);
-                }
-                this.allowSave = false;
-                Cancel = true;
             }
         }
 
