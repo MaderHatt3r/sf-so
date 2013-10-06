@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFSO-E", "SFSO-E\SFSO-E.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternalLibrary", "InternalLibrary\InternalLibrary.csproj", "{3E124DC0-1FDE-401A-872B-5DF24B07A4AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFSOHelper", "SFSOHelper\SFSOHelper.csproj", "{BA883523-194A-43DE-9ABB-5B8C84B35DCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{3E124DC0-1FDE-401A-872B-5DF24B07A4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E124DC0-1FDE-401A-872B-5DF24B07A4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E124DC0-1FDE-401A-872B-5DF24B07A4AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA883523-194A-43DE-9ABB-5B8C84B35DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA883523-194A-43DE-9ABB-5B8C84B35DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA883523-194A-43DE-9ABB-5B8C84B35DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA883523-194A-43DE-9ABB-5B8C84B35DCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
