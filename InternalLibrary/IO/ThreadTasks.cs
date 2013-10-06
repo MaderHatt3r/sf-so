@@ -60,7 +60,10 @@ namespace InternalLibrary.IO
             }
 
             Task newTask = new Task(() => operation());
-            tasks.Add(newTask);
+            lock (taskLock)
+            {
+                tasks.Add(newTask);
+            }
             newTask.Start();
         }
 

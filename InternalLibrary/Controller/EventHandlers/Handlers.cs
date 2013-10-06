@@ -142,6 +142,17 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
         {
+            ThreadTasks.RunThread(() =>
+            {
+                //System.Threading.Thread.Sleep(2000);
+                InternalLibrary.Forms.ConflictingVersionDialog dialog = new InternalLibrary.Forms.ConflictingVersionDialog();
+                dialog.ShowDialog();
+                ConflictResolutionOptions result = dialog.UserSelection;
+            });
+            
+
+            return;
+
             this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
             Model.ConflictResolution conflictManager = new Model.ConflictResolution();
             if (conflictManager.CheckForNewSaves(Doc))
