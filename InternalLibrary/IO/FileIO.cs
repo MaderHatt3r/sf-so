@@ -154,6 +154,10 @@ namespace InternalLibrary.IO
         /// <param name="propertyValue">The property value.</param>
         public static void SetDocPropValue(dynamic Doc, string propertyName, string propertyValue)
         {
+            if (Doc == null)
+            {
+                return;
+            }
             object CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
 
