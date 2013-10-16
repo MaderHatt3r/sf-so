@@ -50,9 +50,16 @@ namespace SFSO
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            //if (this.Application.ProtectedViewWindows.Count > 0)
+            //{
+            //    Word.WdProtectionType protection = this.Application.ActiveProtectedViewWindow.Document.ProtectionType;
+            //    System.Windows.Forms.MessageBox.Show(protection.ToString() + "\nIsActive: " + this.Application.ActiveProtectedViewWindow.Active);
+            //}
+
             this.handlers = new Handlers(this.SaveAsDialog);
             this.handlers.CheckForUpdates(this.Application.COMAddIns);
 
+            this.Application.ProtectedViewWindowActivate += Application_ProtectedViewWindowActivate;
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
             this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.DocumentChange += Application_DocumentNew;
@@ -63,7 +70,15 @@ namespace SFSO
             //Globals.ThisAddIn.Application.ActiveDocument.CoAuthoring.;
             //Compare(fileName, googleAuthor, Word.WdCompareTarget.wdCompareTargetCurrent, true, false, false, false);
             //    (fileName, Word.WdMergeTarget.wdMergeTargetCurrent, true, Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
-            handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
+            if (this.Application.ProtectedViewWindows.Count <= 0 || (this.Application.ProtectedViewWindows.Count > 0 && this.Application.ActiveProtectedViewWindow != null && !this.Application.ActiveProtectedViewWindow.Active))
+            {
+                handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
+            }
+        }
+
+        void Application_ProtectedViewWindowActivate(Word.ProtectedViewWindow PvWindow)
+        {
+            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -72,9 +87,18 @@ namespace SFSO
         /// <param name="Wb">The wb.</param>
         public void Application_DocumentChange()
         {
+            //if (this.Application.ProtectedViewWindows.Count > 0 && this.Application.ActiveProtectedViewWindow != null)
+            //{
+            //    Word.WdProtectionType protection = this.Application.ActiveProtectedViewWindow.Document.ProtectionType;
+            //    System.Windows.Forms.MessageBox.Show(protection.ToString() + "\nIsActive: " + this.Application.ActiveProtectedViewWindow.Active);
+            //}
             try
             {
-                this.handlers.Application_DocumentChange(this.Application.ActiveDocument);
+                ThreadTasks.WaitForRunningTasks();
+                if (this.Application.ProtectedViewWindows.Count <= 0 || (this.Application.ProtectedViewWindows.Count > 0 && this.Application.ActiveProtectedViewWindow != null && !this.Application.ActiveProtectedViewWindow.Active))
+                {
+                    this.handlers.Application_DocumentChange(this.Application.ActiveDocument);
+                }
             }
             catch (System.Runtime.InteropServices.COMException)
             {
