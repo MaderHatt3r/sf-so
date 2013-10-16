@@ -69,6 +69,7 @@ namespace InternalLibrary.Model
         /// <param name="googleFile">The google file.</param>
         private void ResolveNewRevision(dynamic Doc, string prevFileID, string prevRevisionID, string fileID)
         {
+            //GlobalApplicationOptions.ThreadTaskTimeout = 6;
             InternalLibrary.Forms.ConflictingVersionDialog dialog = new InternalLibrary.Forms.ConflictingVersionDialog();
             dialog.ShowDialog();
             ConflictResolutionOptions result = dialog.UserSelection;
@@ -90,6 +91,7 @@ namespace InternalLibrary.Model
                 default:
                     break;
             }
+            //GlobalApplicationOptions.ThreadTaskTimeout = GlobalApplicationOptions.DefaultThreadTaskTimeout;
         }
 
         private void PullLatest(dynamic Doc, string fileID)
@@ -106,7 +108,15 @@ namespace InternalLibrary.Model
             //myApp.Visible = false;
             //myApp.ScreenUpdating = false;
 
-            //ThreadTasks.ActionProtectOfficeObjectModel(() => { Doc.Close(Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges); });
+            new System.Threading.Tasks.Task(() =>
+            {
+                while (GlobalApplicationOptions.HandlerBusy) { continue; }
+                System.Threading.Thread.Sleep(10);
+                Doc.Close(Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges);
+                //Copy pulledDocument from temp to Doc directory
+                //Open the copied document
+                //Close the temp document
+            }).Start();
             //InternalLibrary.Controller.EventHandlers.Handlers handlers = new InternalLibrary.Controller.EventHandlers.Handlers(null);
             //myApp.DocumentBeforeClose -= handlers.Application_DocumentBeforeClose;
 
