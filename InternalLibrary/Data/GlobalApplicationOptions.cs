@@ -61,8 +61,10 @@ namespace InternalLibrary.Data
         /// The TM p_ PATH
         /// </summary>
         public static string TMP_PATH = Environment.GetEnvironmentVariable("TMP") + "\\SFSO\\";
-        public static TimeSpan ThreadTaskTimeout = new TimeSpan(1, 0, 0);
-
+        public static TimeSpan OfficeObjectModelProtectionTimeout = DefaultOfficeObjectModelProtectionTimeout;
+        public static readonly TimeSpan DefaultOfficeObjectModelProtectionTimeout = new TimeSpan(1, 0, 0);
+        public static int ThreadTaskTimeout = DefaultThreadTaskTimeout;
+        public static int DefaultThreadTaskTimeout = 86400000;
         // You should use a more secure way of storing the key here as
         // .NET applications can be disassembled using a reflection tool.
         /// <summary>
@@ -88,6 +90,7 @@ namespace InternalLibrary.Data
         }
 
         private static bool _syncFileNameOnChange = true;
+        public static bool HandlerBusy = false;
         /// <summary>
         /// Gets or sets a value indicating whether [sync file name on change].
         /// </summary>

@@ -70,7 +70,7 @@ namespace InternalLibrary.Controller.EventHandlers
         public void Application_DocumentBeforeClose(dynamic Doc, ref bool Cancel)
         {
             //this.Application.ActiveWindow.Visible = false;
-            GlobalApplicationOptions.ThreadTaskTimeout = new TimeSpan(0, 0, 6);
+            GlobalApplicationOptions.OfficeObjectModelProtectionTimeout = new TimeSpan(0, 0, 6);
             ThreadTasks.WaitForRunningTasks();
         }
 
@@ -142,16 +142,17 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         public void Application_DocumentBeforeSave(dynamic Doc, ref bool SaveAsUI, ref bool Cancel)
         {
-            ThreadTasks.RunThread(() =>
-            {
-                //System.Threading.Thread.Sleep(2000);
-                InternalLibrary.Forms.ConflictingVersionDialog dialog = new InternalLibrary.Forms.ConflictingVersionDialog();
-                dialog.ShowDialog();
-                ConflictResolutionOptions result = dialog.UserSelection;
-            });
+            GlobalApplicationOptions.HandlerBusy = true;
+            //ThreadTasks.RunThread(() =>
+            //{
+            //    //System.Threading.Thread.Sleep(2000);
+            //    InternalLibrary.Forms.ConflictingVersionDialog dialog = new InternalLibrary.Forms.ConflictingVersionDialog();
+            //    dialog.ShowDialog();
+            //    ConflictResolutionOptions result = dialog.UserSelection;
+            //});
             
 
-            return;
+            //return;
 
             this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
             Model.ConflictResolution conflictManager = new Model.ConflictResolution();
@@ -199,6 +200,8 @@ namespace InternalLibrary.Controller.EventHandlers
                     Cancel = true;
                 }
             }
+
+            GlobalApplicationOptions.HandlerBusy = false;
         }
 
         // saveAsDialog.Show() returns bool type for Excel, short type for Word
