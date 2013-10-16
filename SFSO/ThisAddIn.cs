@@ -59,7 +59,6 @@ namespace SFSO
             this.handlers = new Handlers(this.SaveAsDialog);
             this.handlers.CheckForUpdates(this.Application.COMAddIns);
 
-            this.Application.ProtectedViewWindowActivate += Application_ProtectedViewWindowActivate;
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
             this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.DocumentChange += Application_DocumentNew;
@@ -74,11 +73,6 @@ namespace SFSO
             {
                 handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
             }
-        }
-
-        void Application_ProtectedViewWindowActivate(Word.ProtectedViewWindow PvWindow)
-        {
-            //throw new NotImplementedException();
         }
 
         /// <summary>
