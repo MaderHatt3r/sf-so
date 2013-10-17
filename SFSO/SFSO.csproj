@@ -34,7 +34,7 @@
     <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_7\WordTest\</PublishUrl>
     <InstallUrl>http://updates.ctdragon.com/SFSO/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>0.0.0.7</ApplicationVersion>
+    <ApplicationVersion>0.0.0.8</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
@@ -285,7 +285,7 @@
     <ManifestKeyFile>SFSOspc.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>BCE81C271D910AB96EABED44DAD02FE88F264C17</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>4CB9491EFCFAF4E07F647B7E70BD06A604F14ADD</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
