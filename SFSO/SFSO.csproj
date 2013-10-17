@@ -29,14 +29,14 @@
     <AssemblyName>SFSO</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
-    <IsWebBootstrapper>False</IsWebBootstrapper>
+    <IsWebBootstrapper>True</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_5\Word\</PublishUrl>
-    <InstallUrl />
+    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_7\WordTest\</PublishUrl>
+    <InstallUrl>http://updates.ctdragon.com/SFSO/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>0.0.0.6</ApplicationVersion>
+    <ApplicationVersion>0.0.0.7</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
-    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
     <UpdateIntervalUnits>days</UpdateIntervalUnits>
     <ProductName>SFSO</ProductName>
@@ -258,6 +258,7 @@
     <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="SFSOspc.pfx" />
     <None Include="SFSO_TemporaryKey.pfx" />
     <None Include="ThisAddIn.Designer.xml">
       <DependentUpon>ThisAddIn.cs</DependentUpon>
@@ -281,10 +282,13 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>SFSO_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>SFSOspc.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>DBD539AD77044D73C9381ACBD25B5CEED9A22B9B</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>BCE81C271D910AB96EABED44DAD02FE88F264C17</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
