@@ -31,7 +31,7 @@
     <DefineConstants>VSTO40</DefineConstants>
     <IsWebBootstrapper>True</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_7\WordTest\</PublishUrl>
+    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_7\Word\</PublishUrl>
     <InstallUrl>http://updates.ctdragon.com/SFSO/</InstallUrl>
     <TargetCulture>en</TargetCulture>
     <ApplicationVersion>0.0.0.8</ApplicationVersion>
