@@ -29,16 +29,16 @@
     <AssemblyName>SFSO-E</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
-    <IsWebBootstrapper>False</IsWebBootstrapper>
+    <IsWebBootstrapper>True</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_4\Excel\</PublishUrl>
-    <InstallUrl />
+    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_7\Excel\</PublishUrl>
+    <InstallUrl>http://updates.ctdragon.com/SFSO/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>0.0.0.6</ApplicationVersion>
+    <ApplicationVersion>0.0.0.7</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateInterval>0</UpdateInterval>
-    <UpdateIntervalUnits>days</UpdateIntervalUnits>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>hours</UpdateIntervalUnits>
     <ProductName>SFSO-E</ProductName>
     <PublisherName>CTDragon</PublisherName>
     <SupportUrl>http://ctdragon.com</SupportUrl>
