@@ -99,7 +99,7 @@ namespace InternalLibrary.IO
         {
             System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();
 
-            while (timer.Elapsed < GlobalApplicationOptions.OfficeObjectModelProtectionTimeout)
+            while (timer.Elapsed.CompareTo(GlobalApplicationOptions.OfficeObjectModelProtectionTimeout) > 0)
             {
                 try
                 {
