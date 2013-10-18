@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>Google.Apis.Drive.v2</id>
-    <version>1.5.0.95-beta</version>
+    <version>1.5.0.104-beta</version>
     <title>Google.Apis.Drive.v2 Client Library</title>
     <authors>Google Inc.</authors>
     <owners>Google Inc.</owners>

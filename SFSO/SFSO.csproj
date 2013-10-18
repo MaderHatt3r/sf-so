@@ -30,11 +30,13 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
     <IsWebBootstrapper>True</IsWebBootstrapper>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_8\Word\</PublishUrl>
+    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_11\Word\</PublishUrl>
     <InstallUrl>http://updates.ctdragon.com/SFSO/Word/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>0.0.0.9</ApplicationVersion>
+    <ApplicationVersion>0.0.0.17</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
@@ -137,13 +139,12 @@
     <Reference Include="DotNetOpenAuth">
       <HintPath>..\packages\Google.Apis.Authentication.1.5.0-beta\lib\net40\DotNetOpenAuth.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Authentication.OAuth2, Version=1.5.0.28991, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Google.Apis.Authentication.OAuth2">
       <HintPath>..\packages\Google.Apis.Authentication.1.5.0-beta\lib\net40\Google.Apis.Authentication.OAuth2.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Drive.v2, Version=1.5.0.95, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Google.Apis.Drive.v2, Version=1.5.0.104, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Google.Apis.Drive.v2.1.5.0.95-beta\lib\portable-net4+sl4+wp71+win8\Google.Apis.Drive.v2.dll</HintPath>
+      <HintPath>..\packages\Google.Apis.Drive.v2.1.5.0.104-beta\lib\portable-net4+sl4+wp71+win8\Google.Apis.Drive.v2.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -318,4 +319,5 @@
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
     <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
