@@ -12,11 +12,13 @@ namespace Setup
 {
     class Program
     {
-        private static string tempPath = Environment.GetEnvironmentVariable("TMP") ?? Environment.GetEnvironmentVariable("TEMP");
-        private static string wordInstallerPath = tempPath + "\\SFSO\\WordInstaller\\";
-        private static string excelInstallerPath = tempPath + "\\SFSO\\ExcelInstaller\\";
+        private static string tempEnvironmentPath = Environment.GetEnvironmentVariable("TMP") ?? Environment.GetEnvironmentVariable("TEMP");
+        private static string tempDownloadPath = tempEnvironmentPath + "\\SFSO\\";
+        private static string wordInstallerPath = tempEnvironmentPath + "\\SFSO\\WordInstaller\\";
+        private static string excelInstallerPath = tempEnvironmentPath + "\\SFSO\\ExcelInstaller\\";
         private static string wordInstallerFullName = wordInstallerPath + "setup.exe";
         private static string excelInstallerFullName = wordInstallerPath + "setup.exe";
+        private static string certificateFullName = tempDownloadPath + "SFSOspc.pfx";
         private static string executionPath = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
         static void Main(string[] args)
@@ -48,9 +50,11 @@ namespace Setup
             {
                 try
                 {
-                    //InstallCodeSignatureCertificate();
+                    DownloadSetupFiles();
 
-                    EnablePromptForUntrustedCertificates();
+                    InstallCodeSignatureCertificate();
+
+                    //EnablePromptForUntrustedCertificates();
 
                     InstallClickOnceApplications();
                 }
@@ -72,19 +76,19 @@ namespace Setup
         {
             Console.WriteLine("Installing Certificates");
 
-            //X509Certificate2 cert = new X509Certificate2("Word/SFSOspc.pfx", "ehWjjuJuVZSbgBAJUR2X", X509KeyStorageFlags.PersistKeySet);
-            //X509Store store = new X509Store(StoreName.My);
-            //store.Open(OpenFlags.ReadWrite);
-            //store.Add(cert);
-
-            Console.Out.WriteLine("X509Certificate2 cert = new X509Certificate2(\"C:\\Users\\CTDragon\\Desktop\\ALPHA_7\\SFSOspc.pfx\", \"\", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);");
-            X509Certificate2 cert = new X509Certificate2("C:\\Users\\CTDragon\\Desktop\\ALPHA_7\\SFSOspc.pfx", "", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
-            Console.Out.WriteLine("X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);");
-            X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
-            Console.Out.WriteLine("store.Open(OpenFlags.ReadWrite);");
+            X509Certificate2 cert = new X509Certificate2(certificateFullName, "", X509KeyStorageFlags.PersistKeySet);
+            X509Store store = new X509Store(StoreName.Root);
             store.Open(OpenFlags.ReadWrite);
-            Console.Out.WriteLine("store.Add(cert);");
             store.Add(cert);
+
+            //Console.Out.WriteLine("X509Certificate2 cert = new X509Certificate2(\"C:\\Users\\CTDragon\\Desktop\\ALPHA_7\\SFSOspc.pfx\", \"\", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);");
+            X509Certificate2 xCert = new X509Certificate2(certificateFullName, "", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+            //Console.Out.WriteLine("X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);");
+            X509Store xStore = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+            //Console.Out.WriteLine("store.Open(OpenFlags.ReadWrite);");
+            xStore.Open(OpenFlags.ReadWrite);
+            //Console.Out.WriteLine("store.Add(cert);");
+            xStore.Add(xCert);
         }
 
         #endregion // Install Certificate
@@ -120,8 +124,6 @@ namespace Setup
 
         private static void InstallClickOnceApplications()
         {
-            DownloadSetupFiles();
-
             Console.WriteLine("Installing Software");
             Process.Start(wordInstallerFullName).WaitForExit();
             //Process.Start(excelInstallerFullName).WaitForExit();
@@ -138,13 +140,15 @@ namespace Setup
             webClient.DownloadFileCompleted += webClient_DownloadFileCompleted;
             Console.WriteLine();
             webClient.DownloadFile("http://updates.ctdragon.com/SFSO/Word/setup.exe", wordInstallerFullName);
-            Console.WriteLine();
+            //Console.WriteLine();
             //webClient.DownloadFile("http://updates.ctdragon.com/SFSO/Excel/setup.exe", excelInstallerFullName);
+            Console.WriteLine();
+            webClient.DownloadFile("http://updates.ctdragon.com/SFSO/Certificates/SelfSigned/SHA1_DefaultEncryption/SFSOspc.pfx", certificateFullName);
         }
 
         static void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            Console.Write("\r{0}%", e.BytesReceived + "/ " + e.TotalBytesToReceive + e.ProgressPercentage);
+            Console.Write("\r{0}%", e.BytesReceived + "/ " + e.TotalBytesToReceive + "____" + e.ProgressPercentage);
         }
 
         static void webClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
