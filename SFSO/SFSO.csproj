@@ -32,7 +32,7 @@
     <IsWebBootstrapper>True</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_7\Word\</PublishUrl>
-    <InstallUrl>http://updates.ctdragon.com/SFSO/</InstallUrl>
+    <InstallUrl>http://updates.ctdragon.com/SFSO/Word/</InstallUrl>
     <TargetCulture>en</TargetCulture>
     <ApplicationVersion>0.0.0.8</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>

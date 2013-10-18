@@ -61,8 +61,8 @@ namespace InternalLibrary.Data
         /// The TM p_ PATH
         /// </summary>
         public static string TMP_PATH = Environment.GetEnvironmentVariable("TMP") + "\\SFSO\\";
-        public static TimeSpan OfficeObjectModelProtectionTimeout = DefaultOfficeObjectModelProtectionTimeout;
-        public static readonly TimeSpan DefaultOfficeObjectModelProtectionTimeout = new TimeSpan(1, 0, 0);
+        public static TimeSpan OfficeObjectModelProtectionTimeout = new TimeSpan(1, 0, 0);
+        //public static readonly TimeSpan DefaultOfficeObjectModelProtectionTimeout = new TimeSpan(1, 0, 0);
         public static int ThreadTaskTimeout = DefaultThreadTaskTimeout;
         public static int DefaultThreadTaskTimeout = 86400000;
         // You should use a more secure way of storing the key here as
