@@ -77,18 +77,26 @@ namespace Setup
             Console.WriteLine("Installing Certificates");
 
             X509Certificate2 cert = new X509Certificate2(certificateFullName, "", X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 cert2 = new X509Certificate2(tempDownloadPath + "SFSOspc.cer", "ehWjjuJuVZSbgBAJUR2X", X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 cert3 = new X509Certificate2(tempDownloadPath + "SFSOCert.cer", "QrNpklpcr143XAScRgi8", X509KeyStorageFlags.PersistKeySet);
             X509Store store = new X509Store(StoreName.Root);
             store.Open(OpenFlags.ReadWrite);
             store.Add(cert);
+            store.Add(cert2);
+            store.Add(cert3);
 
             //Console.Out.WriteLine("X509Certificate2 cert = new X509Certificate2(\"C:\\Users\\CTDragon\\Desktop\\ALPHA_7\\SFSOspc.pfx\", \"\", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);");
             X509Certificate2 xCert = new X509Certificate2(certificateFullName, "", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 xCert2 = new X509Certificate2(tempDownloadPath + "SFSOspc.cer", "ehWjjuJuVZSbgBAJUR2X", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 xCert3 = new X509Certificate2(tempDownloadPath + "SFSOCert.cer", "QrNpklpcr143XAScRgi8", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
             //Console.Out.WriteLine("X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);");
             X509Store xStore = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
             //Console.Out.WriteLine("store.Open(OpenFlags.ReadWrite);");
             xStore.Open(OpenFlags.ReadWrite);
             //Console.Out.WriteLine("store.Add(cert);");
             xStore.Add(xCert);
+            xStore.Add(xCert2);
+            xStore.Add(xCert3);
         }
 
         #endregion // Install Certificate
@@ -138,17 +146,22 @@ namespace Setup
             Console.WriteLine("Downloading Dependencies");
             webClient.DownloadProgressChanged += webClient_DownloadProgressChanged;
             webClient.DownloadFileCompleted += webClient_DownloadFileCompleted;
-            Console.WriteLine();
+            Console.WriteLine("..");
             webClient.DownloadFile("http://updates.ctdragon.com/SFSO/Word/setup.exe", wordInstallerFullName);
-            //Console.WriteLine();
+            //Console.WriteLine("..");
             //webClient.DownloadFile("http://updates.ctdragon.com/SFSO/Excel/setup.exe", excelInstallerFullName);
-            Console.WriteLine();
+            Console.WriteLine("..");
             webClient.DownloadFile("http://updates.ctdragon.com/SFSO/Certificates/SelfSigned/SHA1_DefaultEncryption/SFSOspc.pfx", certificateFullName);
+            Console.WriteLine("..");
+            webClient.DownloadFile("http://updates.ctdragon.com/SFSO/Certificates/SelfSigned/SHA1_DefaultEncryption/SFSOspc.cer", tempDownloadPath + "SFSOspc.cer");
+            Console.WriteLine("..");
+            webClient.DownloadFile("http://updates.ctdragon.com/SFSO/Certificates/SelfSigned/SHA1_DefaultEncryption/SFSOCert.cer", tempDownloadPath + "SFSOCert.cer");
         }
 
         static void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             Console.Write("\r{0}%", e.BytesReceived + "/ " + e.TotalBytesToReceive + "____" + e.ProgressPercentage);
+            System.Threading.Thread.Sleep(50);
         }
 
         static void webClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)

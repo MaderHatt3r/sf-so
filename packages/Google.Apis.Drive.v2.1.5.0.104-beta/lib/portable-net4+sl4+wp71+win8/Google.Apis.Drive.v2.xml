@@ -722,7 +722,7 @@
             <summary>A group of labels for the file.</summary>
         </member>
         <member name="P:Google.Apis.Drive.v2.Data.File.LabelsData.Hidden">
-            <summary>Whether this file is hidden from the user.</summary>
+            <summary>Deprecated.</summary>
         </member>
         <member name="P:Google.Apis.Drive.v2.Data.File.LabelsData.Restricted">
             <summary>Whether viewers are prevented from downloading this file.</summary>
@@ -3057,6 +3057,18 @@
             <summary>Exports the contents of the Realtime API data model associated with this file as JSON.</summary>
             <param name="fileId">The ID of the file that the Realtime API data model is associated with.</param>
         </member>
+        <member name="M:Google.Apis.Drive.v2.RealtimeResource.Update(System.String)">
+            <summary>Overwrites the Realtime API data model associated with this file with the provided JSON data
+            model.</summary>
+            <param name="fileId">The ID of the file that the Realtime API data model is associated with.</param>
+        </member>
+        <member name="M:Google.Apis.Drive.v2.RealtimeResource.Update(System.String,System.IO.Stream,System.String)">
+            <summary>Overwrites the Realtime API data model associated with this file with the provided JSON data
+            model.</summary>
+            <param name="fileId">The ID of the file that the Realtime API data model is associated with.</param>
+            <param name="stream">The stream to upload.</param>
+            <param name="contentType">The content type of the stream to upload.</param>
+        </member>
         <member name="T:Google.Apis.Drive.v2.RealtimeResource.GetRequest">
             <summary>Exports the contents of the Realtime API data model associated with this file as JSON.</summary>
         </member>
@@ -3089,6 +3101,82 @@
         </member>
         <member name="P:Google.Apis.Drive.v2.RealtimeResource.GetRequest.MediaDownloader">
             <summary>Gets the media downloader.</summary>
+        </member>
+        <member name="T:Google.Apis.Drive.v2.RealtimeResource.UpdateRequest">
+            <summary>Overwrites the Realtime API data model associated with this file with the provided JSON data
+            model.</summary>
+        </member>
+        <member name="M:Google.Apis.Drive.v2.RealtimeResource.UpdateRequest.#ctor(Google.Apis.Services.IClientService,System.String)">
+            <summary>Constructs a new Update request.</summary>
+        </member>
+        <member name="M:Google.Apis.Drive.v2.RealtimeResource.UpdateRequest.InitParameters">
+            <summary>Initializes Update parameter list.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateRequest.FileId">
+            <summary>The ID of the file that the Realtime API data model is associated with.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateRequest.BaseRevision">
+            <summary>The revision of the model to diff the uploaded model against. If set, the uploaded model is
+            diffed against the provided revision and those differences are merged with any changes made to the model
+            after the provided revision. If not set, the uploaded model replaces the current model on the
+            server.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateRequest.MethodName">
+            <summary>Gets the method name.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateRequest.HttpMethod">
+            <summary>Gets the HTTP method.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateRequest.RestPath">
+            <summary>Gets the REST path.</summary>
+        </member>
+        <member name="T:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload">
+            <summary>Update media upload which supports resumable upload.</summary>
+        </member>
+        <member name="M:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.#ctor(Google.Apis.Services.IClientService,System.String,System.IO.Stream,System.String)">
+            <summary>Constructs a new Update media upload instance.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.Alt">
+            <summary>Data format for the response.</summary>
+            [default: json]
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.Fields">
+            <summary>Selector specifying which fields to include in a partial response.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.Key">
+            <summary>API key. Your API key identifies your project and provides you with API access, quota, and
+            reports. Required unless you provide an OAuth 2.0 token.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.OauthToken">
+            <summary>OAuth 2.0 token for the current user.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.PrettyPrint">
+            <summary>Returns response with indentations and line breaks.</summary>
+            [default: true]
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.QuotaUser">
+            <summary>Available to use for quota purposes for server-side applications. Can be any arbitrary string
+            assigned to a user, but should not exceed 40 characters. Overrides userIp if both are
+            provided.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.UserIp">
+            <summary>IP address of the site where the request originates. Use this if you want to enforce per-user
+            limits.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.FileId">
+            <summary>The ID of the file that the Realtime API data model is associated with.</summary>
+        </member>
+        <member name="P:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.BaseRevision">
+            <summary>The revision of the model to diff the uploaded model against. If set, the uploaded model is
+            diffed against the provided revision and those differences are merged with any changes made to the model
+            after the provided revision. If not set, the uploaded model replaces the current model on the
+            server.</summary>
+        </member>
+        <member name="T:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.AltEnum">
+            <summary>Data format for the response.</summary>
+        </member>
+        <member name="F:Google.Apis.Drive.v2.RealtimeResource.UpdateMediaUpload.AltEnum.Json">
+            <summary>Responses with Content-Type of application/json</summary>
         </member>
         <member name="T:Google.Apis.Drive.v2.RepliesResource">
             <summary>The "replies" collection of methods.</summary>
