@@ -55,7 +55,7 @@ namespace SFSO
             //    Word.WdProtectionType protection = this.Application.ActiveProtectedViewWindow.Document.ProtectionType;
             //    System.Windows.Forms.MessageBox.Show(protection.ToString() + "\nIsActive: " + this.Application.ActiveProtectedViewWindow.Active);
             //}
-
+            //System.Windows.Forms.MessageBox.Show("The software has been updated!");
             this.handlers = new Handlers(this.SaveAsDialog);
             this.handlers.CheckForUpdates(this.Application.COMAddIns);
 
