@@ -36,7 +36,7 @@
     <PublishUrl>ftp://ctdragon.com/public_html/updates/SFSO/Word/</PublishUrl>
     <InstallUrl>http://updates.ctdragon.com/SFSO/Word/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>0.0.0.26</ApplicationVersion>
+    <ApplicationVersion>0.0.0.27</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>

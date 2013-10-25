@@ -21,6 +21,7 @@ using Office = Microsoft.Office.Core;
 using InternalLibrary.IO;
 using InternalLibrary.Data;
 using InternalLibrary.Model.RequestManagement;
+using InternalLibrary.Model;
 
 namespace InternalLibrary.Controller.EventHandlers
 {
@@ -93,6 +94,8 @@ namespace InternalLibrary.Controller.EventHandlers
         {
             ThreadTasks.WaitForRunningTasks();
             this.requestController.SpawnInitializeUploadThread(Doc, Doc.CustomDocumentProperties);
+            //ConflictResolution resolutionManager = new ConflictResolution();
+            //resolutionManager.CheckForNewSaves(Doc);
         }
 
         #region DocBeforeSave
