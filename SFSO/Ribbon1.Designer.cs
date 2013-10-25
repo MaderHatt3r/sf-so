@@ -50,6 +50,7 @@
             this.tab1.Groups.Add(this.group1);
             this.tab1.Label = "TabAddIns";
             this.tab1.Name = "tab1";
+            this.tab1.Visible = false;
             // 
             // group1
             // 

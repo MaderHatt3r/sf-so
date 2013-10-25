@@ -43,11 +43,17 @@ namespace InternalLibrary.IO
         public static string createTmpCopy(string fileName, string fullFileLocation)
         {
             string tmpPath = GlobalApplicationOptions.TMP_PATH;
-            string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.');
+            string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.') + ".docx";
             Directory.CreateDirectory(tmpPath);
             System.IO.File.Copy(fullFileLocation, fileCopy);
 
             return fileCopy;
+        }
+
+        public static string copyFile(string fileLocation, string fileDestination)
+        {
+            System.IO.File.Copy(fileLocation, fileDestination, true);
+            return fileDestination;
         }
 
         /// <summary>
@@ -67,7 +73,7 @@ namespace InternalLibrary.IO
 
         public static string SaveFile(Stream documentStream, string fileName)
         {
-            string fullFilePath = GlobalApplicationOptions.TMP_PATH + fileName;
+            string fullFilePath = GlobalApplicationOptions.TMP_PATH + fileName + "DrivePullTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.') + ".docx";
             FileStream fs = new FileStream(fullFilePath, FileMode.Create, FileAccess.Write);
             documentStream.CopyTo(fs);
             fs.Flush();

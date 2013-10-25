@@ -55,7 +55,7 @@ namespace InternalLibrary.Model
 
             if (!string.IsNullOrEmpty(prevRevisionID) && !string.IsNullOrEmpty(newRevisionID) && prevRevisionID != newRevisionID)
             {
-                ResolveNewRevision(Doc, prevFileID, prevRevisionID, prevFileID);
+                ResolveNewRevision(Doc, prevFileID, prevRevisionID, prevFileID, googleFile);
             }
 
             return AllowSaves;
@@ -67,7 +67,7 @@ namespace InternalLibrary.Model
         /// <param name="Doc">The document.</param>
         /// <param name="prevFileID">The previous file unique identifier.</param>
         /// <param name="googleFile">The google file.</param>
-        private void ResolveNewRevision(dynamic Doc, string prevFileID, string prevRevisionID, string fileID)
+        private void ResolveNewRevision(dynamic Doc, string prevFileID, string prevRevisionID, string fileID, File googleFile)
         {
             //GlobalApplicationOptions.ThreadTaskTimeout = 6;
             InternalLibrary.Forms.ConflictingVersionDialog dialog = new InternalLibrary.Forms.ConflictingVersionDialog();
@@ -77,7 +77,7 @@ namespace InternalLibrary.Model
             switch (result)
             {
                 case ConflictResolutionOptions.PULL:
-                    PullLatest(Doc, fileID);
+                    PullLatest(Doc, fileID, googleFile.Title);
                     //System.Windows.Forms.MessageBox.Show("This feature is not yet implemented. Please download the latest version from Google Drive until this feature is developed.");
                     break;
                 case ConflictResolutionOptions.MERGE:
@@ -94,7 +94,7 @@ namespace InternalLibrary.Model
             //GlobalApplicationOptions.ThreadTaskTimeout = GlobalApplicationOptions.DefaultThreadTaskTimeout;
         }
 
-        private void PullLatest(dynamic Doc, string fileID)
+        private void PullLatest(dynamic Doc, string fileID, string googleFileName)
         {
             string newVersion = ServiceRequestManagement.GetRequestManager.Save(fileID, Doc.Name);
 
@@ -112,10 +112,14 @@ namespace InternalLibrary.Model
             {
                 while (GlobalApplicationOptions.HandlerBusy) { continue; }
                 System.Threading.Thread.Sleep(10);
+                string destinationFileName = Doc.FullName;
                 Doc.Close(Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges);
                 //Copy pulledDocument from temp to Doc directory
+                string relocatedDoc = FileIO.copyFile(newVersion, destinationFileName);
                 //Open the copied document
+                Microsoft.Office.Interop.Word.Document relocatedDocument = myApp.Documents.Open(relocatedDoc, ref missing, ref missing, true, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, true, ref missing, ref missing, ref missing, ref missing);
                 //Close the temp document
+                pulledDocument.Close(Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges);
             }).Start();
             //InternalLibrary.Controller.EventHandlers.Handlers handlers = new InternalLibrary.Controller.EventHandlers.Handlers(null);
             //myApp.DocumentBeforeClose -= handlers.Application_DocumentBeforeClose;
