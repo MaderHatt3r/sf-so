@@ -20,7 +20,7 @@ namespace InternalLibrary.Data
 {
     public enum ConflictResolutionOptions
     {
-        PULL, MERGE, CREATE_NEW, FORCE_PUSH
+        PULL, MERGE, CREATE_NEW, FORCE_PUSH, CANCEL
     }
 
     /// <summary>
@@ -88,6 +88,15 @@ namespace InternalLibrary.Data
             get { return _newRevision; }
             set { _newRevision = value; }
         }
+
+        private static bool _pinned = true;
+
+        public static bool Pinned
+        {
+            get { return _pinned; }
+            set { _pinned = value; }
+        }
+
 
         private static bool _syncFileNameOnChange = true;
         public static bool HandlerBusy = false;

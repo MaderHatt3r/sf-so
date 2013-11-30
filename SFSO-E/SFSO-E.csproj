@@ -282,6 +282,20 @@
       <Name>InternalLibrary</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Runtime.dll">
+      <Link>System.Runtime.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Threading.Tasks.dll">
+      <Link>System.Threading.Tasks.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.Net.Http.2.1.10\lib\net40\System.Net.Http.dll">
+      <Link>System.Net.Http.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

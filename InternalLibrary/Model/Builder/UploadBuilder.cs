@@ -57,7 +57,7 @@ namespace InternalLibrary.Model.Bulilder
         /// <param name="stream">The stream.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Google.Apis.Upload.ResumableUpload{FileFile}.</returns>
-        public Google.Apis.Upload.ResumableUpload<File, File> buildUploadRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName)
+        public Google.Apis.Upload.ResumableUpload<File, File> buildUploadRequest(DriveService service, string googleFileID, System.IO.MemoryStream stream, string fileName, bool newRevision = true)
         {
             File body;
             Google.Apis.Upload.ResumableUpload<File, File> request;
@@ -69,7 +69,8 @@ namespace InternalLibrary.Model.Bulilder
                 
                 //Create an update request
                 request = service.Files.Update(body, googleFileID, stream, mimeType);
-                ((FilesResource.UpdateMediaUpload)request).NewRevision = GlobalApplicationOptions.NewRevision;
+                ((FilesResource.UpdateMediaUpload)request).NewRevision = GlobalApplicationOptions.NewRevision && newRevision;
+                ((FilesResource.UpdateMediaUpload)request).Pinned = GlobalApplicationOptions.Pinned;
                 return request;
             }
             else

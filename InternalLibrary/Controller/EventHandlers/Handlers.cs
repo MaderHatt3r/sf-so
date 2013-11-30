@@ -61,6 +61,18 @@ namespace InternalLibrary.Controller.EventHandlers
         public void AddIn_Startup(dynamic doc, dynamic customProp)
         {
             this.requestController.SpawnInitializeUploadThread(doc, customProp);
+            this.Application_DocumentOpen(doc);
+        }
+
+        public void Application_DocumentOpen(dynamic doc)
+        {
+            if (!GlobalApplicationOptions.HandlerBusy)
+            {
+                GlobalApplicationOptions.HandlerBusy = true;
+                bool cancel = false;
+                Application_DocumentBeforeSave(doc, false, ref cancel);
+            }
+            GlobalApplicationOptions.HandlerBusy = false;
         }
 
         /// <summary>
@@ -234,7 +246,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="COMAddIns">The COM add ins.</param>
         public void CheckForUpdates(Office.COMAddIns COMAddIns)
         {
-            DateTime expirationDate = new DateTime(2013, 10, 30);
+            DateTime expirationDate = new DateTime(2013, 12, 30);
             if (DateTime.Now.CompareTo(expirationDate) >= 0)
             {
                 foreach (Office.COMAddIn addin in COMAddIns)

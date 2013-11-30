@@ -58,7 +58,10 @@ namespace SFSO_E
             this.Application.WorkbookActivate += Application_DocumentNew;
             this.Application.WorkbookOpen += Application_WorkbookOpen;
 
-            handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveWorkbook, Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties);
+            if (this.Application.ProtectedViewWindows.Count <= 0)
+            {
+                handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveWorkbook, Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties);
+            }
         }
 
 

@@ -42,12 +42,25 @@ namespace InternalLibrary.IO
         /// <returns>System.String.</returns>
         public static string createTmpCopy(string fileName, string fullFileLocation)
         {
-            string tmpPath = GlobalApplicationOptions.TMP_PATH;
-            string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.') + ".docx";
-            Directory.CreateDirectory(tmpPath);
-            System.IO.File.Copy(fullFileLocation, fileCopy);
+            try
+            {
+                string tmpPath = GlobalApplicationOptions.TMP_PATH;
+                string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString("MM.dd.yyyy,hh.mm.ss.fff,tt") + ".docx";
+                Directory.CreateDirectory(tmpPath);
+                System.IO.File.Copy(fullFileLocation, fileCopy);
 
-            return fileCopy;
+                return fileCopy;
+            }
+            catch
+            {
+                System.Threading.Thread.Sleep(50);
+                string tmpPath = GlobalApplicationOptions.TMP_PATH;
+                string fileCopy = tmpPath + fileName + "DriveUploadTmp" + DateTime.Now.ToString("MM.dd.yyyy,hh.mm.ss.fff,tt") + ".docx";
+                Directory.CreateDirectory(tmpPath);
+                System.IO.File.Copy(fullFileLocation, fileCopy);
+
+                return fileCopy;
+            }
         }
 
         public static string copyFile(string fileLocation, string fileDestination)
@@ -73,13 +86,27 @@ namespace InternalLibrary.IO
 
         public static string SaveFile(Stream documentStream, string fileName)
         {
-            string fullFilePath = GlobalApplicationOptions.TMP_PATH + fileName + "DrivePullTmp" + DateTime.Now.ToString().Replace('/', '.').Replace(' ', ',').Replace(':', '.') + ".docx";
-            FileStream fs = new FileStream(fullFilePath, FileMode.Create, FileAccess.Write);
-            documentStream.CopyTo(fs);
-            fs.Flush();
-            fs.Close();
+            try
+            {
+                string fullFilePath = GlobalApplicationOptions.TMP_PATH + fileName + "DrivePullTmp" + DateTime.Now.ToString("MM.dd.yyyy,hh.mm.ss.fff,tt") + ".docx";
+                FileStream fs = new FileStream(fullFilePath, FileMode.Create, FileAccess.Write);
+                documentStream.CopyTo(fs);
+                fs.Flush();
+                fs.Close();
 
-            return fullFilePath;
+                return fullFilePath;
+            }
+            catch
+            {
+                System.Threading.Thread.Sleep(50);
+                string fullFilePath = GlobalApplicationOptions.TMP_PATH + fileName + "DrivePullTmp" + DateTime.Now.ToString("MM.dd.yyyy,hh.mm.ss.fff,tt") + ".docx";
+                FileStream fs = new FileStream(fullFilePath, FileMode.Create, FileAccess.Write);
+                documentStream.CopyTo(fs);
+                fs.Flush();
+                fs.Close();
+
+                return fullFilePath;
+            }
         }
 
         //private static string createEmptyTmpFile(string fileName)
