@@ -62,6 +62,7 @@ namespace SFSO
             this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
             this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.DocumentChange += Application_DocumentNew;
+            this.Application.DocumentOpen += handlers.Application_DocumentOpen;
             //InternalLibrary.Forms.ConflictingSaveDialog csd = new InternalLibrary.Forms.ConflictingSaveDialog();
             //ConflictResolutionOptions result = ConflictResolutionOptions.PULL;
             //csd.ShowDialog(ref result);

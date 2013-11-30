@@ -24,6 +24,7 @@ namespace InternalLibrary.Forms
         public ConflictingVersionDialog()
         {
             InitializeComponent();
+            UserSelection = ConflictResolutionOptions.CANCEL;
         }
 
         //public void Set(ref ConflictResolutionOptions selectedOption)

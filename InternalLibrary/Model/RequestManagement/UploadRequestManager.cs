@@ -62,7 +62,7 @@ namespace InternalLibrary.Model.RequestManagement
         /// <param name="Doc">The doc.</param>
         public void updateDriveFile(dynamic Doc)
         {
-            string newFileID = this.upload(Doc, Doc.Name, Doc.FullName);
+            string newFileID = this.upload(Doc, Doc.Name, Doc.FullName, GlobalApplicationOptions.NewRevision);
             this.tmpUploadID.Remove(newFileID);
         }
 
@@ -88,7 +88,7 @@ namespace InternalLibrary.Model.RequestManagement
             string fileName = "TMP";
             string fullName = null;
 
-            string newFileID = upload(Doc, fileName, fullName);
+            string newFileID = upload(Doc, fileName, fullName, false);
 
             this.tmpUploadID.Add(newFileID);
         }
@@ -100,7 +100,7 @@ namespace InternalLibrary.Model.RequestManagement
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fullName">The full name.</param>
         /// <returns>System.String google file id returned from the upload</returns>
-        private string upload(dynamic Doc, string fileName, string fullName)
+        private string upload(dynamic Doc, string fileName, string fullName, bool newRevision)
         {
             // Get Google File ID
             string fileID = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME);
@@ -109,17 +109,28 @@ namespace InternalLibrary.Model.RequestManagement
             System.IO.MemoryStream stream = FileIO.createMemoryStream(Doc, fileName, fullName);
 
             // Create request
-            Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, fileID, stream, fileName);
+            Google.Apis.Upload.ResumableUpload<File, File> request = this.uploadBuilder.buildUploadRequest(service, fileID, stream, fileName, newRevision);
 
             request.Upload();
             File googleFile = request.ResponseBody;
-            
+
             FileIO.SetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.GOOGLE_FILE_ID_PROPERTY_NAME, googleFile.Id);
             string previousRevision = FileIO.GetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME);
             FileIO.SetDocPropValue_ThreadSafe(Doc, GlobalApplicationOptions.HEAD_REVISION_ID_PROPERTY_NAME, googleFile.HeadRevisionId);
-            ConflictResolution.CheckForConflicts(googleFile.Id, previousRevision, googleFile.HeadRevisionId);
+            //ConflictResolution.CheckForConflicts(googleFile.Id, previousRevision, googleFile.HeadRevisionId);
 
-            return googleFile.Id;
+            //if (newRevision)
+            //{
+            //    Revision revision = service.Revisions.Get(googleFile.Id, googleFile.HeadRevisionId).Execute();
+            //    revision.Pinned = false;
+            //    service.Revisions.Update(revision, googleFile.Id, googleFile.HeadRevisionId).Execute();
+            //    return upload(Doc, fileName, fullName, false);
+            //}
+            //else
+            //{
+                //ConflictResolution.CheckForConflicts(googleFile.Id, previousRevision, googleFile.HeadRevisionId);
+                return googleFile.Id;
+            //}
         }
 
         /// <summary>
