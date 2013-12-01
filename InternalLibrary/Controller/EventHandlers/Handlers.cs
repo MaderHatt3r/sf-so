@@ -66,13 +66,26 @@ namespace InternalLibrary.Controller.EventHandlers
 
         public void Application_DocumentOpen(dynamic doc)
         {
-            if (!GlobalApplicationOptions.HandlerBusy)
+            // Check to see if the document is in the middle of a save operation 
+            // TODO: (could wait on a new thread for save to exit and check then)
+            if (allowSave)
+            {
+                System.Windows.Forms.MessageBox.Show("The application was in the middle of a save when opening this document, and could not check if there is a new version available.");
+            }
+
+            // Only if the handler is not busy and if the file is not a new file (does not contain .docx in file name)
+            if (!GlobalApplicationOptions.HandlerBusy && doc.Name.Contains(".docx"))
             {
                 GlobalApplicationOptions.HandlerBusy = true;
-                bool cancel = false;
-                Application_DocumentBeforeSave(doc, false, ref cancel);
+
+                Model.ConflictResolution conflictManager = new Model.ConflictResolution();
+                conflictManager.CheckForNewSaves(doc);
+
+                //string fileName = doc.FullName;
+                //doc.SaveAs(ref fileName);
+
+                GlobalApplicationOptions.HandlerBusy = false;
             }
-            GlobalApplicationOptions.HandlerBusy = false;
         }
 
         /// <summary>
@@ -210,6 +223,7 @@ namespace InternalLibrary.Controller.EventHandlers
                     else
                     {
                         this.documentAfterSave(Doc);
+                        Doc.Save();
                     }
                     this.allowSave = false;
                     Cancel = true;
