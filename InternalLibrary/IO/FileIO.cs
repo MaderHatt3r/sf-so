@@ -187,22 +187,31 @@ namespace InternalLibrary.IO
         /// <param name="propertyValue">The property value.</param>
         public static void SetDocPropValue(dynamic Doc, string propertyName, string propertyValue)
         {
-            object CustomProps = Doc.CustomDocumentProperties;
+            dynamic CustomProps = Doc.CustomDocumentProperties;
             Type typeDocCustomProps = CustomProps.GetType();
 
-            try
+            if (GetDocPropValue(Doc, propertyName) != null)
             {
-                typeDocCustomProps.InvokeMember("Item",
-                              BindingFlags.Default |
-                              BindingFlags.SetProperty,
-                              null, CustomProps,
-                              new object[] { propertyName, propertyValue });
+                CustomProps[propertyName].Delete();
+            }
+            CustomProps.Add(propertyName, false, Microsoft.Office.Core.MsoDocProperties.msoPropertyTypeString, propertyValue);
 
-            }
-            catch
-            {
-                addDocProp(Doc, propertyName, propertyValue);
-            }
+            //object CustomProps = Doc.CustomDocumentProperties;
+            //Type typeDocCustomProps = CustomProps.GetType();
+
+            //try
+            //{
+            //    typeDocCustomProps.InvokeMember("Item",
+            //                  BindingFlags.Default |
+            //                  BindingFlags.SetProperty,
+            //                  null, CustomProps,
+            //                  new object[] { propertyName, propertyValue });
+
+            //}
+            //catch
+            //{
+            //    addDocProp(Doc, propertyName, propertyValue);
+            //}
         }
 
         /// <summary>
