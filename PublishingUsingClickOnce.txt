@@ -1,0 +1,61 @@
+Publishing a .vsto Office Add-in using ClickOnce
+
+Publishing to a website to support automatic updating-----------------------------------------------------------------
+
+On the hosting server, set the MIME type for ".vsto" extensions to "application/x-ms-vsto"
+
+Solution Explorer --> [right-click project] --> Properties --> "Publish" tab
+In Visual Studio set the publish location to a local folder and the "Installation Folder URL" to the website to visit for installation and updates (http://updates.ctdragon.com/SFSO/)
+Set Prerequisites, Updates, and Options
+
+Create a Self-Signed Certificate using VS2012 x64 Cross Tools Command Prompt------------------------------------------
+
+CD to directory where certificates should be saved.
+
+///makecert -r -pe -n "CN=CTDragon" -ss CA -sr CurrentUser -a sha256 -b 01/01/2013 -e 01/01/2014 -cy authority -sky signature -sv SFSOCert.pvk SFSOCert.cer
+///QrNpklpcr143XAScRgi8
+///
+///makecert -pe -n "CN=CTDragonSPC" -a sha256 -cy end -sky signature -ic SFSOCert.cer -iv SFSOCert.pvk -sv SFSOspc.pvk SFSOspc.cer
+///ehWjjuJuVZSbgBAJUR2X
+///
+///pvk2pfx -pvk SFSOspc.pvk -spc SFSOspc.cer -pfx SFSOspc.pfx
+
+
+makecert -r -pe -n "CN=CTDragon" -ss CA -sr CurrentUser -b 01/01/2013 -e 01/01/2014 -cy authority -sky signature -sv SFSOCert.pvk SFSOCert.cer
+QrNpklpcr143XAScRgi8
+
+makecert -pe -n "CN=CTDragonSPC" -cy end -sky signature -ic SFSOCert.cer -iv SFSOCert.pvk -sv SFSOspc.pvk SFSOspc.cer
+ehWjjuJuVZSbgBAJUR2X
+
+pvk2pfx -pvk SFSOspc.pvk -spc SFSOspc.cer -pfx SFSOspc.pfx
+
+
+---------------------------------------------------------------
+Solution Explorer --> [right-click project] --> Properties --> "Signing" tab
+Check "Sign the ClickOnce manifests"
+Click "Select from File..."
+
+Click "Publish Now" in the "Publish" tab
+
+Copy files to update location (http://updates.ctdragon.com/SFSO/)
+
+Create an Setup.exe that installs the certificates, then the program(s)
+
+--CTD
+
+Sources:
+
+Publishing and MIME Type:
+http://www.codeproject.com/Articles/17003/ClickOnce-Quick-steps-to-Deploy-Install-and-Update
+http://msdn.microsoft.com/en-us/library/vstudio/bb772100.aspx
+Certificates:
+http://msdn.microsoft.com/en-us/library/vstudio/bfsktky3.aspx
+http://stackoverflow.com/questions/84847/how-do-i-create-a-self-signed-certificate-for-code-signing-on-windows/16027204#16027204
+Certificate Bug Fix with SHA256:
+http://stackoverflow.com/questions/10901035/vs2012-net-4-0-clickonce-vsto-cryptographicexception-signaturedescription-coul
+Installing Certificate and Program Programmatically:
+http://support.microsoft.com/kb/950090
+http://www.dotnetperls.com/process-start
+Setting Registry Values in C#
+http://msdn.microsoft.com/en-us/library/vstudio/ee308453.aspx
+--CTD
