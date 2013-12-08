@@ -20,7 +20,7 @@ namespace InternalLibrary.Data
 {
     public enum ConflictResolutionOptions
     {
-        PULL, MERGE, CREATE_NEW, FORCE_PUSH, CANCEL
+        PULL, MERGE, CREATE_NEW, FORCE_PUSH, CANCEL, NOTSET
     }
 
     /// <summary>
@@ -100,6 +100,10 @@ namespace InternalLibrary.Data
 
         private static bool _syncFileNameOnChange = true;
         public static bool HandlerBusy = false;
+
+        public static ConflictResolutionOptions? OverrideConflictResolutionDialogResult = null;
+
+
         /// <summary>
         /// Gets or sets a value indicating whether [sync file name on change].
         /// </summary>

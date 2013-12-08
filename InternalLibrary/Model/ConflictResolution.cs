@@ -108,13 +108,9 @@ namespace InternalLibrary.Model
 
             object missing = Type.Missing;
             object doNotSave = Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges;
-            //Doc.Close(ref doNotSave, ref missing, ref missing);
-            
-            Microsoft.Office.Interop.Word.Application myApp = (Microsoft.Office.Interop.Word.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Word.Application");
-            Microsoft.Office.Interop.Word.Document pulledDocument = myApp.Documents.Open(newVersion, ref missing, ref missing, true, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
 
-            //myApp.Visible = false;
-            //myApp.ScreenUpdating = false;
+            Microsoft.Office.Interop.Word.Application myApp = (Microsoft.Office.Interop.Word.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Word.Application");
+            Microsoft.Office.Interop.Word.Document pulledDocument = myApp.Documents.Open(newVersion, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, false, ref missing, ref missing, ref missing, ref missing);
 
             new System.Threading.Tasks.Task(() =>
             {
@@ -131,32 +127,7 @@ namespace InternalLibrary.Model
                 pulledDocument.Close(Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges);
                 GlobalApplicationOptions.HandlerBusy = false;
             }).Start();
-            //InternalLibrary.Controller.EventHandlers.Handlers handlers = new InternalLibrary.Controller.EventHandlers.Handlers(null);
-            //myApp.DocumentBeforeClose -= handlers.Application_DocumentBeforeClose;
 
-
-            //foreach (Microsoft.Office.Interop.Word.Document openDocument in myApp.Documents)
-            //{
-            //    if (openDocument == Doc)
-            //    {
-            //        ThreadTasks.RunThread(() => { System.Threading.Thread.Sleep(5000); openDocument.Close(Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges); });
-            //    }
-            //}
-            
-
-            //Doc.Close(Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges);
-
-            //Doc.Close(Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges, ref missing, ref missing);
-            //foreach (Microsoft.Office.Interop.Word.Document openDocument in myApp.Documents)
-            //{
-            //    if (openDocument == Doc)
-            //    {
-            //        openDocument.Close(false, ref missing, ref missing);
-            //    }
-            //}
-
-            
-            //throw new OperationCanceledException("The save was cancelled due to a pull request for the latest version");
         }
 
         private void MergeRevisions(dynamic Doc, string prevRevisionID, string fileID)
