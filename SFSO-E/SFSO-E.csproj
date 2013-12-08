@@ -30,23 +30,23 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
     <IsWebBootstrapper>True</IsWebBootstrapper>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\Users\CTDragon\Desktop\Google\Publishing\ALPHA_7\Excel\</PublishUrl>
-    <InstallUrl>http://updates.ctdragon.com/SFSO/</InstallUrl>
+    <PublishUrl>ftp://ctdragon.com/public_html/updates/SFSO/Excel/</PublishUrl>
+    <InstallUrl>http://updates.ctdragon.com/SFSO/Excel/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>0.0.0.7</ApplicationVersion>
+    <ApplicationVersion>0.0.0.8</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>hours</UpdateIntervalUnits>
+    <UpdateInterval>0</UpdateInterval>
+    <UpdateIntervalUnits>days</UpdateIntervalUnits>
     <ProductName>SFSO-E</ProductName>
     <PublisherName>CTDragon</PublisherName>
     <SupportUrl>http://ctdragon.com</SupportUrl>
     <FriendlyName>SFSO-E</FriendlyName>
     <OfficeApplicationDescription>Backs up your saved documents</OfficeApplicationDescription>
     <LoadBehavior>3</LoadBehavior>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -268,6 +268,7 @@
       <SubType>Code</SubType>
     </Compile>
     <None Include="SFSO-E_TemporaryKey.pfx" />
+    <None Include="SFSOEspc.pfx" />
     <None Include="ThisAddIn.Designer.xml">
       <DependentUpon>ThisAddIn.cs</DependentUpon>
     </None>
@@ -304,10 +305,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>SFSO-E_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>SFSOEspc.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>2FE9A63C55374D187E7A84BBDF6DB63B78440E38</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>9DC501F97726F569CBE5EB6C970E8919B7DE2934</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
