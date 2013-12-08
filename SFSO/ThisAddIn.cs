@@ -50,12 +50,6 @@ namespace SFSO
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            //if (this.Application.ProtectedViewWindows.Count > 0)
-            //{
-            //    Word.WdProtectionType protection = this.Application.ActiveProtectedViewWindow.Document.ProtectionType;
-            //    System.Windows.Forms.MessageBox.Show(protection.ToString() + "\nIsActive: " + this.Application.ActiveProtectedViewWindow.Active);
-            //}
-            //System.Windows.Forms.MessageBox.Show("The software has been updated!");
             this.handlers = new Handlers(this.SaveAsDialog);
             this.handlers.CheckForUpdates(this.Application.COMAddIns);
 
@@ -63,14 +57,10 @@ namespace SFSO
             this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
             this.Application.DocumentChange += Application_DocumentNew;
             this.Application.DocumentOpen += handlers.Application_DocumentOpen;
-            //InternalLibrary.Forms.ConflictingSaveDialog csd = new InternalLibrary.Forms.ConflictingSaveDialog();
-            //ConflictResolutionOptions result = ConflictResolutionOptions.PULL;
-            //csd.ShowDialog(ref result);
-            //bool canMerge = Globals.ThisAddIn.Application.ActiveDocument.CoAuthoring.CanMerge;
-            //Globals.ThisAddIn.Application.ActiveDocument.CoAuthoring.;
-            //Compare(fileName, googleAuthor, Word.WdCompareTarget.wdCompareTargetCurrent, true, false, false, false);
-            //    (fileName, Word.WdMergeTarget.wdMergeTargetCurrent, true, Word.WdUseFormattingFrom.wdFormattingFromPrompt, false);
-            if (this.Application.ProtectedViewWindows.Count <= 0 || (this.Application.ProtectedViewWindows.Count > 0 && this.Application.ActiveProtectedViewWindow != null && !this.Application.ActiveProtectedViewWindow.Active))
+
+            // Removing the following condition because this is only evaluated when the application starts up, not when doc is opened
+            // || (this.Application.ProtectedViewWindows.Count > 0 && this.Application.ActiveProtectedViewWindow != null && !this.Application.ActiveProtectedViewWindow.Active)
+            if (this.Application.ProtectedViewWindows.Count <= 0)
             {
                 handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
             }

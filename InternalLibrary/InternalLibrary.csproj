@@ -119,6 +119,7 @@
       <DependentUpon>ConflictingVersionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Builder\DownloadBuilder.cs" />
+    <Compile Include="Model\ConflictResolution-E.cs" />
     <Compile Include="Model\RequestManagement\GetRequestManager.cs" />
     <Compile Include="Model\RequestManagement\UploadRequestManager.cs" />
     <Compile Include="Data\GlobalApplicationOptions.cs" />

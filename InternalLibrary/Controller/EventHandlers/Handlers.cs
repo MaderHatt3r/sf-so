@@ -42,6 +42,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// The save as dialog
         /// </summary>
         private dynamic SaveAsDialog;
+        private bool excelIgnoreAfterSave = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Handlers" /> class.
@@ -134,6 +135,19 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="Cancel">if set to <c>true</c> [cancel].</param>
         public void Application_DocumentBeforeSave(dynamic Doc, bool SaveAsUI, ref bool Cancel)
         {
+            GlobalApplicationOptions.HandlerBusy = true;
+
+            DocumentBeforeSavePreCheck(Doc);
+
+            Model.ConflictResolution_E conflictManager = new Model.ConflictResolution_E();
+            if (!conflictManager.CheckForNewSaves(Doc))
+            {
+                Cancel = true;
+            }
+        }
+
+        private void DocumentBeforeSavePreCheck(dynamic Doc)
+        {
             ThreadTasks.WaitForRunningTasks();
             this.Application_DocumentChange(Doc);
         }
@@ -145,10 +159,25 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="Success">if set to <c>true</c> [success].</param>
         public void Application_DocumentAfterSave(dynamic Doc, bool Success)
         {
-            if (Success)
+            if (Success && !excelIgnoreAfterSave)
             {
-                this.documentAfterSave(Doc);
+                //this.documentAfterSave(Doc);
+
+                object missing = Type.Missing;
+                if (!((Microsoft.Office.Interop.Excel.Workbook)Doc).MultiUserEditing)
+                {
+                    Doc.Application.DisplayAlerts = false;
+                    this.excelIgnoreAfterSave = true;
+                    ((Microsoft.Office.Interop.Excel.Workbook)Doc).SaveAs(Doc.FullName, AccessMode: Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlShared);
+                    excelIgnoreAfterSave = false;
+                    Doc.Application.DisplayAlerts = true;
+                }
+                requestController.updateDriveFile(Doc);
+                this.excelIgnoreAfterSave = true;
+                Doc.Save();
+                this.excelIgnoreAfterSave = false;
             }
+            GlobalApplicationOptions.HandlerBusy = false;
         }
 
         /// <summary>
@@ -182,7 +211,7 @@ namespace InternalLibrary.Controller.EventHandlers
 
             //return;
 
-            this.Application_DocumentBeforeSave(Doc, SaveAsUI, ref Cancel);
+            this.DocumentBeforeSavePreCheck(Doc);
             Model.ConflictResolution conflictManager = new Model.ConflictResolution();
             if (conflictManager.CheckForNewSaves(Doc))
             {
