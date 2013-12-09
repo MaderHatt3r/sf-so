@@ -60,6 +60,12 @@
     <Compile Include="UserControls\InstallationType.Designer.cs">
       <DependentUpon>InstallationType.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\InstallationUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\InstallationUserControl.Designer.cs">
+      <DependentUpon>InstallationUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\IntroUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -88,6 +94,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\InstallationType.resx">
       <DependentUpon>InstallationType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\InstallationUserControl.resx">
+      <DependentUpon>InstallationUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\IntroUserControl.resx">
       <DependentUpon>IntroUserControl.cs</DependentUpon>

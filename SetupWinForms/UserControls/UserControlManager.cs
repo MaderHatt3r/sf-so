@@ -14,6 +14,7 @@ namespace Setup.UserControls
         public const string INSTALLATION_TYPE = "InstallationType";
         public const string INTRO_USER_CONTROL = "IntroUserControl";
         public const string SELECT_COMPONENTS_USER_CONTROL = "SelectComponentsUserControl";
+        public const string INSTALLATION_USER_CONTROL = "InstallationUserControl";
 
         private List<UserControl> screens = new List<UserControl>();
         int currentScreen = -1;
@@ -57,10 +58,12 @@ namespace Setup.UserControls
             UserScreens[INTRO_USER_CONTROL] = new IntroUserControl();
             UserScreens[SELECT_COMPONENTS_USER_CONTROL] = new SelectComponentsUserControl();
             UserScreens[INSTALLATION_TYPE] = new InstallationType();
+            UserScreens[INSTALLATION_USER_CONTROL] = new InstallationUserControl();
             
             UserScreenEnabled[INTRO_USER_CONTROL] = true;
             UserScreenEnabled[SELECT_COMPONENTS_USER_CONTROL] = true;
             UserScreenEnabled[INSTALLATION_TYPE] = true;
+            UserScreenEnabled[INSTALLATION_USER_CONTROL] = true;
         }
 
         private void OrderScreens()
@@ -68,6 +71,7 @@ namespace Setup.UserControls
             screens.Add(UserScreens[INTRO_USER_CONTROL]);
             screens.Add(UserScreens[INSTALLATION_TYPE]);
             screens.Add(UserScreens[SELECT_COMPONENTS_USER_CONTROL]);
+            screens.Add(UserScreens[INSTALLATION_USER_CONTROL]);
         }
 
         #endregion // Construction
