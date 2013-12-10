@@ -39,8 +39,17 @@ namespace Setup.UserControls
 
         private void EvaluateCustomInstallOption()
         {
+            bool customInstallation = customInstallationRadioButton.Checked;
             UserControl uc = GlobalApplicationOptions.ucManager.UserScreens[UserControlManager.SELECT_COMPONENTS_USER_CONTROL];
-            GlobalApplicationOptions.ucManager.UserScreenEnabled[UserControlManager.SELECT_COMPONENTS_USER_CONTROL] = customInstallationRadioButton.Checked;
+            GlobalApplicationOptions.ucManager.UserScreenEnabled[UserControlManager.SELECT_COMPONENTS_USER_CONTROL] = customInstallation;
+
+            if (!customInstallation)
+            {
+                foreach (Versions ver in Enum.GetValues(typeof(Versions)))
+                {
+                    GlobalApplicationOptions.AddVersionToInstall(ver);
+                }
+            }
         }
     }
 }

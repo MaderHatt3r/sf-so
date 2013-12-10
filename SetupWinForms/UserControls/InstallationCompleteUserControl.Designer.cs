@@ -31,7 +31,6 @@
             this.descriptionTextBox = new System.Windows.Forms.TextBox();
             this.titleTextBox = new System.Windows.Forms.TextBox();
             this.supportSiteLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.supportDescriptionLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // descriptionTextBox
@@ -63,28 +62,18 @@
             // supportSiteLinkLabel
             // 
             this.supportSiteLinkLabel.AutoSize = true;
-            this.supportSiteLinkLabel.Location = new System.Drawing.Point(446, 300);
+            this.supportSiteLinkLabel.Location = new System.Drawing.Point(346, 356);
             this.supportSiteLinkLabel.Name = "supportSiteLinkLabel";
-            this.supportSiteLinkLabel.Size = new System.Drawing.Size(79, 13);
+            this.supportSiteLinkLabel.Size = new System.Drawing.Size(296, 13);
             this.supportSiteLinkLabel.TabIndex = 3;
             this.supportSiteLinkLabel.TabStop = true;
-            this.supportSiteLinkLabel.Text = "CTDragon.com";
+            this.supportSiteLinkLabel.Text = "Please feel free to visit CTDragon.com for any support needs.";
             this.supportSiteLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.supportSiteLinkLabel_LinkClicked);
-            // 
-            // supportDescriptionLabel
-            // 
-            this.supportDescriptionLabel.AutoSize = true;
-            this.supportDescriptionLabel.Location = new System.Drawing.Point(135, 300);
-            this.supportDescriptionLabel.Name = "supportDescriptionLabel";
-            this.supportDescriptionLabel.Size = new System.Drawing.Size(305, 13);
-            this.supportDescriptionLabel.TabIndex = 4;
-            this.supportDescriptionLabel.Text = "Please feel free to visit the following site for any support needs: ";
             // 
             // InstallationCompleteUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.supportDescriptionLabel);
             this.Controls.Add(this.supportSiteLinkLabel);
             this.Controls.Add(this.titleTextBox);
             this.Controls.Add(this.descriptionTextBox);
@@ -100,6 +89,5 @@
         private System.Windows.Forms.TextBox descriptionTextBox;
         private System.Windows.Forms.TextBox titleTextBox;
         private System.Windows.Forms.LinkLabel supportSiteLinkLabel;
-        private System.Windows.Forms.Label supportDescriptionLabel;
     }
 }

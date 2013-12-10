@@ -49,9 +49,13 @@ namespace Setup.UserControls
                 return;
             }
 
+            foreach (dynamic item in versionsCLB.Items)
+            {
+                GlobalApplicationOptions.VersionsToInstall.Remove(item.Version);
+            }
             foreach (dynamic item in versionsCLB.CheckedItems)
             {
-                GlobalApplicationOptions.VersionsToInstall.Add(item.Version);
+                GlobalApplicationOptions.AddVersionToInstall(item.Version);
             }
 
             foreach (dynamic item in versionsCLB.SelectedItems)
