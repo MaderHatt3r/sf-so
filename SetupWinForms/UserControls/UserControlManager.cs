@@ -15,6 +15,9 @@ namespace Setup.UserControls
         public const string INTRO_USER_CONTROL = "IntroUserControl";
         public const string SELECT_COMPONENTS_USER_CONTROL = "SelectComponentsUserControl";
         public const string INSTALLATION_USER_CONTROL = "InstallationUserControl";
+        public const string INSTALLATION_COMPLETE_USER_CONTROL = "InstallationCompleteUserControl";
+
+        public event EventHandler RaiseNextScreen;
 
         private List<UserControl> screens = new List<UserControl>();
         int currentScreen = -1;
@@ -59,11 +62,13 @@ namespace Setup.UserControls
             UserScreens[SELECT_COMPONENTS_USER_CONTROL] = new SelectComponentsUserControl();
             UserScreens[INSTALLATION_TYPE] = new InstallationType();
             UserScreens[INSTALLATION_USER_CONTROL] = new InstallationUserControl();
+            UserScreens[INSTALLATION_COMPLETE_USER_CONTROL] = new InstallationCompleteUserControl();
             
             UserScreenEnabled[INTRO_USER_CONTROL] = true;
             UserScreenEnabled[SELECT_COMPONENTS_USER_CONTROL] = true;
             UserScreenEnabled[INSTALLATION_TYPE] = true;
             UserScreenEnabled[INSTALLATION_USER_CONTROL] = true;
+            UserScreenEnabled[INSTALLATION_COMPLETE_USER_CONTROL] = true;
         }
 
         private void OrderScreens()
@@ -72,6 +77,7 @@ namespace Setup.UserControls
             screens.Add(UserScreens[INSTALLATION_TYPE]);
             screens.Add(UserScreens[SELECT_COMPONENTS_USER_CONTROL]);
             screens.Add(UserScreens[INSTALLATION_USER_CONTROL]);
+            screens.Add(UserScreens[INSTALLATION_COMPLETE_USER_CONTROL]);
         }
 
         #endregion // Construction
@@ -80,6 +86,11 @@ namespace Setup.UserControls
         //{
         //    screens.Remove(UserScreens[_userControl]);
         //}
+
+        public void NextScreen()
+        {
+            RaiseNextScreen(this, new EventArgs());
+        }
 
         public UserControl GetNextScreen()
         {

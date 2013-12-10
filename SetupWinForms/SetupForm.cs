@@ -15,7 +15,8 @@ namespace Setup
     {
         #region Data
 
-        UserControlManager ucManager = GlobalApplicationOptions.ucManager;
+        private UserControlManager ucManager = GlobalApplicationOptions.ucManager;
+        private UserControl currentControl;
 
         #endregion // Data
 
@@ -26,6 +27,12 @@ namespace Setup
             InitializeComponent();
             contentPanel.Controls.Add(ucManager.GetNextScreen());
             nextButton.Select();
+            ucManager.RaiseNextScreen += ucManager_RaiseNextScreen;
+        }
+
+        void ucManager_RaiseNextScreen(object sender, EventArgs e)
+        {
+            NextScreen();
         }
 
         #endregion // Construction
@@ -47,6 +54,16 @@ namespace Setup
             this.Close();
         }
 
+        private void installButton_Click(object sender, EventArgs e)
+        {
+            ((InstallationUserControl)currentControl).Install();
+        }
+
+        private void SetupForm_InstallationComplete(object sender, EventArgs e)
+        {
+            NextScreen();
+        }
+
         #endregion // Event Handlers
 
         #region Private Helpers
@@ -56,12 +73,19 @@ namespace Setup
             try
             {
                 contentPanel.Controls.Clear();
-                contentPanel.Controls.Add(ucManager.GetNextScreen());
+                currentControl = ucManager.GetNextScreen();
+                contentPanel.Controls.Add(currentControl);
                 if (ucManager.LastScreen)
                 {
                     nextButton.Text = "Finish";
                     nextButton.Click -= nextButton_Click;
                     nextButton.Click += finishButton_Click;
+                }
+                if (currentControl is InstallationUserControl)
+                {
+                    nextButton.Text = "Install";
+                    nextButton.Click -= nextButton_Click;
+                    nextButton.Click += installButton_Click;
                 }
             }
             catch (ArgumentOutOfRangeException)

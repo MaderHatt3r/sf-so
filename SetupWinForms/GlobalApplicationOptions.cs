@@ -16,5 +16,7 @@ namespace Setup
     {
         public static List<Versions> VersionsToInstall = new List<Versions>();
         public static UserControlManager ucManager = new UserControlManager();
+        public static bool ErrorsDuringInstallation = false;
+        public static string ErrorMessage = "";
     }
 }
