@@ -17,7 +17,12 @@ namespace Setup.UserControls
         public InstallationCompleteUserControl()
         {
             InitializeComponent();
-            supportSiteLinkLabel.Links.Add(6, 4, "http://ctdragon.com/");
+            supportSiteLinkLabel.Links.Add(supportSiteLinkLabel.Text.IndexOf("CTDragon.com"), "CTDragon.com".Length, "http://ctdragon.com/");
+            this.ParentChanged += InstallationCompleteUserControl_ParentChanged;
+        }
+
+        private void InstallationCompleteUserControl_ParentChanged(object sender, EventArgs e)
+        {
             CheckForErrors();
         }
 

@@ -15,7 +15,7 @@ namespace Setup
     {
         #region Data
 
-        private UserControlManager ucManager = GlobalApplicationOptions.ucManager;
+        private UserControlManager ucManager;
         private UserControl currentControl;
 
         #endregion // Data
@@ -25,6 +25,7 @@ namespace Setup
         public SetupForm()
         {
             InitializeComponent();
+            ucManager = GlobalApplicationOptions.ucManager;
             contentPanel.Controls.Add(ucManager.GetNextScreen());
             nextButton.Select();
             ucManager.RaiseNextScreen += ucManager_RaiseNextScreen;
@@ -56,6 +57,8 @@ namespace Setup
 
         private void installButton_Click(object sender, EventArgs e)
         {
+            cancelButton.Visible = false;
+            nextButton.Enabled = false;
             ((InstallationUserControl)currentControl).Install();
         }
 
@@ -77,8 +80,9 @@ namespace Setup
                 contentPanel.Controls.Add(currentControl);
                 if (ucManager.LastScreen)
                 {
+                    nextButton.Enabled = true;
                     nextButton.Text = "Finish";
-                    nextButton.Click -= nextButton_Click;
+                    nextButton.Click -= installButton_Click;
                     nextButton.Click += finishButton_Click;
                 }
                 if (currentControl is InstallationUserControl)

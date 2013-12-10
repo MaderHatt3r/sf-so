@@ -61,7 +61,7 @@
             this.descriptionTextBox.Size = new System.Drawing.Size(384, 21);
             this.descriptionTextBox.TabIndex = 2;
             this.descriptionTextBox.TabStop = false;
-            this.descriptionTextBox.Text = "Please wait while your installation is in progress.";
+            this.descriptionTextBox.Text = "Please press the install button to begin installation.";
             // 
             // titleTextBox
             // 
@@ -71,10 +71,10 @@
             this.titleTextBox.Multiline = true;
             this.titleTextBox.Name = "titleTextBox";
             this.titleTextBox.ReadOnly = true;
-            this.titleTextBox.Size = new System.Drawing.Size(190, 45);
+            this.titleTextBox.Size = new System.Drawing.Size(236, 45);
             this.titleTextBox.TabIndex = 3;
             this.titleTextBox.TabStop = false;
-            this.titleTextBox.Text = "Installing";
+            this.titleTextBox.Text = "Ready to Install";
             // 
             // currentTaskTextBox
             // 

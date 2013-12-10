@@ -14,10 +14,17 @@ namespace Setup.Model
         public int PercentCompleted { get; set; }
     }
 
+    public class InstallationCompleteEventArgs : EventArgs
+    {
+        public Versions version { get; set; }
+    }
+
     public class CustomInstaller
     {
 
         #region Data
+
+        private Versions version;
 
         private static string tempEnvironmentPath = Environment.GetEnvironmentVariable("TMP") ?? Environment.GetEnvironmentVariable("TEMP");
         private static string tempDownloadPath = tempEnvironmentPath + "\\SFSO\\";
@@ -41,13 +48,28 @@ namespace Setup.Model
         public event EventHandler<GetManifestCompletedEventArgs> InitializeManifestCompleted;
         public event EventHandler DownloadingApplicationStarted;
         public event EventHandler<DownloadProgressChangedEventArgs> ApplicationDownloadProgressChanged;
-        public event EventHandler<DownloadApplicationCompletedEventArgs> ApplicationDownloadCompleted;
+        public event EventHandler<InstallationCompleteEventArgs> InstallationComplete;
         public event EventHandler ErrorDuringInstallation;
 
         #endregion // Data
 
-        public void InstallApplication(string deployManifestUriStr, Versions version)
+        public void InstallApplication(Versions version)
         {
+            this.version = version;
+            string deployManifestUriStr = "";
+
+            switch (version)
+            {
+                case Versions.WORD:
+                    deployManifestUriStr = "http://updates.ctdragon.com/SFSO/Word/SFSO.vsto";
+                    break;
+                case Versions.EXCEL:
+                    deployManifestUriStr = "http://updates.ctdragon.com/SFSO/Excel/SFSO-E.vsto";
+                    break;
+                default:
+                    break;
+            }
+
             try
             {
                 DownloadSetupFiles();
@@ -66,7 +88,7 @@ namespace Setup.Model
             }
             catch (Exception e)
             {
-                
+
                 GlobalApplicationOptions.ErrorMessage += Environment.NewLine + "Error installing certificates: " + e.Message;
                 ErrorDuringInstallation(this, new EventArgs());
                 return;
@@ -83,7 +105,7 @@ namespace Setup.Model
                 //MessageBox.Show("Cannot install the application: " +
                 //    "The deployment manifest URL supplied is not a valid URL. " +
                 //    "Error: " + uriEx.Message);
-                
+
                 GlobalApplicationOptions.ErrorMessage += Environment.NewLine + "Cannot install the application: " +
                     "The deployment manifest URL supplied is not a valid URL. " +
                     "Error: " + uriEx.Message;
@@ -95,7 +117,7 @@ namespace Setup.Model
                 //MessageBox.Show("Cannot install the application: " +
                 //    "This program requires Windows XP or higher. " +
                 //    "Error: " + platformEx.Message);
-                
+
                 GlobalApplicationOptions.ErrorMessage += Environment.NewLine + "Cannot install the application: " +
                     "This program requires Windows XP or higher. " +
                     "Error: " + platformEx.Message;
@@ -107,7 +129,7 @@ namespace Setup.Model
                 //MessageBox.Show("Cannot install the application: " +
                 //    "The deployment manifest URL supplied is not a valid URL. " +
                 //    "Error: " + argumentEx.Message);
-                
+
                 GlobalApplicationOptions.ErrorMessage += Environment.NewLine + "Cannot install the application: " +
                     "The deployment manifest URL supplied is not a valid URL. " +
                     "Error: " + argumentEx.Message;
@@ -127,7 +149,9 @@ namespace Setup.Model
             if (e.Error != null)
             {
                 // Cancel download and install.
-                MessageBox.Show("Could not download manifest. Error: " + e.Error.Message);
+                //MessageBox.Show("Could not download manifest. Error: " + e.Error.Message);
+                GlobalApplicationOptions.ErrorMessage = "Could not download manifest. Error: " + e.Error.Message;
+                ErrorDuringInstallation(this, new EventArgs());
                 return;
             }
 
@@ -158,12 +182,12 @@ namespace Setup.Model
             // appInfo += "\n\nThis application requires full trust in order to run.";
             appInfo += "\n\nProceed with installation?";
 
-            DialogResult dr = MessageBox.Show(appInfo, "Confirm Application Install",
-                MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-            if (dr != System.Windows.Forms.DialogResult.OK)
-            {
-                return;
-            }
+            //DialogResult dr = MessageBox.Show(appInfo, "Confirm Application Install",
+            //    MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            //if (dr != System.Windows.Forms.DialogResult.OK)
+            //{
+            //    return;
+            //}
 
             // Download the deployment manifest. 
             iphm.DownloadProgressChanged += new EventHandler<DownloadProgressChangedEventArgs>(iphm_DownloadProgressChanged);
@@ -180,7 +204,7 @@ namespace Setup.Model
             {
                 //MessageBox.Show("Cannot initiate download of application. Error: " +
                 //    downloadEx.Message);
-                
+
                 GlobalApplicationOptions.ErrorMessage += Environment.NewLine + "Cannot initiate download of application. Error: " + downloadEx.Message;
                 ErrorDuringInstallation(this, new EventArgs());
                 return;
@@ -214,7 +238,9 @@ namespace Setup.Model
 
         void iphm_DownloadApplicationCompleted(object sender, DownloadApplicationCompletedEventArgs e)
         {
-            ApplicationDownloadCompleted(this, e);
+            InstallationCompleteEventArgs icea = new InstallationCompleteEventArgs();
+            icea.version = this.version;
+            InstallationComplete(this, icea);
             // Check for an error. 
             if (e.Error != null)
             {

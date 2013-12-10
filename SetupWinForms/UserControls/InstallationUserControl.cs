@@ -15,31 +15,75 @@ namespace Setup.UserControls
     {
         public string ID = UserControlManager.INSTALLATION_USER_CONTROL;
 
+        private object lockObj = new object();
+        // Used to maintain a reference to the object so they are not collected by garbage
+        private List<CustomInstaller> customInstallers = new List<CustomInstaller>();
+
         public InstallationUserControl()
         {
             InitializeComponent();
+            currentTaskTextBox.Visible = false;
+            currentTaskProgressBar.Visible = false;
+            overallTextBox.Visible = false;
+            overallProgressBar.Visible = false;
         }
 
         public void Install()
         {
+            titleTextBox.Text = "Installing";
+            descriptionTextBox.Text = "Please wait while your installation is in progress.";
+            currentTaskTextBox.Visible = true;
+            currentTaskProgressBar.Visible = true;
+            overallTextBox.Visible = true;
+            overallProgressBar.Visible = true;
+            this.Refresh();
+
             CustomInstaller installer = new CustomInstaller();
+            customInstallers.Add(installer);
 
             HookIntoInstallerEvents(installer);
 
-            foreach (Versions version in GlobalApplicationOptions.VersionsToInstall)
+            if (GlobalApplicationOptions.VersionsToInstall.Count <= 0)
             {
-                switch (version)
+                GlobalApplicationOptions.ucManager.NextScreen();
+            }
+            else
+            {
+                lock (lockObj)
                 {
-                    case Versions.WORD:
-                        installer.InstallApplication("http://updates.ctdragon.com/SFSO/Word/SFSO.vsto", version);
-                        break;
-                    case Versions.EXCEL:
-                        installer.InstallApplication("http://updates.ctdragon.com/SFSO/Excel/SFSO-E.vsto", version);
-                        break;
-                    default:
-                        break;
+                    installer.InstallApplication(GlobalApplicationOptions.VersionsToInstall[0]);
+                    try
+                    {
+                        GlobalApplicationOptions.VersionsToInstall.RemoveAt(0);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+
+                    }
                 }
             }
+
+            //foreach (Versions version in GlobalApplicationOptions.VersionsToInstall)
+            //{
+            //    switch (version)
+            //    {
+            //        case Versions.WORD:
+            //            installing = true;
+            //            installer.InstallApplication("http://updates.ctdragon.com/SFSO/Word/SFSO.vsto", version);
+            //            break;
+            //        case Versions.EXCEL:
+            //            installing = true;
+            //            while (installing)
+            //            {
+            //                System.Threading.Thread.Sleep(1000);
+            //                continue;
+            //            }
+            //            installer.InstallApplication("http://updates.ctdragon.com/SFSO/Excel/SFSO-E.vsto", version);
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //}
         }
 
         private void HookIntoInstallerEvents(CustomInstaller installer)
@@ -54,7 +98,7 @@ namespace Setup.UserControls
             installer.InitializeManifestCompleted += installer_InitializeManifestCompleted;
             installer.DownloadingApplicationStarted += installer_DownloadingApplicationStarted;
             installer.ApplicationDownloadProgressChanged += installer_ApplicationDownloadProgressChanged;
-            installer.ApplicationDownloadCompleted += installer_ApplicationDownloadCompleted;
+            installer.InstallationComplete += installer_InstallationComplete;
             installer.ErrorDuringInstallation += installer_ErrorDuringInstallation;
 
         //    public event EventHandler DownloadingCertificatesStarted;
@@ -73,20 +117,27 @@ namespace Setup.UserControls
 
         private void installer_ErrorDuringInstallation(object sender, EventArgs e)
         {
-            //GlobalApplicationOptions.ucManager.NextScreen();
+            GlobalApplicationOptions.ErrorsDuringInstallation = true;
+            lock (lockObj)
+            {
+                GlobalApplicationOptions.VersionsToInstall.Clear();
+            }
+            Install();
         }
 
-        private void installer_ApplicationDownloadCompleted(object sender, System.Deployment.Application.DownloadApplicationCompletedEventArgs e)
+        private void installer_InstallationComplete(object sender, InstallationCompleteEventArgs e)
         {
             currentTaskProgressBar.Value = 100;
-            overallProgressBar.Increment(33);
+            overallProgressBar.Increment((int)(33 / (GlobalApplicationOptions.VersionsToInstall.Count + .001)));
+            System.Threading.Thread.Sleep(300);
 
-            GlobalApplicationOptions.ucManager.NextScreen();
+            Install();
         }
 
         private void installer_ApplicationDownloadProgressChanged(object sender, System.Deployment.Application.DownloadProgressChangedEventArgs e)
         {
             currentTaskProgressBar.Value = e.ProgressPercentage;
+            //System.Threading.Thread.Sleep(200);
         }
 
         private void installer_DownloadingApplicationStarted(object sender, EventArgs e)
@@ -97,23 +148,28 @@ namespace Setup.UserControls
 
         private void installer_InitializeManifestCompleted(object sender, System.Deployment.Application.GetManifestCompletedEventArgs e)
         {
-            overallProgressBar.Increment(33);
+            currentTaskProgressBar.Value = 100;
+            overallProgressBar.Increment((int)(33 / (GlobalApplicationOptions.VersionsToInstall.Count + .001)));
+            System.Threading.Thread.Sleep(200);
         }
 
         private void installer_InitializingManifestStarted(object sender, EventArgs e)
         {
             currentTaskProgressBar.Value = 0;
             currentTaskTextBox.Text = "Initializing Manifest";
+            //System.Threading.Thread.Sleep(200);
         }
 
         private void installer_InstallingCertificatesCompleted(object sender, EventArgs e)
         {
             currentTaskProgressBar.Value = 100;
+            System.Threading.Thread.Sleep(200);
         }
 
         private void installer_InstallingCertificatesProgressChange(object sender, InstallingCertificatesProgessChangeEventArgs e)
         {
             currentTaskProgressBar.Value = e.PercentCompleted;
+            System.Threading.Thread.Sleep(200);
         }
 
         private void installer_InstallingCertificatesStarted(object sender, EventArgs e)
@@ -124,18 +180,22 @@ namespace Setup.UserControls
 
         private void installer_CertDownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            overallProgressBar.Increment(33);
+            currentTaskProgressBar.Value = 100;
+            overallProgressBar.Increment((int)(33 / (GlobalApplicationOptions.VersionsToInstall.Count + .001)));
+            System.Threading.Thread.Sleep(200);
         }
 
         private void installer_CertDownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
         {
             currentTaskProgressBar.Value = e.ProgressPercentage;
+            //System.Threading.Thread.Sleep(200);
         }
 
         private void installer_DownloadingCertificatesStarted(object sender, EventArgs e)
         {
             currentTaskProgressBar.Value = 0;
             currentTaskTextBox.Text = "Downloading Certificates";
+            //System.Threading.Thread.Sleep(200);
         }
 
 
