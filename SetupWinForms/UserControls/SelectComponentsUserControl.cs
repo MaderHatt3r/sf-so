@@ -23,6 +23,11 @@ namespace Setup.UserControls
         public SelectComponentsUserControl()
         {
             InitializeComponent();
+            this.ParentChanged += SelectComponentsUserControl_ParentChanged;
+        }
+
+        void SelectComponentsUserControl_ParentChanged(object sender, EventArgs e)
+        {
             SetupListBox();
         }
 
