@@ -253,6 +253,7 @@ namespace Setup.Model
 
             // Inform the user that their application is ready for use. 
             //MessageBox.Show("Application installed!");
+            //MessageBox.Show(e.LogFilePath);
         }
 
         void iphm_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
