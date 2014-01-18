@@ -24,9 +24,16 @@ namespace Setup
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if (CheckSystemArchitecture())
+            try
             {
-                Application.Run(new SetupForm());
+                if (CheckSystemArchitecture())
+                {
+                    Application.Run(new SetupForm());
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("The installer failed to run. Please report the following error to http://CTDragon.com/discussion: \n\n" + e.Message);
             }
         }
 
