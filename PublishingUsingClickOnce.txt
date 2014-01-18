@@ -21,20 +21,20 @@ CD to directory where certificates should be saved.
 ///pvk2pfx -pvk SFSOspc.pvk -spc SFSOspc.cer -pfx SFSOspc.pfx
 
 WORD------
-makecert -r -pe -n "CN=CTDragon" -ss CA -sr CurrentUser -b 01/01/2013 -e 01/01/2014 -cy authority -sky signature -sv SFSOCert.pvk SFSOCert.cer
-Word:	QrNpklpcr143XAScRgi8
+makecert -r -pe -n "CN=CTDragon" -ss CA -sr CurrentUser -b 01/01/2014 -e 01/01/2023 -cy authority -sky signature -sv SFSOCert.pvk SFSOCert.cer
+Word:	ZyUMDPMwrCXYuHMQ7MXF
 
 makecert -pe -n "CN=CTDragonSPC" -cy end -sky signature -ic SFSOCert.cer -iv SFSOCert.pvk -sv SFSOspc.pvk SFSOspc.cer
-Word:	ehWjjuJuVZSbgBAJUR2X
+Word:	Y6VdDYX9PgCWSyPYLsMh
 
 pvk2pfx -pvk SFSOspc.pvk -spc SFSOspc.cer -pfx SFSOspc.pfx
 
 EXCEL-----
-makecert -r -pe -n "CN=CTDragon" -ss CA -sr CurrentUser -b 11/11/2013 -e 11/11/2014 -cy authority -sky signature -sv SFSOECert.pvk SFSOECert.cer
-Excel:	Pk9NF8xBQUToIBc0PfRb
+makecert -r -pe -n "CN=CTDragon" -ss CA -sr CurrentUser -b 01/01/2014 -e 01/01/2023 -cy authority -sky signature -sv SFSOECert.pvk SFSOECert.cer
+Excel:	DM05lXLY5u0JPMtoHRCE
 
 makecert -pe -n "CN=CTDragonSPC" -cy end -sky signature -ic SFSOECert.cer -iv SFSOECert.pvk -sv SFSOEspc.pvk SFSOEspc.cer
-Excel:	Fe5Tb1Y0xpgShvYMwbiw
+Excel:	TuN1VmP84jHzsW8tdc4e
 
 pvk2pfx -pvk SFSOEspc.pvk -spc SFSOEspc.cer -pfx SFSOEspc.pfx
 

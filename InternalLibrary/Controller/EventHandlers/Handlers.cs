@@ -174,7 +174,7 @@ namespace InternalLibrary.Controller.EventHandlers
                 }
                 requestController.updateDriveFile(Doc);
                 this.excelIgnoreAfterSave = true;
-                Doc.Save();
+                //Doc.Save();
                 this.excelIgnoreAfterSave = false;
             }
             GlobalApplicationOptions.HandlerBusy = false;
@@ -289,7 +289,7 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="COMAddIns">The COM add ins.</param>
         public void CheckForUpdates(Office.COMAddIns COMAddIns)
         {
-            DateTime expirationDate = new DateTime(2013, 12, 30);
+            DateTime expirationDate = new DateTime(2014, 10, 30);
             if (DateTime.Now.CompareTo(expirationDate) >= 0)
             {
                 foreach (Office.COMAddIn addin in COMAddIns)
