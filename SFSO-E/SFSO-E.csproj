@@ -36,7 +36,7 @@
     <PublishUrl>ftp://ctdragon.com/public_html/updates/SFSO/Excel/</PublishUrl>
     <InstallUrl>http://updates.ctdragon.com/SFSO/Excel/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>0.0.0.8</ApplicationVersion>
+    <ApplicationVersion>0.0.1.2</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
@@ -308,7 +308,7 @@
     <ManifestKeyFile>SFSOEspc.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9DC501F97726F569CBE5EB6C970E8919B7DE2934</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>88038DECD6C736416A37112717005612D44C690F</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

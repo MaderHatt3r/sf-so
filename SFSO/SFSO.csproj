@@ -36,7 +36,7 @@
     <PublishUrl>ftp://ctdragon.com/public_html/updates/SFSO/Word/</PublishUrl>
     <InstallUrl>http://updates.ctdragon.com/SFSO/Word/</InstallUrl>
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>0.0.0.32</ApplicationVersion>
+    <ApplicationVersion>0.0.1.1</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
@@ -309,7 +309,7 @@
     <ManifestKeyFile>SFSOspc.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>4CB9491EFCFAF4E07F647B7E70BD06A604F14ADD</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>EAAB929887D4CF901A8C3B2E8C0BF16636DDD063</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
