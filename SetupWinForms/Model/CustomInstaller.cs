@@ -58,28 +58,20 @@ namespace Setup.Model
             this.version = version;
             string deployManifestUriStr = "";
 
-            switch (version)
-            {
-                case Versions.WORD:
-                    deployManifestUriStr = "http://updates.ctdragon.com/SFSO/Word/SFSO.vsto";
-                    break;
-                case Versions.EXCEL:
-                    deployManifestUriStr = "http://updates.ctdragon.com/SFSO/Excel/SFSO-E.vsto";
-                    break;
-                default:
-                    break;
-            }
-
             try
             {
-                DownloadSetupFiles();
+                
 
                 switch (version)
                 {
                     case Versions.WORD:
+                        deployManifestUriStr = "http://updates.ctdragon.com/SFSO/Word/SFSO.vsto";
+                        DownloadSetupFiles();
                         InstallCodeSignatureCertificate();
                         break;
                     case Versions.EXCEL:
+                        deployManifestUriStr = "http://updates.ctdragon.com/SFSO/Excel/SFSO-E.vsto";
+                        DownloadSetupFiles();
                         InstallCodeSignatureCertificate_Excel();
                         break;
                     default:
@@ -316,8 +308,8 @@ namespace Setup.Model
             //Console.WriteLine("Installing Certificates");
 
             X509Certificate2 cert = new X509Certificate2(certificateFullName, "", X509KeyStorageFlags.PersistKeySet);
-            X509Certificate2 cert2 = new X509Certificate2(tempDownloadPath + "SFSOspc.cer", "ehWjjuJuVZSbgBAJUR2X", X509KeyStorageFlags.PersistKeySet);
-            X509Certificate2 cert3 = new X509Certificate2(tempDownloadPath + "SFSOCert.cer", "QrNpklpcr143XAScRgi8", X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 cert2 = new X509Certificate2(tempDownloadPath + "SFSOspc.cer", "Y6VdDYX9PgCWSyPYLsMh", X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 cert3 = new X509Certificate2(tempDownloadPath + "SFSOCert.cer", "ZyUMDPMwrCXYuHMQ7MXF", X509KeyStorageFlags.PersistKeySet);
             X509Store store = new X509Store(StoreName.Root);
             store.Open(OpenFlags.ReadWrite);
             store.Add(cert);
@@ -330,8 +322,8 @@ namespace Setup.Model
 
             //Console.Out.WriteLine("X509Certificate2 cert = new X509Certificate2(\"C:\\Users\\CTDragon\\Desktop\\ALPHA_7\\SFSOspc.pfx\", \"\", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);");
             X509Certificate2 xCert = new X509Certificate2(certificateFullName, "", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
-            X509Certificate2 xCert2 = new X509Certificate2(tempDownloadPath + "SFSOspc.cer", "ehWjjuJuVZSbgBAJUR2X", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
-            X509Certificate2 xCert3 = new X509Certificate2(tempDownloadPath + "SFSOCert.cer", "QrNpklpcr143XAScRgi8", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 xCert2 = new X509Certificate2(tempDownloadPath + "SFSOspc.cer", "Y6VdDYX9PgCWSyPYLsMh", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 xCert3 = new X509Certificate2(tempDownloadPath + "SFSOCert.cer", "ZyUMDPMwrCXYuHMQ7MXF", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
             //Console.Out.WriteLine("X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);");
             X509Store xStore = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
             //Console.Out.WriteLine("store.Open(OpenFlags.ReadWrite);");
@@ -353,8 +345,8 @@ namespace Setup.Model
             //Console.WriteLine("Installing Certificates");
 
             X509Certificate2 cert = new X509Certificate2(certificateFullName_Excel, "", X509KeyStorageFlags.PersistKeySet);
-            X509Certificate2 cert2 = new X509Certificate2(tempDownloadPath + "SFSOEspc.cer", "Fe5Tb1Y0xpgShvYMwbiw", X509KeyStorageFlags.PersistKeySet);
-            X509Certificate2 cert3 = new X509Certificate2(tempDownloadPath + "SFSOECert.cer", "Pk9NF8xBQUToIBc0PfRb", X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 cert2 = new X509Certificate2(tempDownloadPath + "SFSOEspc.cer", "TuN1VmP84jHzsW8tdc4e", X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 cert3 = new X509Certificate2(tempDownloadPath + "SFSOECert.cer", "DM05lXLY5u0JPMtoHRCE", X509KeyStorageFlags.PersistKeySet);
             X509Store store = new X509Store(StoreName.Root);
             store.Open(OpenFlags.ReadWrite);
             store.Add(cert);
@@ -367,8 +359,8 @@ namespace Setup.Model
 
             //Console.Out.WriteLine("X509Certificate2 cert = new X509Certificate2(\"C:\\Users\\CTDragon\\Desktop\\ALPHA_7\\SFSOspc.pfx\", \"\", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);");
             X509Certificate2 xCert = new X509Certificate2(certificateFullName_Excel, "", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
-            X509Certificate2 xCert2 = new X509Certificate2(tempDownloadPath + "SFSOEspc.cer", "Fe5Tb1Y0xpgShvYMwbiw", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
-            X509Certificate2 xCert3 = new X509Certificate2(tempDownloadPath + "SFSOECert.cer", "Pk9NF8xBQUToIBc0PfRb", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 xCert2 = new X509Certificate2(tempDownloadPath + "SFSOEspc.cer", "TuN1VmP84jHzsW8tdc4e", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+            X509Certificate2 xCert3 = new X509Certificate2(tempDownloadPath + "SFSOECert.cer", "DM05lXLY5u0JPMtoHRCE", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
             //Console.Out.WriteLine("X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);");
             X509Store xStore = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
             //Console.Out.WriteLine("store.Open(OpenFlags.ReadWrite);");
