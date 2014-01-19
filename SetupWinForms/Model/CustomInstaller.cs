@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Deployment.Application;
 using System.Windows.Forms;
 using System.Security.Cryptography.X509Certificates;
+using System.Diagnostics;
 
 namespace Setup.Model
 {
@@ -86,11 +87,41 @@ namespace Setup.Model
                 return;
             }
 
+            InstallUsingVSTOInstaller();
+            //SetupIPHMAndDownload(deployManifestUriStr);
+        }
+
+        public void InstallUsingVSTOInstaller()
+        {
+            string vstoInstaller = Environment.GetEnvironmentVariable("CommonProgramFiles") + "\\Microsoft Shared\\VSTO\\10.0\\VSTOInstaller.exe";
+
+            Process installProcess = Process.Start(vstoInstaller, "/Install http://updates.ctdragon.com/SFSO/Word/SFSO.vsto");
+            installProcess.WaitForExit();
+            while (!installProcess.HasExited)
+            {
+                System.Threading.Thread.Sleep(100);
+                continue;
+            }
+            MessageBox.Show(installProcess.ExitCode + "");
+
+            Process excelInstallProcess = Process.Start(vstoInstaller, "/Install http://updates.ctdragon.com/SFSO/Excel/SFSO-E.vsto");
+
+            excelInstallProcess.WaitForExit();
+            while (!excelInstallProcess.HasExited)
+            {
+                System.Threading.Thread.Sleep(100);
+                continue;
+            }
+            MessageBox.Show(excelInstallProcess.ExitCode + "");
+        }
+
+        private void SetupIPHMAndDownload(string deployManifestUriStr)
+        {
             try
             {
                 InitializingManifestStarted(this, new EventArgs());
                 Uri deploymentUri = new Uri(deployManifestUriStr);
-                iphm = new InPlaceHostingManager(deploymentUri, false);
+                iphm = new InPlaceHostingManager(deploymentUri);
             }
             catch (UriFormatException uriEx)
             {
