@@ -68,8 +68,8 @@ namespace SFSO_E
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("A problem occured during startup of SFSO Add-In. Please try opening the application, then openeing the document from the application if opening the application directly from the document (ex double-click) is giving you issues." +
-                    Environment.NewLine + Environment.NewLine + ex.Message);
+                //System.Windows.Forms.MessageBox.Show("A problem occured during startup of SFSO Add-In. Please try opening the application, then openeing the document from the application if opening the application directly from the document (ex double-click) is giving you issues." +
+                //    Environment.NewLine + Environment.NewLine + ex.Message);
             }
 
         }
