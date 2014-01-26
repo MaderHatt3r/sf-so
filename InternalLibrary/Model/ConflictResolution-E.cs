@@ -159,6 +159,7 @@ namespace InternalLibrary.Model
                 GlobalApplicationOptions.OverrideConflictResolutionDialogResult = ConflictResolutionOptions.FORCE_PUSH;
                 Doc.MergeWorkbook(lastRevision); // Side-effect (save && save event is called)
                 GlobalApplicationOptions.OverrideConflictResolutionDialogResult = null;
+                Doc.Saved = false;
                 //myApp.ScreenUpdating = true;
             }).Start();
 

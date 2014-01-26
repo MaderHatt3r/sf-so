@@ -270,7 +270,8 @@ namespace InternalLibrary.Controller.EventHandlers
                     }
                     else
                     {
-                        this.documentAfterSave(Doc);
+                        //this.documentAfterSave(Doc);
+                        requestController.updateDriveFile(Doc); // Not on new thread so I can save afterwards
                         Doc.Save();
                     }
                     this.allowSave = false;
