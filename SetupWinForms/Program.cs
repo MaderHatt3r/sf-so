@@ -35,6 +35,8 @@ namespace Setup
             {
                 MessageBox.Show("The installer failed to run. Please report the following error to http://CTDragon.com/discussion: \n\n" + e.Message);
             }
+
+            Environment.Exit(0);
         }
 
         private static bool CheckSystemArchitecture()
@@ -61,6 +63,18 @@ namespace Setup
                 return false;
             }
 #endif
+
+            return true;
+        }
+
+        private static bool CheckElevation()
+        {
+            ProcessStartInfo processInfo = new ProcessStartInfo();
+            processInfo.Verb = @"runas";
+            processInfo.LoadUserProfile = true;
+            processInfo.FileName = Application.ExecutablePath;
+            processInfo.Arguments = @"/argumentXYZ";
+            Process.Start(processInfo);
 
             return true;
         }

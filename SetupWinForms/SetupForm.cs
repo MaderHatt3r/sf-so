@@ -100,7 +100,8 @@ namespace Setup
 
         private void Finish()
         {
-            this.Close();
+            //this.Close();
+            Application.Exit();
         }
 
         #endregion // Private Helpers

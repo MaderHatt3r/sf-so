@@ -20,6 +20,15 @@ namespace InternalLibrary.Model
             set { _allowSaves = _allowSaves && value; }
         }
 
+        private ConflictResolutionOptions _userSelection;
+
+        public ConflictResolutionOptions UserSelection
+        {
+            get { return _userSelection; }
+            set { _userSelection = value; }
+        }
+
+
         public ConflictResolution_E()
         {
             _allowSaves = true;
@@ -59,6 +68,7 @@ namespace InternalLibrary.Model
         private void ResolveNewRevision(dynamic Doc, string prevFileID, string prevRevisionID, string fileID, File googleFile)
         {
             ConflictResolutionOptions result = GlobalApplicationOptions.OverrideConflictResolutionDialogResult ?? PromptDialogResult();
+            UserSelection = result;
 
             switch (result)
             {

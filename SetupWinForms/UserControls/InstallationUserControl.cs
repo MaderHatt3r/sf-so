@@ -36,6 +36,7 @@ namespace Setup.UserControls
             currentTaskProgressBar.Visible = true;
             overallTextBox.Visible = true;
             overallProgressBar.Visible = true;
+
             this.Refresh();
 
             CustomInstaller installer = new CustomInstaller();
@@ -43,25 +44,25 @@ namespace Setup.UserControls
 
             HookIntoInstallerEvents(installer);
 
-            if (GlobalApplicationOptions.VersionsToInstall.Count <= 0)
-            {
-                GlobalApplicationOptions.ucManager.NextScreen();
-            }
-            else
-            {
-                lock (lockObj)
-                {
-                    installer.InstallApplication(GlobalApplicationOptions.VersionsToInstall[0]);
-                    try
-                    {
-                        GlobalApplicationOptions.VersionsToInstall.RemoveAt(0);
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
+            //if (GlobalApplicationOptions.VersionsToInstall.Count <= 0)
+            //{
+            //    GlobalApplicationOptions.ucManager.NextScreen();
+            //}
+            //else
+            //{
+            //    lock (lockObj)
+            //    {
+            //        installer.InstallApplication(GlobalApplicationOptions.VersionsToInstall[0]);
+            //        try
+            //        {
+            //            GlobalApplicationOptions.VersionsToInstall.RemoveAt(0);
+            //        }
+            //        catch (ArgumentOutOfRangeException)
+            //        {
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
 
             //foreach (Versions version in GlobalApplicationOptions.VersionsToInstall)
             //{
@@ -84,6 +85,14 @@ namespace Setup.UserControls
             //            break;
             //    }
             //}
+
+            foreach (Versions version in GlobalApplicationOptions.VersionsToInstall)
+            {
+                installer.InstallApplication(version);
+                overallProgressBar.Value = (int)(100 / (GlobalApplicationOptions.VersionsToInstall.Count + .001));
+            }
+
+            GlobalApplicationOptions.ucManager.NextScreen();
         }
 
         private void HookIntoInstallerEvents(CustomInstaller installer)
@@ -118,20 +127,20 @@ namespace Setup.UserControls
         private void installer_ErrorDuringInstallation(object sender, EventArgs e)
         {
             GlobalApplicationOptions.ErrorsDuringInstallation = true;
-            lock (lockObj)
-            {
-                GlobalApplicationOptions.VersionsToInstall.Clear();
-            }
-            Install();
+            //lock (lockObj)
+            //{
+            //    //GlobalApplicationOptions.VersionsToInstall.Clear();
+            //}
+            //Install();
         }
 
         private void installer_InstallationComplete(object sender, InstallationCompleteEventArgs e)
         {
             currentTaskProgressBar.Value = 100;
             overallProgressBar.Increment((int)(33 / (GlobalApplicationOptions.VersionsToInstall.Count + .001)));
-            System.Threading.Thread.Sleep(300);
+            //System.Threading.Thread.Sleep(300);
 
-            Install();
+            //Install();
         }
 
         private void installer_ApplicationDownloadProgressChanged(object sender, System.Deployment.Application.DownloadProgressChangedEventArgs e)
@@ -150,7 +159,7 @@ namespace Setup.UserControls
         {
             currentTaskProgressBar.Value = 100;
             overallProgressBar.Increment((int)(33 / (GlobalApplicationOptions.VersionsToInstall.Count + .001)));
-            System.Threading.Thread.Sleep(200);
+            //System.Threading.Thread.Sleep(200);
         }
 
         private void installer_InitializingManifestStarted(object sender, EventArgs e)
@@ -163,13 +172,13 @@ namespace Setup.UserControls
         private void installer_InstallingCertificatesCompleted(object sender, EventArgs e)
         {
             currentTaskProgressBar.Value = 100;
-            System.Threading.Thread.Sleep(200);
+            //System.Threading.Thread.Sleep(200);
         }
 
         private void installer_InstallingCertificatesProgressChange(object sender, InstallingCertificatesProgessChangeEventArgs e)
         {
             currentTaskProgressBar.Value = e.PercentCompleted;
-            System.Threading.Thread.Sleep(200);
+            //System.Threading.Thread.Sleep(200);
         }
 
         private void installer_InstallingCertificatesStarted(object sender, EventArgs e)
@@ -181,8 +190,8 @@ namespace Setup.UserControls
         private void installer_CertDownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             currentTaskProgressBar.Value = 100;
-            overallProgressBar.Increment((int)(33 / (GlobalApplicationOptions.VersionsToInstall.Count + .001)));
-            System.Threading.Thread.Sleep(200);
+            overallProgressBar.Value += (int)(33 / (GlobalApplicationOptions.VersionsToInstall.Count + .001));
+            System.Threading.Thread.Sleep(80);
         }
 
         private void installer_CertDownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
@@ -193,7 +202,7 @@ namespace Setup.UserControls
 
         private void installer_DownloadingCertificatesStarted(object sender, EventArgs e)
         {
-            currentTaskProgressBar.Value = 0;
+            currentTaskProgressBar.Value = 10;
             currentTaskTextBox.Text = "Downloading Certificates";
             //System.Threading.Thread.Sleep(200);
         }

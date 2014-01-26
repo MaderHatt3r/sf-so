@@ -75,15 +75,13 @@ namespace InternalLibrary.Controller.EventHandlers
             }
 
             // Only if the handler is not busy and if the file is not a new file (does not contain .docx in file name)
+            //(Crashes the program if document is opened from double-click
             if (!GlobalApplicationOptions.HandlerBusy && doc.Name.Contains(".docx"))
             {
                 GlobalApplicationOptions.HandlerBusy = true;
 
                 Model.ConflictResolution conflictManager = new Model.ConflictResolution();
                 conflictManager.CheckForNewSaves(doc);
-
-                //string fileName = doc.FullName;
-                //doc.SaveAs(ref fileName);
 
                 GlobalApplicationOptions.HandlerBusy = false;
             }
@@ -144,6 +142,10 @@ namespace InternalLibrary.Controller.EventHandlers
             {
                 Cancel = true;
             }
+            //if (conflictManager.UserSelection != null && conflictManager.UserSelection == ConflictResolutionOptions.MERGE)
+            //{
+
+            //}
         }
 
         private void DocumentBeforeSavePreCheck(dynamic Doc)
@@ -163,6 +165,7 @@ namespace InternalLibrary.Controller.EventHandlers
             {
                 //this.documentAfterSave(Doc);
 
+                // Enable sharing
                 object missing = Type.Missing;
                 if (!((Microsoft.Office.Interop.Excel.Workbook)Doc).MultiUserEditing)
                 {
@@ -171,11 +174,27 @@ namespace InternalLibrary.Controller.EventHandlers
                     ((Microsoft.Office.Interop.Excel.Workbook)Doc).SaveAs(Doc.FullName, AccessMode: Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlShared);
                     excelIgnoreAfterSave = false;
                     Doc.Application.DisplayAlerts = true;
+
+                    // Save after enable
+                    this.excelIgnoreAfterSave = true;
+                    Doc.Save();
+                    this.excelIgnoreAfterSave = false;
                 }
+
                 requestController.updateDriveFile(Doc);
-                this.excelIgnoreAfterSave = true;
-                //Doc.Save();
-                this.excelIgnoreAfterSave = false;
+
+                try
+                {
+                    // Save after upload to undirty document
+                    this.excelIgnoreAfterSave = true;
+                    Doc.Save();
+                    this.excelIgnoreAfterSave = false;
+                }
+                catch
+                {
+                    // Can't save again after merge or it crashes
+                    this.excelIgnoreAfterSave = false;
+                }
             }
             GlobalApplicationOptions.HandlerBusy = false;
         }
