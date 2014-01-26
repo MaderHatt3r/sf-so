@@ -273,6 +273,7 @@ namespace InternalLibrary.Controller.EventHandlers
                         //this.documentAfterSave(Doc);
                         requestController.updateDriveFile(Doc); // Not on new thread so I can save afterwards
                         Doc.Save();
+                        Doc.Saved = true;
                     }
                     this.allowSave = false;
                     Cancel = true;
