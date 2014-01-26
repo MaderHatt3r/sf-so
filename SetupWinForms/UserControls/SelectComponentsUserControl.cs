@@ -26,7 +26,7 @@ namespace Setup.UserControls
             this.ParentChanged += SelectComponentsUserControl_ParentChanged;
         }
 
-        void SelectComponentsUserControl_ParentChanged(object sender, EventArgs e)
+        private void SelectComponentsUserControl_ParentChanged(object sender, EventArgs e)
         {
             SetupListBox();
         }
@@ -40,6 +40,8 @@ namespace Setup.UserControls
             ((ListBox)this.versionCheckedListBox).DataSource = versionsItemSource;
             ((ListBox)this.versionCheckedListBox).DisplayMember = "Name";
             ((ListBox)this.versionCheckedListBox).ValueMember = "Version";
+
+            this.ParentChanged -= SelectComponentsUserControl_ParentChanged;
         }
 
         #endregion // Construction
@@ -50,6 +52,10 @@ namespace Setup.UserControls
         {
             CheckedListBox versionsCLB = sender as CheckedListBox;
             if (versionsCLB == null)
+            {
+                return;
+            }
+            if (versionsCLB.Items == null)
             {
                 return;
             }

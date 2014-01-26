@@ -49,20 +49,28 @@ namespace SFSO_E
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            this.handlers = new Handlers(this.SaveAsDialog);
-            this.handlers.CheckForUpdates(this.Application.COMAddIns);
-
-            this.Application.WorkbookBeforeSave += new Excel.AppEvents_WorkbookBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
-            this.Application.WorkbookAfterSave += new Excel.AppEvents_WorkbookAfterSaveEventHandler(handlers.Application_DocumentAfterSave);
-            this.Application.WorkbookBeforeClose += handlers.Application_DocumentBeforeClose;
-            this.Application.WorkbookActivate += Application_DocumentNew;
-            this.Application.WorkbookOpen += Application_WorkbookOpen;
-
-            if (this.Application.ProtectedViewWindows.Count <= 0)
+            try
             {
-                handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveWorkbook, Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties);
-            }
+                FileIO.createTempDirectory();
+                this.handlers = new Handlers(this.SaveAsDialog);
+                this.handlers.CheckForUpdates(this.Application.COMAddIns);
 
+                this.Application.WorkbookBeforeSave += new Excel.AppEvents_WorkbookBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
+                this.Application.WorkbookAfterSave += new Excel.AppEvents_WorkbookAfterSaveEventHandler(handlers.Application_DocumentAfterSave);
+                this.Application.WorkbookBeforeClose += handlers.Application_DocumentBeforeClose;
+                this.Application.WorkbookActivate += Application_DocumentNew;
+                this.Application.WorkbookOpen += Application_WorkbookOpen;
+
+                if (this.Application.ProtectedViewWindows.Count <= 0)
+                {
+                    handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveWorkbook, Globals.ThisAddIn.Application.ActiveWorkbook.CustomDocumentProperties);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("A problem occured during startup of SFSO Add-In. Please try opening the application, then openeing the document from the application if opening the application directly from the document (ex double-click) is giving you issues." +
+                    Environment.NewLine + Environment.NewLine + ex.Message);
+            }
 
         }
 

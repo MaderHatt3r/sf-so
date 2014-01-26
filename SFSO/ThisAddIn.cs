@@ -50,19 +50,28 @@ namespace SFSO
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            this.handlers = new Handlers(this.SaveAsDialog);
-            this.handlers.CheckForUpdates(this.Application.COMAddIns);
-
-            this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
-            this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
-            this.Application.DocumentChange += Application_DocumentNew;
-            this.Application.DocumentOpen += handlers.Application_DocumentOpen;
-
-            // Removing the following condition because this is only evaluated when the application starts up, not when doc is opened
-            // || (this.Application.ProtectedViewWindows.Count > 0 && this.Application.ActiveProtectedViewWindow != null && !this.Application.ActiveProtectedViewWindow.Active)
-            if (this.Application.ProtectedViewWindows.Count <= 0)
+            try
             {
-                handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
+                FileIO.createTempDirectory();
+                this.handlers = new Handlers(this.SaveAsDialog);
+                this.handlers.CheckForUpdates(this.Application.COMAddIns);
+
+                this.Application.DocumentBeforeSave += new Word.ApplicationEvents4_DocumentBeforeSaveEventHandler(handlers.Application_DocumentBeforeSave);
+                this.Application.DocumentBeforeClose += handlers.Application_DocumentBeforeClose;
+                this.Application.DocumentChange += Application_DocumentNew;
+                this.Application.DocumentOpen += handlers.Application_DocumentOpen;
+
+                // Removing the following condition because this is only evaluated when the application starts up, not when doc is opened
+                // || (this.Application.ProtectedViewWindows.Count > 0 && this.Application.ActiveProtectedViewWindow != null && !this.Application.ActiveProtectedViewWindow.Active)
+                if (this.Application.ProtectedViewWindows.Count <= 0)
+                {
+                    handlers.AddIn_Startup(Globals.ThisAddIn.Application.ActiveDocument, Globals.ThisAddIn.Application.ActiveDocument.CustomDocumentProperties);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("A problem occured during startup of SFSO Add-In. Please try opening the application, then openeing the document from the application if opening the application directly from the document (ex double-click) is giving you issues." +
+                    Environment.NewLine + Environment.NewLine + ex.Message);
             }
         }
 

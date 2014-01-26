@@ -82,37 +82,68 @@ namespace Setup.Model
             catch (Exception e)
             {
 
-                GlobalApplicationOptions.ErrorMessage += Environment.NewLine + "Error installing certificates: " + e.Message;
+                GlobalApplicationOptions.ErrorMessage += Environment.NewLine + Environment.NewLine +
+                    "Error installing certificates for " + version.ToString() + " :" + Environment.NewLine +
+                    e.Message;
                 ErrorDuringInstallation(this, new EventArgs());
                 return;
             }
 
-            InstallUsingVSTOInstaller();
+            try
+            {
+                InstallUsingVSTOInstaller(deployManifestUriStr);
+            }
+            catch (Exception e)
+            {
+                GlobalApplicationOptions.ErrorMessage += Environment.NewLine + Environment.NewLine +
+                    "Error installing plugin for " + version.ToString() + " :" + Environment.NewLine +
+                    e.Message;
+                ErrorDuringInstallation(this, new EventArgs());
+                return;
+            }
             //SetupIPHMAndDownload(deployManifestUriStr);
         }
 
-        public void InstallUsingVSTOInstaller()
+        public void InstallUsingVSTOInstaller(string deploymentManifest)
         {
+            DownloadingApplicationStarted(this, new EventArgs());
+
             string vstoInstaller = Environment.GetEnvironmentVariable("CommonProgramFiles") + "\\Microsoft Shared\\VSTO\\10.0\\VSTOInstaller.exe";
 
-            Process installProcess = Process.Start(vstoInstaller, "/Install http://updates.ctdragon.com/SFSO/Word/SFSO.vsto");
+            Process installProcess = Process.Start(vstoInstaller, "/Install " + deploymentManifest);
             installProcess.WaitForExit();
             while (!installProcess.HasExited)
             {
                 System.Threading.Thread.Sleep(100);
                 continue;
             }
-            MessageBox.Show(installProcess.ExitCode + "");
 
-            Process excelInstallProcess = Process.Start(vstoInstaller, "/Install http://updates.ctdragon.com/SFSO/Excel/SFSO-E.vsto");
-
-            excelInstallProcess.WaitForExit();
-            while (!excelInstallProcess.HasExited)
+            if (installProcess.ExitCode == 0)
             {
-                System.Threading.Thread.Sleep(100);
-                continue;
+                //InstallationCompleteEventArgs icea = new InstallationCompleteEventArgs();
+                //icea.version = this.version;
+                //InstallationComplete(this, icea);
             }
-            MessageBox.Show(excelInstallProcess.ExitCode + "");
+            else
+            {
+                GlobalApplicationOptions.ErrorMessage += Environment.NewLine + Environment.NewLine +
+                    "For help with this error, please go to our support site and report the following error code:" + Environment.NewLine +
+                    "Install Error Code: " + installProcess.ExitCode;
+                ErrorDuringInstallation(this, new EventArgs());
+            }
+            
+
+            //MessageBox.Show(installProcess.ExitCode + "");
+
+            //Process excelInstallProcess = Process.Start(vstoInstaller, "/Install http://updates.ctdragon.com/SFSO/Excel/SFSO-E.vsto");
+
+            //excelInstallProcess.WaitForExit();
+            //while (!excelInstallProcess.HasExited)
+            //{
+            //    System.Threading.Thread.Sleep(100);
+            //    continue;
+            //}
+            //MessageBox.Show(excelInstallProcess.ExitCode + "");
         }
 
         private void SetupIPHMAndDownload(string deployManifestUriStr)

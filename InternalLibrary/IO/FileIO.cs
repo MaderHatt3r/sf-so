@@ -33,6 +33,19 @@ namespace InternalLibrary.IO
     /// </summary>
     public class FileIO
     {
+        public static bool createTempDirectory()
+        {
+            try
+            {
+                Directory.CreateDirectory(GlobalApplicationOptions.TMP_PATH);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         //Copy Word doc to tmp file for upload
         /// <summary>
         /// Creates the TMP copy.
