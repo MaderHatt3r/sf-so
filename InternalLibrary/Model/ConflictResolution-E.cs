@@ -157,7 +157,15 @@ namespace InternalLibrary.Model
                 while (GlobalApplicationOptions.HandlerBusy) { continue; }
                 System.Threading.Thread.Sleep(50);
                 GlobalApplicationOptions.OverrideConflictResolutionDialogResult = ConflictResolutionOptions.FORCE_PUSH;
-                Doc.MergeWorkbook(lastRevision); // Side-effect (save && save event is called)
+                try
+                {
+                    Doc.MergeWorkbook(lastRevision); // Side-effect (save && save event is called)
+                }
+                catch (Exception e)
+                {
+                    System.Windows.Forms.MessageBox.Show("The merge failed. If you continue to have problems, contact support at http://ctdragon.com" +
+                        Environment.NewLine + Environment.NewLine + e.Message);
+                }
                 GlobalApplicationOptions.OverrideConflictResolutionDialogResult = null;
                 Doc.Saved = false;
                 //myApp.ScreenUpdating = true;

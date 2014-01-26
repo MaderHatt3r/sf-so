@@ -200,14 +200,23 @@ namespace InternalLibrary.IO
         /// <param name="propertyValue">The property value.</param>
         public static void SetDocPropValue(dynamic Doc, string propertyName, string propertyValue)
         {
+            //Microsoft.Office.Core.DocumentProperties
             dynamic CustomProps = Doc.CustomDocumentProperties;
             //Type typeDocCustomProps = CustomProps.GetType();
+            //int countBefore = CustomProps.Count;
 
             if (GetDocPropValue(Doc, propertyName) != null)
             {
                 CustomProps[propertyName].Delete();
             }
+
+            //int count = CustomProps.Count;
+
             CustomProps.Add(propertyName, false, Microsoft.Office.Core.MsoDocProperties.msoPropertyTypeString, propertyValue);
+
+            Doc.Saved = false;
+
+            //int countAfter = CustomProps.Count;
 
             //object CustomProps = Doc.CustomDocumentProperties;
             //Type typeDocCustomProps = CustomProps.GetType();
