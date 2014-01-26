@@ -201,7 +201,7 @@ namespace InternalLibrary.IO
         public static void SetDocPropValue(dynamic Doc, string propertyName, string propertyValue)
         {
             dynamic CustomProps = Doc.CustomDocumentProperties;
-            Type typeDocCustomProps = CustomProps.GetType();
+            //Type typeDocCustomProps = CustomProps.GetType();
 
             if (GetDocPropValue(Doc, propertyName) != null)
             {
