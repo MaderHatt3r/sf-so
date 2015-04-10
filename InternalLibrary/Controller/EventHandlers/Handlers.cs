@@ -310,18 +310,18 @@ namespace InternalLibrary.Controller.EventHandlers
         /// <param name="COMAddIns">The COM add ins.</param>
         public void CheckForUpdates(Office.COMAddIns COMAddIns)
         {
-            DateTime expirationDate = new DateTime(2014, 10, 30);
-            if (DateTime.Now.CompareTo(expirationDate) >= 0)
-            {
-                foreach (Office.COMAddIn addin in COMAddIns)
-                {
-                    if (addin.Description.ToUpper().Equals("SFSO"))
-                    {
-                        System.Windows.Forms.MessageBox.Show("This beta version of SFSO has expired. Please upgrade to the newest release by visiting http://ctdragon.com. This add-in will now uninstall itself.");
-                        addin.Connect = false;
-                    }
-                }
-            }
+            //DateTime expirationDate = new DateTime(2014, 10, 30);
+            //if (DateTime.Now.CompareTo(expirationDate) >= 0)
+            //{
+            //    foreach (Office.COMAddIn addin in COMAddIns)
+            //    {
+            //        if (addin.Description.ToUpper().Equals("SFSO"))
+            //        {
+            //            System.Windows.Forms.MessageBox.Show("This beta version of SFSO has expired. Please upgrade to the newest release by visiting http://ctdragon.com. This add-in will now uninstall itself.");
+            //            addin.Connect = false;
+            //        }
+            //    }
+            //}
         }
     }
 }
